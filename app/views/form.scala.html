@@ -1,0 +1,84 @@
+@(profileForm: Form[Prof], errors: String *)
+
+@import helper.form
+
+@import play.api.Play.current
+@import play.api.Play.configuration
+
+@main(title = "書類提出", nav = "submit") {
+@for(errorMessage <- errors) {
+	<div class="alert alert-warning">
+		<p><strong>Oops!</strong> @errorMessage <a href="@routes.Faq.faq">よくあるご質問</a></p>
+	</div>
+}
+
+@helper.form(action = routes.Submit.summary, 'class -> "form-horizontal", 'enctype -> "multipart/form-data") {
+	<h3><span class="glyphicon glyphicon-user"/> 参加局の情報</h3>
+	<fieldset class="well">
+		@input(
+			profileForm("call"),
+			inputType = "text",
+			label = "呼出符号"
+		)
+		@select(
+			profileForm("city"),
+			options = Place.cityNames,
+			label   = "運用場所"
+		)
+		@select(
+			profileForm("mobi"),
+			options = Mobile.options,
+			label  = "運用形態"
+		)
+		@select(
+			profileForm("band"),
+			options = Bands.options,
+			label = "周波数帯"
+		)
+		@select(
+			profileForm("mode"),
+			options = Modes.options,
+			label = "変調方式"
+		)
+		@input(
+			profileForm("name"),
+			inputType = "text",
+			label = "お名前",
+			hint  = "この宛先に賞を発送します"
+		)
+		@input(
+			profileForm("addr"),
+			inputType = "text",
+			label = "ご住所",
+			hint  = "この宛先に賞を発送します"
+		)
+		@input(
+			profileForm("mail"),
+			inputType = "text",
+			label = "メール",
+			hint  = "受理通知メールが届きます"
+		)
+		@textarea(
+			profileForm("comm"),
+			label = "ご感想",
+			hint  = "呼出符号付きで公表します"
+		)
+	</fieldset>
+	<br>
+	<h3><span class="glyphicon glyphicon-th-list"/> 交信記録</h3>
+	<fieldset class="well">
+		@file(
+			id    = "eLog",
+			name  = "eLog",
+			label = "交信記録",
+			hint  = "交信記録ファイルを選択してください"
+		)
+	</fieldset>
+	<br>
+	<fieldset>
+		<input class="btn btn-primary" type="submit" value="この内容で提出します">
+	</fieldset>
+	<br>
+	<br>
+}
+}

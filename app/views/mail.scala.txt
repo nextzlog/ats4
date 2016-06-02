@@ -1,0 +1,17 @@
+@(entry: Entry)
+
+@entry.call 様
+
+この度は@{Contest.name}コンテストに参加いただきありがとうございます。
+
+@entry.sect 部門にて書類を受理いたしました。
+今後とも当コンテストをよろしくお願いいたします。
+
+---
+このメールに心当たりがない場合はお手数ですが下記のアドレスまでご連絡ください。
+
+---
+@{Contest.host}
+@{Contest.name}受付担当係
+@{Contest.site}
+@{Contest.mail}

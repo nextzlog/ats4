@@ -1,0 +1,48 @@
+@(title: String = "", nav: String = "")(content: Html)
+
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>@Contest.name ATS-3</title>
+		<link rel="stylesheet" media="screen" href="@routes.Assets.at("css/bootstrap.css")">
+		<link rel="stylesheet" media="screen" href="@routes.Assets.at("css/main.css")">
+		<link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+		<script src="@routes.Assets.at("js/jquery-1.10.2.min.js")" type="text/javascript"></script>
+	</head>
+	<body>
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="@routes.Index.index">ATS-3</a>
+				</div>
+				<ul class="nav navbar-nav">
+					<li class="@("active".when(nav == "submit"))">
+						<a href="@routes.Submit.form">書類提出</a>
+					</li>
+					<li class="@("active".when(nav == "results"))">
+						<a href="@routes.Results.results">暫定結果</a>
+					</li>
+					<li class="@("active".when(nav == "comments"))">
+						<a href="@routes.Comments.comments">コメント集</a>
+					</li>
+					<li class="@("active".when(nav == "faq"))">
+						<a href="@routes.Faq.faq">FAQ</a>
+					</li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="http://@Contest.site">@Contest.host</a></li>
+					<li><a href="http://pafelog.net">pafelog.net</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="container">
+		@if(title.nonEmpty) {
+			<div class="page-header">
+				<h1>@title</h1>
+			</div>
+		}
+			@content
+		</div>
+	</body>
+</html>

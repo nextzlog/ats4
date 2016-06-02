@@ -1,0 +1,9 @@
+@(entries: List[Entry])
+
+@main(title = "コメント集", nav = "comments") {
+@for(entry <- entries.filter(_.comm.isDefined)) {
+	<blockquote>
+		<p>@entry.comm <footer>@entry.call @entry.mobi (@entry.city)</footer></p>
+	</blockquote>
+}
+}

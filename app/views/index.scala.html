@@ -1,0 +1,34 @@
+@import play.api.Play.current
+@import java.text.SimpleDateFormat
+
+@main(nav = "index") {
+	<div class="jumbotron">
+		<h1>@{new SimpleDateFormat("yyyy年M月d日開催").format(TimeTable.contestDate)}</h1>
+		<p>@Contest.what</p>
+		<p><a class="btn btn-primary btn-lg" href="http://@Contest.rule">最新の規約を確認する</a></p>
+	</div>
+	<div class="row">
+		<div class="col-lg-4">
+			<h3><span class="glyphicon glyphicon-refresh"> 最新のマルチ定義</h3>
+			<p>市町村合併によりマルチ定義は毎年変わっています</p>
+			<p><a class="btn btn-primary" href="@routes.Dat.dat">最新のDATファイル</a></p>
+		</div>
+		<div class="col-lg-4">
+			<h3><span class="glyphicon glyphicon-user"> 事前登録は不要です</h3>
+			<p>当サイトで書類提出すれば参加局として受理します</p>
+			<p><a class="btn btn-primary" href="@routes.Submit.form">今すぐ書類を提出する</a></p>
+		</div>
+		<div class="col-lg-4">
+			<h3><span class="glyphicon glyphicon-tower"> 暫定結果を確認できます</h3>
+			<p>提出期間の満了と同時に暫定結果を発表します</p>
+			<p><a class="btn btn-primary" href="@routes.Results.results">暫定結果を確認する</a></p>
+		</div>
+	</div>
+	<div class="page-header">
+	@if(TimeLimit.isOK) {
+		<h3><span class="glyphicon glyphicon-time"> 提出期限まであと@{TimeLimit.remain / 1000 / 60 / 60}時間</h3>
+	} else {
+		<h3><span class="glyphicon glyphicon-remove"> 提出期間外です</h3>
+	}
+	</div>
+}

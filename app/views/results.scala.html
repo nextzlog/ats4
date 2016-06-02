@@ -1,0 +1,44 @@
+@(sections: List[Section])
+
+@main(title = "暫定結果発表", nav = "results") {
+@for(section <- sections) {
+	<h4>@{section.name}部門</h4>
+	<table class="table">
+		<tr>
+			<th width="10%">順位</th>
+			<th width="15%">呼出符号</th>
+			<th width="15%">交信局数</th>
+			<th width="15%">マルチ数</th>
+			<th width="15%">総得点</th>
+			<th width="30%">運用地</th>
+		</tr>
+@if(models.TimeLimit.notOK) @{
+	for(entry <- section.entries) yield if(section.award(entry.score)) (
+		<tr>
+			<td><font color="red"><strong>{section.rank(entry.score) + 1}</strong></font></td>
+			<td><font color="red"><strong>{entry.displayCall}</strong></font></td>
+			<td><font color="red"><strong>{entry.calls}</strong></font></td>
+			<td><font color="red"><strong>{entry.mults}</strong></font></td>
+			<td><font color="red"><strong>{entry.score}</strong></font></td>
+			<td><font color="red"><strong>{entry.city}</strong></font></td>
+		</tr>
+	) else (
+		<tr>
+			<td>{section.rank(entry.score) + 1}</td>
+			<td>{entry.displayCall}</td>
+			<td>{entry.calls}</td>
+			<td>{entry.mults}</td>
+			<td>{entry.score}</td>
+			<td>{entry.city}</td>
+		</tr>
+	)
+}
+	</table>
+	<br>
+	<br>
+	<br>
+}
+<div class="alert alert-warning">
+	赤太字は暫定入賞局ですが、審査によって除外されることがあります
+</div>
+}

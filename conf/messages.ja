@@ -1,0 +1,4 @@
+errors.invalid=不正な値
+error.required=*
+error.email=*
+constraint.required=必須

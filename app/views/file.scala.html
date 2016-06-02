@@ -1,0 +1,16 @@
+@(id: String = "", name: String = "", label: String = "", hint: String = "")
+
+<input type="file" id="@id" name="@name" style="display: none">
+<div class="input-group">
+	<label for="@{id}-button" id="@{id}-name" class="form-control">@hint</label>
+	<span class="input-group-btn">
+		<button type="button" id="@{id}-button" class="btn btn-default" onclick="$('#@id').click();">
+			<i class="glyphicon glyphicon-folder-open"></i>
+		</button>
+	</span>
+</div>
+<script type="text/javascript">
+	$('#@id').change(function() {
+		$('#@{id}-name').html($(this).val())
+	})
+</script>

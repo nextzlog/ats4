@@ -1,0 +1,25 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.Index.index
+
+# Submit
+GET     /submit                     controllers.Submit.form
+POST    /submit                     controllers.Submit.summary
+
+# Results
+GET     /results                    controllers.Results.results
+
+# Comments
+GET     /comments                   controllers.Comments.comments
+
+# FAQ
+GET     /faq                        controllers.Faq.faq
+
+# Serial Number Definition File Service
+GET     /dat                        controllers.Dat.dat
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
