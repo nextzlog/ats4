@@ -1,5 +1,9 @@
 body {
-    padding-top: 40px;
+	padding-top: 60px;
+}
+
+.jumbotron {
+	color: #000;
 }
 
 fieldset {
