@@ -2,11 +2,13 @@ package models
 
 import java.util.NoSuchElementException
 
-import fxlog.field._
-import fxlog.model._
+import qxsl.field._
+import qxsl.model._
+
+import scala.collection.JavaConversions._
 
 object Clean {
-	def cleanAll(doc: Document) = doc.getAllRecords.map(clean)
+	def cleanAll(doc: Document) = doc.getRecords.map(clean)
 	def clean(rec: Record): Record = {
 		val band = rec.getBand
 		val freq = rec.getFreq

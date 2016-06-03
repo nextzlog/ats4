@@ -1,6 +1,6 @@
 package models
 
-import fxlog.model.Record
+import qxsl.model.Record
 
 object Filter {
 	def 運用場所  (rec: Record) = rec.getRcvdCity != null

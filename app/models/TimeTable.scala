@@ -5,8 +5,8 @@ import play.api.Play.{configuration => conf}
 
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import fxlog.field._
-import fxlog.model._
+import qxsl.field._
+import qxsl.model._
 
 object TimeTable {
 	val contestdate   = conf.getString("ats3.contestdate").get

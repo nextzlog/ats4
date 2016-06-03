@@ -9,7 +9,7 @@ import scala.language.postfixOps
 
 import java.util.Date
 
-import fxlog.field.Call
+import qxsl.field.Call
 
 object Storage {
 	def insert(entry: Entry) = DB.withConnection(implicit conn => SQL("""

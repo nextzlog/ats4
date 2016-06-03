@@ -5,7 +5,7 @@ import play.api.Play.{configuration => conf}
 
 import com.typesafe.plugin._
 
-import fxlog.field.Call
+import qxsl.field.Call
 
 object Mail {
 	val from = conf.getString("ats3.mail.from").get

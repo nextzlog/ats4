@@ -5,8 +5,8 @@ import scala.collection.JavaConversions._
 
 import java.io._
 
-import fxlog.model._
-import fxlog.serial._
+import qxsl.model._
+import qxsl.sheet._
 
 object Decoder {
 	val txt = MutableList[LogSheetFormat]()

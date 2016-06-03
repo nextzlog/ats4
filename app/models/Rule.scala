@@ -1,14 +1,16 @@
 package models
 
 import java.util.HashSet
-import fxlog.model._
+import qxsl.model._
 
 import models.Filter._
 
+import scala.collection.JavaConversions._
+
 case class Rule(id: Int, filters: Record=>Boolean *) {
 	def validate(rec: Record) = filters.forall(_(rec))
-	def pickout(doc: Document) = doc.getAllRecords.filter(validate)
-	def cutdown(doc: Document) = doc.getAllRecords.filterNot(validate)
+	def pickout(doc: Document) = doc.getRecords.filter(validate)
+	def cutdown(doc: Document) = doc.getRecords.filterNot(validate)
 }
 
 object Rule {

@@ -1,8 +1,8 @@
 package models
 
 import java.util.HashSet
-import fxlog.field._
-import fxlog.model._
+import qxsl.field._
+import qxsl.model._
 
 object Count {
 	def count(records: Record*) = {

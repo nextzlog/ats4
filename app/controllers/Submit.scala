@@ -9,7 +9,7 @@ import play.api.data.validation.Constraints._
 import views._
 import models._
 
-import fxlog.serial._
+import qxsl.sheet._
 
 import java.io._
 import java.sql.SQLException
@@ -17,7 +17,7 @@ import java.sql.SQLException
 import org.apache.commons.mail.EmailException
 
 object Submit extends Controller {
-	val eLogFormat = new LogSheetManager().getFormat("fxlog")
+	val eLogFormat = LogSheetFormat.forName("qxml")
 	val profileForm: Form[Prof] = Form(
 		mapping(
 			"call" -> nonEmptyText,

@@ -3,8 +3,8 @@ package models
 import java.util.Date
 import java.text.ParseException
 
-import fxlog.field._
-import fxlog.model._
+import qxsl.field._
+import qxsl.model._
 
 case class Prof(
 	call: String,

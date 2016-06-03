@@ -3,7 +3,7 @@ package models
 import scala.collection.mutable._
 import java.util.Date
 
-import fxlog.field.Call
+import qxsl.field.Call
 
 case class Section(name: String, entries: List[Entry]) {
 	val id = Rule.forName(name).id

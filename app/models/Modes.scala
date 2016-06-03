@@ -1,6 +1,6 @@
 package models
 
-import fxlog.field.Mode
+import qxsl.field.Mode
 
 object Modes {
 	val options = List("電信", "電信電話")

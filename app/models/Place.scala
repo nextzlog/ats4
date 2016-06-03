@@ -6,7 +6,7 @@ import play.api.Play.{configuration => conf}
 import scala.io.Source
 import scala.collection.mutable.MutableList
 
-import fxlog.field.City
+import qxsl.field.City
 
 case class Place(num: String, city: City, pref: Pref)
 

@@ -2,10 +2,10 @@ package models
 
 import java.io.FileInputStream
 
-import fxlog.serial.LogSheetManager
+import qxsl.sheet.LogSheetFormat
 
 object Rescore {
-	val eLogFormat = new LogSheetManager().getFormat("fxlog")
+	val eLogFormat = LogSheetFormat.forName("qxml")
 	def recalc(entries: Seq[Entry]) = entries.foreach(entry => {
 		val doc = eLogFormat.decode(new FileInputStream(entry.eLogFile))
 		val mod = entry.prof.entry(doc)

@@ -7,8 +7,8 @@ import java.io._
 import java.text.SimpleDateFormat
 import java.util.Date
 
-import fxlog.field._
-import fxlog.model._
+import qxsl.field._
+import qxsl.model._
 
 case class Entry(prof: Prof, time: Date, calls: Int, mults: Int) {
 	def call = new Call(Prof.toHalfWidth(prof.call).split("/", 2)(0).filter{

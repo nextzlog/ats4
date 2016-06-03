@@ -1,7 +1,7 @@
 package models
 
-import fxlog.field.Band
-import fxlog.field.Freq
+import qxsl.field.Band
+import qxsl.field.Freq
 
 case class Freqs(band: Band, minFreq: Int, maxFreq: Int)
 

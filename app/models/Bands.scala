@@ -2,7 +2,7 @@ package models
 
 import scala.collection.mutable.HashMap
 
-import fxlog.field._
+import qxsl.field._
 
 case class Bands(name: String, bands: Band *)
 

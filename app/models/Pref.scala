@@ -1,6 +1,6 @@
 package models
 
-import fxlog.field.City
+import qxsl.field.City
 
 case class Pref(name: String)
 
