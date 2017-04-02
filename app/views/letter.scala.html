@@ -1,0 +1,11 @@
+@(field: Field, text: String = "", hint: String = "")
+
+<div class="form-group @if(field.hasErrors){has-error} has-feedback">
+	<label for="@field.id" class="col-lg-2 control-label">@text</label>
+	<div class="col-lg-10">
+		<textarea class="form-control" name="@field.id" placeholder="@hint" rows="5">@field.value</textarea>
+	@if(field.hasErrors) {
+		<span class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
+	}
+	</div>
+</div>

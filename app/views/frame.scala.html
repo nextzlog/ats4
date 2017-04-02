@@ -1,0 +1,50 @@
+@(title: String = "", nav: String = "")(content: Html)
+
+<html>
+	<head>
+		<title>@Conf.name ATS-4</title>
+		<link rel="stylesheet" href="@routes.Assets.versioned("css/bootstrap.css")" media="print,screen">
+		<link rel="stylesheet" href="@routes.Assets.versioned("css/bootstrap-select.css")">
+		<link rel="stylesheet" href="@routes.Assets.versioned("css/main.css")">
+		<script src="@routes.Assets.versioned("js/jquery-1.10.2.min.js")" type="text/javascript"></script>
+		<script src="@routes.Assets.versioned("js/bootstrap.min.js")" type="text/javascript"></script>
+		<script src="@routes.Assets.versioned("js/bootstrap-select.min.js")" type="text/javascript"></script>
+		<script type="text/javascript">$('.selectpicker').selectpicker({style:'btn-info', size:4})</script>
+	</head>
+	<body>
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="@routes.Index.index">ATS-4</a>
+				</div>
+				<ul class="nav navbar-nav">
+					<li class="@("active".when(nav == "entry"))">
+						<a href="@routes.Entry.submit">書類提出</a>
+					</li>
+					<li class="@("active".when(nav == "result"))">
+						<a href="@routes.Result.result">暫定結果</a>
+					</li>
+					<li class="@("active".when(nav == "board"))">
+						<a href="@routes.Board.board">コメント集</a>
+					</li>
+					<li class="@("active".when(nav == "quest"))">
+						<a href="@routes.Quest.quest">質問集</a>
+					</li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="http://@Conf.site">@Conf.host</a></li>
+					<li><a href="http://pafelog.net">無線部開発班</a></li>
+					<li><a href="http://pafelog.net/ats4.pdf">ATS-4徹底解説</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="container">
+		@if(title.nonEmpty) {
+			<div class="page-header">
+				<h1>@title</h1>
+			</div>
+		}
+		@content
+		</div>
+	</body>
+</html>

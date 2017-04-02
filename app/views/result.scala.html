@@ -1,0 +1,48 @@
+@(sections: Seq[Sect])
+
+@frame(title = "暫定結果", nav = "result") {
+<div class="alert alert-warning">
+	掲載内容に誤りがある場合は、直ちに異議申し立てを行ってください
+</div>
+<br>
+@for(section <- sections) {
+	<h4>@{section.name}</h4>
+	<table class="table">
+		<tr>
+			<th width="10%">順位</th>
+			<th width="15%">呼出符号</th>
+			<th width="15%">交信局数</th>
+			<th width="15%">マルチ数</th>
+			<th width="15%">総得点</th>
+			<th width="30%">運用地</th>
+		</tr>
+@if(!models.Conf.isOK) @{
+	for(post <- section.sorted) yield if(section.prize(post)) (
+		<tr>
+			<td><font color="red"><strong>{section.place(post) + 1}</strong></font></td>
+			<td><font color="red"><strong>{post.call}</strong></font></td>
+			<td><font color="red"><strong>{post.cnt}</strong></font></td>
+			<td><font color="red"><strong>{post.mul}</strong></font></td>
+			<td><font color="red"><strong>{post.score}</strong></font></td>
+			<td><font color="red"><strong>{post.city}</strong></font></td>
+		</tr>
+	) else (
+		<tr>
+			<td>{section.place(post) + 1}</td>
+			<td>{post.call}</td>
+			<td>{post.cnt}</td>
+			<td>{post.mul}</td>
+			<td>{post.score}</td>
+			<td>{post.city}</td>
+		</tr>
+	)
+}
+	</table>
+	<br>
+	<br>
+	<br>
+}
+<div class="alert alert-warning">
+	赤太字は暫定入賞局ですが、審査によって除外されることがあります
+</div>
+}
