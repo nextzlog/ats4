@@ -17,7 +17,7 @@ object Conf {
 	val repl = "allja1@ja1zlo.u-tokyo.org"
 	def isOK = new DateTime().getMonthOfYear() == 6
 	def save = new File(System.getProperty("user.home"), "ats4.rcvd")
-	val test = Contest.forName("ALLJA1.lisp")
+	val test = Contest.forName("allja1.lisp")
 	def sects = test.toList
 	def sectsAM = sects.map(_.getName).filter(_.matches(""".*(1\.9|3\.5|7).*"""))
 	def sectsPM = sects.map(_.getName).filter(_.matches(""".*(14|21|28|50).*"""))
