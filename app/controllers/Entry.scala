@@ -47,7 +47,7 @@ class Entry @Inject()(smtp: MailerClient)(implicit db: Database) extends Control
 					val table = (new Tables).decode(try {
 						new ByteArrayInputStream((new Sheets).decode(new FileInputStream(elog))("LOGSHEET").getBytes)
 					} catch {
-						case ex: IOException => new FileInputStream(elog)
+						case ex: Exception => new FileInputStream(elog)
 					})
 					val summ = new Summary(table, Conf.sect(prof.sect))
 					val post = prof.post(summ)

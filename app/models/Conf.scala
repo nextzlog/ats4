@@ -11,7 +11,7 @@ object Conf {
 	val host = "東京大学アマチュア無線クラブ"
 	val mail = "allja1@ja1zlo.u-tokyo.org"
 	val site = "ja1zlo.u-tokyo.org"
-	val rule = "ja1zlo.u-tokyo.org/allja1/28rule.html"
+	val rule = "ja1zlo.u-tokyo.org/allja1/29rule.html"
 	val ats3 = "allja1.org"
 	val subj = "ALLJA1 Entry Acceptance"
 	val repl = "allja1@ja1zlo.u-tokyo.org"
