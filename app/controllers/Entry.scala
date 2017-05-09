@@ -53,18 +53,14 @@ class Entry @Inject()(smtp: MailerClient)(implicit db: Database) extends Control
 					val post = prof.post(summ)
 					Logger.info(s"accept: ${post}")
 					// delete conflicting entries
-					for(old <- Post.ofCall(prof.call) if(Conf.sectsRC.contains(old.sect))) {
-						if(Conf.sectsAM.contains(prof.sect)) old.delete
-						if(Conf.sectsPM.contains(prof.sect)) old.delete
-					}
+					for(old <- Post.ofCall(prof.call) if(Conf.sectsRC.contains(old.sect))) old.delete
 					// delete conflicting entries
 					for(old <- Post.ofCall(prof.call) if(Conf.sectsAM.contains(old.sect))) {
-						if(Conf.sectsRC.contains(prof.sect)) old.delete
-						if(Conf.sectsAM.contains(prof.sect)) old.delete
+						if(!Conf.sectsPM.contains(prof.sect)) old.delete
 					}
+					// delete conflicting entries
 					for(old <- Post.ofCall(prof.call) if(Conf.sectsPM.contains(old.sect))) {
-						if(Conf.sectsRC.contains(prof.sect)) old.delete
-						if(Conf.sectsPM.contains(prof.sect)) old.delete
+						if(!Conf.sectsAM.contains(prof.sect)) old.delete
 					}
 					post.insert
 					sendAcceptMail(post)
