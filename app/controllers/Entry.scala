@@ -62,18 +62,20 @@ class Entry @Inject()(smtp: MailerClient)(implicit db: Database) extends Control
 					for(old <- Post.ofCall(prof.call) if(Conf.sectsPM.contains(old.sect))) {
 						if(!Conf.sectsAM.contains(prof.sect)) old.delete
 					}
+					// delete SOUGOU entry once
+					for(old <- Post.ofCall(prof.call) if(old.sect.contains("総合部門"))) old.delete
 					post.insert
 					sendAcceptMail(post)
 					// automatic entry into "sougou" category
 					val postAM = Post.ofCall(prof.call).filter(post => Conf.sectsAM.contains(post.sect))
 					val postPM = Post.ofCall(prof.call).filter(post => Conf.sectsPM.contains(post.sect))
 					if(postAM.nonEmpty && postPM.nonEmpty) {
-						val amIsAllBands = Conf.sectsAllBands.contains(postAM.last)
-						val pmIsAllBands = Conf.sectsAllBands.contains(postPM.last)
+						val amIsAllBands = Conf.sectsAllBands.contains(postAM.last.sect)
+						val pmIsAllBands = Conf.sectsAllBands.contains(postPM.last.sect)
 						if(amIsAllBands && pmIsAllBands) {
 							if(postAM.last.city == postPM.last.city) {
-								val prefixAM = postAM.last.sect.split(" ").take(3).mkString
-								val prefixPM = postPM.last.sect.split(" ").take(3).mkString
+								val prefixAM = postAM.last.sect.split(" ").take(3).mkString(" ")
+								val prefixPM = postPM.last.sect.split(" ").take(3).mkString(" ")
 								if(prefixAM == prefixPM) {
 									val postAllBands = postAM.last.copy(
 										sect = prefixAM + " 総合部門",
