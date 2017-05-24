@@ -15,7 +15,8 @@ object Conf {
 	val ats3 = "allja1.org"
 	val subj = "ALLJA1 Entry Acceptance"
 	val repl = "allja1@ja1zlo.u-tokyo.org"
-	def isOK = new DateTime().getMonthOfYear() == 6
+	val demo = true
+	def isOK = new DateTime().getMonthOfYear() == 6 || demo
 	def save = new File(System.getProperty("user.home"), "ats4.rcvd")
 	val test = Contest.forName("allja1.lisp")
 	def sects = test.toList

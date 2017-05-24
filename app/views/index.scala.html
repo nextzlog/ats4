@@ -8,6 +8,11 @@
 	<div class="page-header text-center">
 		<h3>@Conf.what</h3>
 	</div>
+@if(models.Conf.demo){
+	<div class="alert alert-warning">
+		現在、検証モードで稼働しています。コンテスト参加予定の皆様は、書類提出と結果発表のリハーサルが可能です。
+	</div>
+}
 	<div class="row text-center">
 		<div class="col-sm-6">
 			<a class="thumbnail" href="http://@Conf.rule">

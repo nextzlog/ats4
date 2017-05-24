@@ -16,7 +16,7 @@
 			<th width="15%">総得点</th>
 			<th width="30%">運用地</th>
 		</tr>
-@if(!models.Conf.isOK) @{
+@if(!models.Conf.isOK || models.Conf.demo) @{
 	for(post <- section.sorted) yield if(section.prize(post)) (
 		<tr>
 			<td><font color="red"><strong>{section.place(post) + 1}</strong></font></td>
