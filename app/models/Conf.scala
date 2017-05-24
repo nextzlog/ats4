@@ -28,6 +28,6 @@ object Conf {
 	def sect(name: String) = sects.filter(_.getName == name).head
 	def citys = City.getAvailableCodes.map(new City(_)).filter(c=>c.getPrefName!=c.getCityName)
 	def prefs = City.getAvailableCodes.map(new City(_)).filter(c=>c.getPrefName==c.getCityName)
-	def inner = citys.filter(c=>Seq("東京都", "神奈川県", "埼玉県", "千葉県", "群馬県", "茨城県", "栃木県", "山梨県").contains(c.getPrefName))
-	def outer = prefs.filter(c=>Seq("東京都", "神奈川県", "埼玉県", "千葉県", "群馬県", "茨城県", "栃木県", "山梨県").contains(c.getPrefName))
+	def inner = citys.filter(c=> Seq("東京都", "神奈川県", "埼玉県", "千葉県", "群馬県", "茨城県", "栃木県", "山梨県").contains(c.getPrefName))
+	def outer = prefs.filter(c=>!Seq("東京都", "神奈川県", "埼玉県", "千葉県", "群馬県", "茨城県", "栃木県", "山梨県").contains(c.getPrefName))
 }
