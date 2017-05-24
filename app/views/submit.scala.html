@@ -5,7 +5,6 @@
 @import play.api.Play.current
 @import play.api.Play.configuration
 
-@import qxsl.field.City
 @import qxsl.table.Tables
 
 @frame(title = "書類提出", nav = "etry") {
@@ -31,7 +30,7 @@
 		)
 		@select(
 			pform("city"),
-			opts = City.getAvailableCodes.map(new City(_)).map(_.getPrefName()).toSeq.distinct,
+			opts = models.Conf.inner ++ models.Conf.outer,
 			text = "運用場所",
 			hint = "未選択"
 		)
