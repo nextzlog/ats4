@@ -102,6 +102,7 @@ class Entry @Inject()(smtp: MailerClient)(implicit db: Database) extends Control
 		mail.setSubject(Conf.subj)
 		mail.setFrom("%s <%s>".format(Conf.host, Conf.repl))
 		mail.addTo("%s <%s>".format(post.call, to))
+		mail.addBcc(Conf.repl)
 		smtp.send(mail.setBodyText(views.txt.mail(post).body.trim))
 	}
 }
