@@ -30,7 +30,7 @@
 		)
 		@select(
 			pform("city"),
-			opts = models.Conf.inner ++ models.Conf.outer,
+			opts = (models.Conf.inner ++ models.Conf.outer).map(_.getCityName),
 			text = "運用場所",
 			hint = "未選択"
 		)
