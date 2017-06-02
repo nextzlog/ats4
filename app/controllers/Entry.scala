@@ -53,22 +53,22 @@ class Entry @Inject()(smtp: MailerClient)(implicit db: Database) extends Control
 					val post = prof.post(summ)
 					Logger.info(s"accept: ${post}")
 					// delete conflicting entries
-					for(old <- Post.ofCall(prof.call) if(Conf.sectsRC.contains(old.sect))) old.delete
+					for(old <- Post.ofCall(prof.safeCall) if(Conf.sectsRC.contains(old.sect))) old.delete
 					// delete conflicting entries
-					for(old <- Post.ofCall(prof.call) if(Conf.sectsAM.contains(old.sect))) {
+					for(old <- Post.ofCall(prof.safeCall) if(Conf.sectsAM.contains(old.sect))) {
 						if(!Conf.sectsPM.contains(prof.sect)) old.delete
 					}
 					// delete conflicting entries
-					for(old <- Post.ofCall(prof.call) if(Conf.sectsPM.contains(old.sect))) {
+					for(old <- Post.ofCall(prof.safeCall) if(Conf.sectsPM.contains(old.sect))) {
 						if(!Conf.sectsAM.contains(prof.sect)) old.delete
 					}
 					// delete SOUGOU entry once
-					for(old <- Post.ofCall(prof.call) if(old.sect.contains("総合部門"))) old.delete
+					for(old <- Post.ofCall(prof.safeCall) if(old.sect.contains("総合部門"))) old.delete
 					post.insert
 					sendAcceptMail(post)
 					// automatic entry into "sougou" category
-					val postAM = Post.ofCall(prof.call).filter(post => Conf.sectsAM.contains(post.sect))
-					val postPM = Post.ofCall(prof.call).filter(post => Conf.sectsPM.contains(post.sect))
+					val postAM = Post.ofCall(prof.safeCall).filter(post => Conf.sectsAM.contains(post.sect))
+					val postPM = Post.ofCall(prof.safeCall).filter(post => Conf.sectsPM.contains(post.sect))
 					if(postAM.nonEmpty && postPM.nonEmpty) {
 						val amIsAllBands = Conf.sectsAllBands.contains(postAM.last.sect)
 						val pmIsAllBands = Conf.sectsAllBands.contains(postPM.last.sect)
