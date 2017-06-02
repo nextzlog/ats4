@@ -77,7 +77,7 @@ class Entry @Inject()(smtp: MailerClient)(implicit db: Database) extends Control
 								val prefixAM = postAM.last.sect.split(" ").take(3)
 								val prefixPM = postPM.last.sect.split(" ").take(3)
 								if(prefixAM.take(2) == prefixPM.take(2)) {
-									mode = (prefixAM.last, prefixPM.last) match {
+									val mode = (prefixAM.last, prefixPM.last) match {
 										case ("電信電話",_) => "電信電話"
 										case (_,"電信電話") => "電信電話"
 										case _ => "電信限定"
