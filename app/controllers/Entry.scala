@@ -74,11 +74,16 @@ class Entry @Inject()(smtp: MailerClient)(implicit db: Database) extends Control
 						val pmIsAllBands = Conf.sectsAllBands.contains(postPM.last.sect)
 						if(amIsAllBands && pmIsAllBands) {
 							if(postAM.last.city == postPM.last.city) {
-								val prefixAM = postAM.last.sect.split(" ").take(3).mkString(" ")
-								val prefixPM = postPM.last.sect.split(" ").take(3).mkString(" ")
-								if(prefixAM == prefixPM) {
+								val prefixAM = postAM.last.sect.split(" ").take(3)
+								val prefixPM = postPM.last.sect.split(" ").take(3)
+								if(prefixAM.take(2) == prefixPM.take(2)) {
+									mode = (prefixAM.last, prefixPM.last) match {
+										case ("電信電話",_) => "電信電話"
+										case (_,"電信電話") => "電信電話"
+										case _ => "電信限定"
+									}
 									val postAllBands = postAM.last.copy(
-										sect = prefixAM + " 総合部門",
+										sect = "%s %s 総合部門".format(prefixAM.take(2).mkString(" "), mode),
 										cnt = postAM.last.cnt + postPM.last.cnt,
 										mul = postAM.last.mul + postPM.last.mul,
 										comm = ""
@@ -97,7 +102,7 @@ class Entry @Inject()(smtp: MailerClient)(implicit db: Database) extends Control
 			}
 		)
 	})
-	def sendAcceptMail(post: Post) = for(to <- Post.ofCall(post.call).map(_.mail)) {
+	def sendAcceptMail(post: Post) = for(to <- Post.ofCall(post.call).map(_.mail).toSet) {
 		val mail = new Email
 		mail.setSubject(Conf.subj)
 		mail.setFrom("%s <%s>".format(Conf.host, Conf.repl))
