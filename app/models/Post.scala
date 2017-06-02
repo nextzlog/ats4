@@ -29,9 +29,9 @@ object Post {
 	val parser = Macro.namedParser[Post]
 	def all(implicit db: Database) = db.withConnection(implicit conn => SQL("select * from post order by id").as(parser.*)).sortBy(_.call)
 	def ofSect(sect: String)(implicit db: Database) = db.withConnection{implicit conn =>
-		SQL("select * from post where sect like {sect} order by id").on('sect->s"{sect}%").as(parser.*)
+		SQL("select * from post where sect like {sect} order by id").on('sect->s"${sect}%").as(parser.*)
 	}.sortBy(_.score).reverse
 	def ofCall(call: String)(implicit db: Database) = db.withConnection{implicit conn =>
-		SQL("select * from post where call like {call} order by id").on('call->s"{name}%").as(parser.*)
+		SQL("select * from post where call like {call} order by id").on('call->s"${call}%").as(parser.*)
 	}.sortBy(_.call)
 }
