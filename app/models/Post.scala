@@ -32,6 +32,6 @@ object Post {
 		SQL("select * from post where sect={sect} order by id").on('sect->sect).as(parser.*)
 	}.sortBy(_.score).reverse
 	def ofCall(call: String)(implicit db: Database) = db.withConnection{implicit conn =>
-		SQL("select * from post where call={call} or call like {like} order by id").on('call->call,'like->s"{call}/%").as(parser.*)
+		SQL("select * from post where call={call} or call like {like} order by id").on('call->call,'like->s"${call}/%").as(parser.*)
 	}.sortBy(_.call)
 }
