@@ -102,7 +102,7 @@ class Entry @Inject()(smtp: MailerClient)(implicit db: Database) extends Control
 			}
 		)
 	})
-	def sendAcceptMail(post: Post) = for(to <- Post.ofCall(post.call).map(_.mail).toSet) {
+	def sendAcceptMail(post: Post) = for(to <- Post.ofCall(post.call).map(_.mail).distinct) {
 		val mail = new Email
 		mail.setSubject(Conf.subj)
 		mail.setFrom("%s <%s>".format(Conf.host, Conf.repl))
