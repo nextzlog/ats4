@@ -36,7 +36,7 @@
 		)
 		@select(
 			pform("sect"),
-			opts = Conf.sects.map(_.getName).filterNot(_.contains("総合")),
+			opts = Conf.sects.map(_.getName.split(" ").tail.mkString(" ")).filterNot(_.contains("総合")).distinct,
 			text = "参加部門",
 			hint = "未選択"
 		)
