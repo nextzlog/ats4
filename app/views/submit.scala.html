@@ -1,13 +1,9 @@
 @(pform: Form[Prof], error: String = "")
 
 @import helper.form
-
-@import play.api.Play.current
-@import play.api.Play.configuration
-
 @import qxsl.table.Tables
 
-@frame(title = "書類提出", nav = "etry") {
+@frame(title = "書類提出", nav = "entry") {
 @if(error.nonEmpty) {
 	<fieldset class="panel panel-danger">
 		<div class="panel-heading">

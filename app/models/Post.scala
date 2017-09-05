@@ -20,7 +20,7 @@ case class Post(call: String, city: String, sect: String, name: String, addr: St
 		).executeUpdate
 	}
 	def delete(implicit db: Database) = db.withConnection{implicit conn =>
-		SQL("delete from post where call={call} and sect={sect}").on('call->call, 'sect->sect).executeUpdate
+		SQL("delete from post where call={call} and sect={sect} and cnt={cnt}").on('call->call, 'sect->sect, 'cnt->cnt).executeUpdate
 	}
 	def score = cnt * mul
 }

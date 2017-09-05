@@ -6,7 +6,6 @@ import javax.inject.Inject
 
 import play.Logger
 import play.api.Play.current
-import play.api.Play.{configuration => conf}
 import play.api.data.{Form, Forms}
 import play.api.db.Database
 import play.api.mvc.{Action, Controller}
