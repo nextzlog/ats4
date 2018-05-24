@@ -20,7 +20,7 @@
 	for(post <- section.sorted) yield if(section.prize(post)) (
 		<tr>
 			<td><font color="red"><strong>{section.place(post) + 1}</strong></font></td>
-			<td><font color="red"><strong>{post.call}</strong></font></td>
+			<td><font color="red"><strong>{post.disp}</strong></font></td>
 			<td><font color="red"><strong>{post.cnt}</strong></font></td>
 			<td><font color="red"><strong>{post.mul}</strong></font></td>
 			<td><font color="red"><strong>{post.score}</strong></font></td>
@@ -29,7 +29,7 @@
 	) else (
 		<tr>
 			<td>{section.place(post) + 1}</td>
-			<td>{post.call}</td>
+			<td>{post.disp}</td>
 			<td>{post.cnt}</td>
 			<td>{post.mul}</td>
 			<td>{post.score}</td>

@@ -3,6 +3,7 @@
 create table post (
 	id int(10) not null auto_increment,
 	call varchar(16),
+	disp varchar(32),
 	city varchar(64),
 	sect varchar(64),
 	name varchar(32),

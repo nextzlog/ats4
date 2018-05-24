@@ -3,7 +3,7 @@
 @frame(title = "コメント集", nav = "board") {
 @for(entry <- entries.filter(_.comm.nonEmpty)) {
 	<blockquote>
-		<p>@entry.comm <footer>@entry.call (@entry.city)</footer></p>
+		<p>@entry.comm <footer>@entry.disp (@entry.city)</footer></p>
 	</blockquote>
 }
 }

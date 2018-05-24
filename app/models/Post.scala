@@ -3,12 +3,13 @@ package models
 import anorm.{Macro, SQL}
 import play.api.db.Database
 
-case class Post(call: String, city: String, sect: String, name: String, addr: String, mail: String, comm: String, cnt: Int, mul: Int) {
+case class Post(call: String, disp: String, city: String, sect: String, name: String, addr: String, mail: String, comm: String, cnt: Int, mul: Int) {
 	def insert(implicit db: Database) = db.withConnection{implicit conn => 
 		SQL("""insert into
-			post  ( call,  city,  sect,  name,  addr,  mail,  comm,  cnt,  mul)
-			values({call},{city},{sect},{name},{addr},{mail},{comm},{cnt},{mul})""").on(
+			post  ( call,  disp,  city,  sect,  name,  addr,  mail,  comm,  cnt,  mul)
+			values({call},{disp},{city},{sect},{name},{addr},{mail},{comm},{cnt},{mul})""").on(
 			'call -> call,
+			'disp -> disp,
 			'city -> city,
 			'sect -> sect,
 			'name -> name,
