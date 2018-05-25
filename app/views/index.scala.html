@@ -13,43 +13,35 @@
 	</div>
 }
 	<div class="row text-center">
-		<div class="col-sm-6">
-			<a class="thumbnail" href="http://@Conf.rule">
-				<div class="caption">
-					<h3>コンテストの規約を読む</h3>
-					<p>コンテスト規約は変更されることがあります</p>
-				</div>
-			</a>
-		</div>
-		<div class="col-sm-6">
-			<a class="thumbnail" href="@routes.Entry.submit">
-				<div class="caption">
-					<h3>電子ログを提出して登録</h3>
-				@if(Conf.isOK) {
-					<p>事前の参加登録やアカウント作成は不要です</p>
-				} else {
-					<p>提出期間外につき提出書類は受理できません</p>
-				}
-				</div>
-			</a>
-		</div>
-	</div>
-	<div class="row text-center">
-		<div class="col-sm-6">
-			<a class="thumbnail" href="@routes.Result.result">
-				<div class="caption">
-					<h3>暫定結果をご確認下さい</h3>
-					<p>提出期間が満了したら必ず確認してください</p>
-				</div>
-			</a>
-		</div>
-		<div class="col-sm-6">
-			<a class="thumbnail" href="@routes.Quest.quest">
-				<div class="caption">
-					<h3>よくあるトラブルと対策</h3>
-					<p>お困りのことがありましたらご連絡ください</p>
-				</div>
-			</a>
+		<div class="btn-group btn-group-justified">
+			<div class="col-sm-4">
+				<a class="btn btn-block btn-default" href="http://@Conf.rule">
+					<div class="caption">
+						<h3>コンテスト規約</h3>
+						<p>コンテスト規約は変更されることがあります</p>
+					</div>
+				</a>
+			</div>
+			<div class="col-sm-4">
+				<a class="btn btn-block btn-primary" href="@routes.Entry.submit">
+					<div class="caption">
+						<h3>電子ログを提出</h3>
+					@if(Conf.isOK) {
+						<p>事前の参加登録やアカウント作成は不要です</p>
+					} else {
+						<p>提出期間外につき提出書類は受理できません</p>
+					}
+					</div>
+				</a>
+			</div>
+			<div class="col-sm-4">
+				<a class="btn btn-block btn-default" href="@routes.Table.result">
+					<div class="caption">
+						<h3>暫定結果を確認</h3>
+						<p>提出期間が満了したら必ず確認してください</p>
+					</div>
+				</a>
+			</div>
 		</div>
 	</div>
 }

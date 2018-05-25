@@ -3,23 +3,20 @@ package controllers
 import java.io.{ByteArrayInputStream, File, FileInputStream, IOException}
 import java.text.SimpleDateFormat
 import javax.inject.Inject
-
 import play.Logger
 import play.api.data.{Form, Forms}
 import play.api.db.Database
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{Action, InjectedController}
 import play.libs.mailer.{Email, MailerClient}
-
 import qxsl.ruler.Summary
 import qxsl.sheet.Sheets
 import qxsl.table.Tables
-
 import scala.collection.JavaConversions._
 
 import views._
 import models._
 
-class Entry @Inject() (smtp: MailerClient)(implicit db: Database) extends Controller {
+class Entry @Inject() (smtp: MailerClient)(implicit db: Database) extends InjectedController {
 	def date = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date)
 	val form = Form(Forms.mapping(
 		"call" -> Forms.nonEmptyText,

@@ -1,10 +1,10 @@
 package controllers
 
-import play.api.mvc.{Action, Controller}
-import javax.inject._
+import play.api.mvc.{Action, InjectedController}
+import javax.inject.Inject
 
 import views._
 
-class Quest @Inject() extends Controller {
+class Quest @Inject() extends InjectedController {
 	def quest = Action(Ok(html.quest()))
 }

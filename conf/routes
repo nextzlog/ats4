@@ -9,8 +9,11 @@ GET     /                 controllers.Index.index
 GET     /entry            controllers.Entry.submit
 POST    /entry            controllers.Entry.accept
 
+# Filer
+GET     /filer            controllers.Filer.upload(id)
+
 # Result
-GET     /result           controllers.Result.result
+GET     /table            controllers.Table.result
 
 # Comments
 GET     /board            controllers.Board.board

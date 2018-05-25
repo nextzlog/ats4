@@ -5,6 +5,6 @@ import javax.inject.Inject
 
 import views._
 
-class Index @Inject() extends InjectedController {
-	def index = Action(Ok(html.index()))
+class Filer @Inject() extends InjectedController {
+	def upload(id: String) = Action(Ok(js.upload(id)))
 }
