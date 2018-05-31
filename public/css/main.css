@@ -33,8 +33,8 @@ blockquote p {
 	margin-top: 10px;
 	margin-left: 20px;
 	margin-right: 20px;
-	padding-top: 30px;
-	padding-bottom: 67px;
+	padding-top: 0px;
+	padding-bottom: 0px;
 	width: 85%;
 	z-index: 99;
 	cursor: pointer;
