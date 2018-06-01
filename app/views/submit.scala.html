@@ -1,8 +1,5 @@
 @(pform: Form[Prof], error: String = "")(implicit req: RequestHeader)
 
-@import helper.{form,CSRF}
-@import qxsl.table.Tables
-
 @frame(title = "書類提出", nav = "entry") {
 @if(error.nonEmpty) {
 	<fieldset class="panel panel-danger">
@@ -16,7 +13,8 @@
 		午前と午後の双方の部門に参加した場合は、午前と午後で別々に提出してください
 	</fieldset>
 }
-@helper.form(action = CSRF(routes.Entry.accept), 'class->"form-horizontal", 'enctype->"multipart/form-data") {
+@helper.form(action = routes.Entry.accept, 'class->"form-horizontal", 'enctype->"multipart/form-data") {
+	@helper.CSRF.formField
 	<h3><span class="glyphicon glyphicon-user"></span> 参加局の情報</h3>
 	<fieldset class="well">
 		@string(
@@ -82,7 +80,7 @@
 					<div class="panel-body">
 						<ul>
 					@{
-						for(format <- new Tables()) yield(
+						for(format <- new qxsl.table.Tables()) yield(
 							<li>{format}</li>
 						)
 					}
