@@ -9,8 +9,7 @@ libraryDependencies ++= Seq(
 	"com.h2database" % "h2" % "1.4.+",
 	"com.typesafe.play" %% "anorm" % "2.5.+",
 	"com.typesafe.play" %% "play-mailer" % "6.0.+",
-	"com.typesafe.play" %% "play-mailer-guice" % "6.0.+",
-	"joda-time" % "joda-time" % "2.3"
+	"com.typesafe.play" %% "play-mailer-guice" % "6.0.+"
 )
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
