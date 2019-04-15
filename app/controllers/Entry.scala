@@ -4,7 +4,6 @@ import java.io.{ByteArrayInputStream, File, FileInputStream, IOException}
 import java.text.SimpleDateFormat
 import javax.inject.Inject
 import play.Logger
-import play.api.data.{Form, Forms}
 import play.api.db.Database
 import play.api.mvc.{Action, InjectedController}
 import play.libs.mailer.{Email, MailerClient}
@@ -18,19 +17,10 @@ import models._
 
 class Entry @Inject() (smtp: MailerClient)(implicit db: Database) extends InjectedController {
 	def date = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date)
-	val form = Form(Forms.mapping(
-		"call" -> Forms.nonEmptyText,
-		"city" -> Forms.nonEmptyText,
-		"sect" -> Forms.nonEmptyText,
-		"name" -> Forms.nonEmptyText,
-		"addr" -> Forms.nonEmptyText,
-		"mail" -> Forms.email,
-		"comm" -> Forms.text
-	)(Prof.apply)(Prof.unapply))
 	if(!Conf.save.isDirectory) Conf.save.mkdirs
-	def submit = Action(implicit req => if(Conf.isOK) Ok(html.submit(form)) else BadRequest(html.index()))
+	def submit = Action(implicit req => if(Conf.isOK) Ok(html.submit(Prof.form)) else BadRequest(html.index()))
 	def accept = Action(parse.multipartFormData) (implicit req => {
-		val rcvd = form.bindFromRequest
+		val rcvd = Prof.form.bindFromRequest
 		rcvd.fold (
 			errs => BadRequest(html.submit(rcvd, "未入力の項目があります")),
 			prof => req.body.file("eLog") match {
