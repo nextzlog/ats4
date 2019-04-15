@@ -37,48 +37,13 @@ class Entry @Inject() (smtp: MailerClient)(implicit db: Database) extends Inject
 					val summ = new Summary(table, Conf.sect(prof.fullSect))
 					val post = prof.post(summ)
 					Logger.info(s"accept: ${post}")
-					// delete conflicting entries
-					for(old <- Post.ofCall(prof.safeCall) if(Conf.sectsRC.contains(old.sect))) old.delete
-					// delete conflicting entries
-					for(old <- Post.ofCall(prof.safeCall) if(Conf.sectsAM.contains(old.sect))) {
-						if(!Conf.sectsPM.contains(post.sect)) old.delete
-					}
-					// delete conflicting entries
-					for(old <- Post.ofCall(prof.safeCall) if(Conf.sectsPM.contains(old.sect))) {
-						if(!Conf.sectsAM.contains(post.sect)) old.delete
-					}
-					// delete SOUGOU entry once
-					for(old <- Post.ofCall(prof.safeCall) if(old.sect.contains("総合部門"))) old.delete
+					Dupe.delete(post)
 					post.insert
 					sendAcceptMail(post)
 					// automatic entry into "sougou" category
-					val postAM = Post.ofCall(prof.safeCall).filter(post => Conf.sectsAM.contains(post.sect))
-					val postPM = Post.ofCall(prof.safeCall).filter(post => Conf.sectsPM.contains(post.sect))
-					if(postAM.nonEmpty && postPM.nonEmpty) {
-						val amIsAllBands = Conf.sectsAllBands.contains(postAM.last.sect)
-						val pmIsAllBands = Conf.sectsAllBands.contains(postPM.last.sect)
-						if(amIsAllBands && pmIsAllBands) {
-							if(postAM.last.city == postPM.last.city) {
-								val prefixAM = postAM.last.sect.split(" ").take(3).toList
-								val prefixPM = postPM.last.sect.split(" ").take(3).toList
-								if(prefixAM.take(2) == prefixPM.take(2)) {
-									val mode = (prefixAM.last, prefixPM.last) match {
-										case ("電信電話",_) => "電信電話"
-										case (_,"電信電話") => "電信電話"
-										case _ => "電信限定"
-									}
-									val postAllBands = postAM.last.copy(
-										sect = "%s %s 総合部門".format(prefixAM.take(2).mkString(" "), mode),
-										cnt = postAM.last.cnt + postPM.last.cnt,
-										mul = postAM.last.mul + postPM.last.mul,
-										comm = ""
-									)
-									postAllBands.insert
-									sendAcceptMail(postAllBands)
-								}
-							}
-						}
-					}
+					val postAllBands = HiLo.post(post)
+					postAllBands.foreach(_.insert)
+					postAllBands.foreach(sendAcceptMail)
 					Ok(html.accept(post, summ, date))
 				} catch {
 					case ex: Exception => Logger.error(s"failed to store ${prof}", ex)
