@@ -1,29 +1,17 @@
 package models
 
-import java.io.{ByteArrayInputStream, File, FileInputStream}
-import java.text.SimpleDateFormat
-import play.api.Logger
-import play.api.db.Database
-import play.api.libs.Files.TemporaryFile
-import play.libs.mailer.MailerClient
+import java.io.File
 import qxsl.ruler.Summary
 import qxsl.sheet.Sheets
 import qxsl.table.Tables
 import scala.util.Try
 
-case class Scan(prof: Prof, file: TemporaryFile)(implicit smtp: MailerClient, db: Database) {
-	val date = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date)
-	val elog = new File(Conf.save, s"${prof.safeCall}.$date.log")
-	file.moveFileTo(elog)
-	Logger.info(s"stored: $elog")
-	val sheet = Try(new ByteArrayInputStream(new Sheets().decode(new FileInputStream(elog)).get("LOGSHEET").getBytes))
-	val table = new Tables().decode(sheet.getOrElse(new FileInputStream(elog)))
-	val summ = new Summary(table, Conf.sect(prof.fullSect))
-	val post = prof.post(summ)
-	Logger.info(s"accept: $post")
-	Dupe.delete(post)
-	post.insert
-	val postAllBands = HiLo.post(post)
-	postAllBands.foreach(_.insert)
-	new Mail().sendAcceptMail(post,postAllBands)
+case class Scan(elog: String) {
+	val sheets = new Sheets()
+	val tables = new Tables()
+	val source = Elog(elog).toURI.toURL
+	val sheet = Try(sheets.decode(source).get("LOGSHEET").getBytes)
+	val table = Try(tables.decode(sheet.get)).getOrElse(tables.decode(source))
+	def summ(prof: Prof) = new Summary(table, Conf.sect(prof.fullSect))
+	def summ(post: Post) = new Summary(table, Conf.sect(post.sect))
 }

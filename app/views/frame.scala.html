@@ -2,7 +2,7 @@
 
 <html>
 	<head>
-		<title>@Conf.name ATS-4</title>
+		<title>@Conf.name ATS-4 - @Conf.host</title>
 		<link rel="stylesheet" href="@routes.Assets.versioned("css/bootstrap.css")" media="print,screen">
 		<link rel="stylesheet" href="@routes.Assets.versioned("css/bootstrap-combobox.css")">
 		<link rel="stylesheet" href="@routes.Assets.versioned("css/main.css")">
@@ -14,20 +14,23 @@
 		<div class="navbar navbar-inverse navbar-fixed-top">
 			<div class="container">
 				<div class="navbar-header">
-					<a class="navbar-brand" href="@routes.Index.index">ATS-4</a>
+					<a class="navbar-brand" href="@routes.Index.view">ATS-4</a>
 				</div>
 				<ul class="nav navbar-nav">
 					<li class="@("active".when(nav == "entry"))">
-						<a href="@routes.Entry.submit">書類提出</a>
+						<a href="@routes.Entry.pull">書類提出</a>
 					</li>
-					<li class="@("active".when(nav == "table"))">
-						<a href="@routes.Table.result">暫定結果</a>
+					<li class="@("active".when(nav == "lists"))">
+						<a href="@routes.Lists.view">暫定結果</a>
 					</li>
 					<li class="@("active".when(nav == "board"))">
-						<a href="@routes.Board.board">皆様の声</a>
+						<a href="@routes.Board.view">皆様の声</a>
+					</li>
+					<li class="@("active".when(nav == "admin"))">
+						<a href="@routes.Admin.view">管理画面</a>
 					</li>
 					<li class="@("active".when(nav == "quest"))">
-						<a href="@routes.Quest.quest">お困りですか？</a>
+						<a href="@routes.Quest.view">FAQ</a>
 					</li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">

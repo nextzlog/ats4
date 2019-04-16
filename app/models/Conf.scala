@@ -9,7 +9,7 @@ import scala.collection.JavaConverters._
 object Conf {
 	val name = "ALLJA1"
 	val what = "ALLJA1コンテストは関東地方を中心としたアマチュア無線の全国大会です"
-	val host = "東京大学アマチュア無線クラブ"
+	val host = "東大無線部"
 	val mail = "allja1@ja1zlo.u-tokyo.org"
 	val site = "ja1zlo.u-tokyo.org"
 	val rule = "ja1zlo.u-tokyo.org/allja1/%02drule.html".format(time)

@@ -3,9 +3,10 @@ package models
 import play.api.db.Database
 
 case class Sect(name: String)(implicit db: Database) {
-	val sorted = Post.ofSect(name); val numPost = sorted.size;
+	val sorted = Post.ofSect(name).sortBy(_.score).reverse
+	val winners = sorted.size
 	def place(s: Post) = sorted.indexWhere(_.score == s.score)
-	def prize(s: Post) = place(s) <= Math.min(numPost / 10, 6)
+	def prize(s: Post) = place(s) <= Math.min(winners / 10, 6)
 }
 
 object Sect {

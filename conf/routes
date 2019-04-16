@@ -3,23 +3,30 @@
 # ~~~~
 
 # Home page
-GET     /                 controllers.Index.index
+GET     /                 controllers.Index.view
 
 # Entry
-GET     /entry            controllers.Entry.submit
-POST    /entry            controllers.Entry.accept
+GET     /entry            controllers.Entry.pull
+POST    /entry            controllers.Entry.push
 
 # Filer
-GET     /filer            controllers.Filer.upload(id)
+GET     /filer            controllers.Filer.view(id)
 
-# Result
-GET     /table            controllers.Table.result
+# Lists
+GET     /lists            controllers.Lists.view
 
-# Comments
-GET     /board            controllers.Board.board
+# Admin (Private)
+GET     /admin            controllers.Admin.view
+
+# Posts (Private)
+GET     /admin/:id        controllers.Posts.pull(id: Long)
+POST    /admin/:id        controllers.Posts.push(id: Long)
+
+# Board
+GET     /board            controllers.Board.view
 
 # FAQ
-GET     /quest            controllers.Quest.quest
+GET     /quest            controllers.Quest.view
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file     controllers.Assets.versioned(path="/public", file: Asset)

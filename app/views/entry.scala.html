@@ -10,43 +10,43 @@
 		午前と午後の双方の部門に参加した場合は、午前と午後で別々に提出してください
 	</fieldset>
 }
-@helper.form(action = routes.Entry.accept, 'class->"form-horizontal", 'enctype->"multipart/form-data") {
+@helper.form(action = routes.Entry.push, 'class->"form-horizontal", 'enctype->"multipart/form-data") {
 	@helper.CSRF.formField
-	<h3><span class="glyphicon glyphicon-user"></span> 参加局の情報</h3>
+	<h3><span class="glyphicon glyphicon-user"></span> 登録情報</h3>
 	<fieldset class="well">
-		@string(
+		@input(
 			pform("call"),
 			text = "呼出符号",
 			hint = "移動運用の例: JA1ZLO/1"
 		)
-		@select(
+		@combo(
 			pform("city"),
 			opts = (models.Conf.inner ++ models.Conf.outer).map(_.getCityName),
 			text = "運用場所",
 			hint = "未選択"
 		)
-		@select(
+		@combo(
 			pform("sect"),
 			opts = Conf.sects.map(_.getName.split(" ").tail.mkString(" ")).filterNot(_.contains("総合")).distinct,
 			text = "参加部門",
 			hint = "未選択"
 		)
-		@string(
+		@input(
 			pform("name"),
 			text = "お名前",
 			hint = "この宛名で賞を発送します"
 		)
-		@string(
+		@input(
 			pform("addr"),
 			text = "ご住所",
 			hint = "この宛先に賞を発送します"
 		)
-		@string(
+		@input(
 			pform("mail"),
 			text = "メール",
 			hint = "受理通知メールが届きます"
 		)
-		@letter(
+		@tarea(
 			pform("comm"),
 			text = "ご感想",
 			hint = "呼出符号付きで公表します"
@@ -58,7 +58,7 @@
 		JARLサマリーシートをアップロードした場合は、交信記録の部分のみを読み取ります
 	</fieldset>
 	<fieldset class="well">
-		@upload(
+		@filer(
 			id    = "eLog",
 			name  = "eLog",
 			hint  = "右のボタンをクリックして交信記録ファイルを選択してください"
@@ -90,7 +90,7 @@
 	<br>
 	<fieldset>
 		<input class="btn btn-primary" type="submit" value="この内容で提出します">
-		<a type="button" id="error-button" class="btn btn-default pull-right" href="@routes.Quest.quest">よくあるご質問</a>
+		<a type="button" id="error-button" class="btn btn-default pull-right" href="@routes.Quest.view">よくあるご質問</a>
 	</fieldset>
 	<br>
 	<br>

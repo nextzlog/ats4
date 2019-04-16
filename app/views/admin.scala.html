@@ -1,0 +1,34 @@
+@(sections: Seq[Sect])
+
+@frame(title = "管理画面", nav = "admin") {
+<div class="alert alert-danger">
+	このページが外部から閲覧可能である場合は、直ちに設定を修正してください
+</div>
+<br>
+@for(section <- sections) {
+	<h4>@{section.name}</h4>
+	<table class="table">
+		<tr>
+			<th width="10%">順位</th>
+			<th width="20%">呼出符号</th>
+			<th width="10%">交信局数</th>
+			<th width="10%">マルチ数</th>
+			<th width="10%">総得点</th>
+			<th width="40%">運用地</th>
+		</tr>
+	@for(post <- section.sorted) {
+		<tr>
+			<td>@{section.place(post) + 1}</td>
+			<td><a href="@routes.Posts.pull(post.id)">@{post.disp}</a></td>
+			<td>@{post.cnt}</td>
+			<td>@{post.mul}</td>
+			<td>@{post.score}</td>
+			<td>@{post.city}</td>
+		</tr>
+	}
+	</table>
+	<br>
+	<br>
+	<br>
+}
+}

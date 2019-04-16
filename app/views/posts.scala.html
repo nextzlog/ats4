@@ -1,0 +1,17 @@
+@(post: Post)
+
+@import qxsl.field._
+
+@frame(title = "提出書類の確認", nav = "admin") {
+	<h2><span class="glyphicon glyphicon-user"/> 登録情報</h2>
+	<br>
+	<h4>@post.disp (@post.sect)</h4>
+	<br>
+@if(post.comm.nonEmpty) {
+	<p class="well">@post.comm</p>
+}
+	<br>
+	@table(Scan(post.elog).summ(post))
+	<br>
+	<br>
+}

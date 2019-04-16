@@ -13,7 +13,7 @@ class Mail(implicit smtp: MailerClient, db: Database) {
 			mail.setFrom("%s <%s>".format(Conf.host, Conf.repl))
 			mail.addTo("%s <%s>".format(post.call, to))
 			mail.addBcc(Conf.repl)
-			mail.setBodyText(views.txt.mail(post, postAllBands).body.trim)
+			mail.setBodyText(views.txt.email(post, postAllBands).body.trim)
 			Try(smtp.send(mail)).recover{case ex=>Logger.error("mail error",ex)}
 		}
 	}

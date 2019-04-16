@@ -12,6 +12,7 @@ create table post (
 	comm varchar(512),
 	cnt int,
 	mul int,
+	elog varchar(23),
 	primary key(id)
 );
 
