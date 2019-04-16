@@ -1,10 +1,10 @@
-@(post: Post)
+@(post: Post, postAllBands: Option[Post])
 
 @post.call 様
 
 この度は@{Conf.name}コンテストに参加いただきありがとうございます。
 
-@post.sect にて書類を受理いたしました。
+@{(Some(post.sect) ++ postAllBands).mkString("・")}にて受理いたしました。
 今後とも当コンテストをよろしくお願いいたします。
 
 ---

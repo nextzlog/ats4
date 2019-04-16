@@ -20,6 +20,7 @@ object Conf {
 	def time = LocalDate.of(1988,5,1).until(LocalDate.now()).getYears()
 	def isOK = LocalDate.now().getMonthValue() == 6 || demo
 	def save = new File(System.getProperty("user.home"), "ats4.rcvd")
+	if(!save.isDirectory) save.mkdirs
 	val test = Contest.forName("allja1.lisp")
 	def sects = test.toList
 	def sectsAM = sects.map(_.getName).filter(_.matches(""".*(1\.9|3\.5|7).*"""))

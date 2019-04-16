@@ -1,12 +1,9 @@
-@(pform: Form[Prof], error: String = "")(implicit req: RequestHeader)
+@(pform: Form[Prof], warn: Option[Warn] = None)(implicit req: RequestHeader)
 
 @frame(title = "書類提出", nav = "entry") {
-@if(error.nonEmpty) {
-	<fieldset class="panel panel-danger">
-		<div class="panel-heading">
-			<div class="panel-title">提出内容をご確認ください</div>
-		</div>
-		<div class="panel-body"><span class="glyphicon glyphicon-warning-sign"></span> @error</div>
+@if(warn.nonEmpty) {
+	<fieldset class="alert alert-danger">
+		<span class="glyphicon glyphicon-warning-sign"></span> @warn
 	</fieldset>
 } else {
 	<fieldset class="alert alert-info">
