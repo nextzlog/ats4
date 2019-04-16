@@ -3,7 +3,6 @@ package controllers
 import java.io.{IOException => UnsupException}
 import java.util.{NoSuchElementException => OmissException}
 import javax.inject.Inject
-import play.api.Logger
 import play.api.db.Database
 import play.api.mvc.{Action, InjectedController}
 import play.libs.mailer.MailerClient

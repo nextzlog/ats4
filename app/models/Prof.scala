@@ -2,7 +2,6 @@ package models
 
 import java.text.Normalizer.{normalize, Form}
 import play.api.data.{Form => PlayForm, Forms}
-import scala.collection.JavaConversions._
 
 case class Prof(call: String, city: String, sect: String, name: String, addr: String, mail: String, comm: String) {
 	def dispCall = normalize(call.toUpperCase, Form.NFKC)

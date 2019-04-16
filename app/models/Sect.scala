@@ -9,6 +9,5 @@ case class Sect(name: String)(implicit db: Database) {
 }
 
 object Sect {
-	import scala.collection.JavaConversions._
 	def all()(implicit db: Database) = Conf.sects.map(s=>Sect(s.getName))
 }
