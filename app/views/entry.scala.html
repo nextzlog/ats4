@@ -1,6 +1,6 @@
-@(pform: Form[Prof], warn: Option[Warn] = None)(implicit req: RequestHeader)
+@(pform: Form[Prof], warn: Option[Warn] = None)(cfg: play.api.Configuration)(implicit req: RequestHeader)
 
-@frame(title = "書類提出", nav = "entry") {
+@frame(title = "書類提出", nav = "entry")(cfg) {
 @if(warn.nonEmpty) {
 	<fieldset class="alert alert-danger">
 		<span class="glyphicon glyphicon-warning-sign"></span> @warn
@@ -12,7 +12,7 @@
 }
 @helper.form(action = routes.Entry.push, 'class->"form-horizontal", 'enctype->"multipart/form-data") {
 	@helper.CSRF.formField
-	<h3><span class="glyphicon glyphicon-user"></span> 登録情報</h3>
+	<h3><span class="glyphicon glyphicon-user"></span> 参加局の情報</h3>
 	<fieldset class="well">
 		@input(
 			pform("call"),

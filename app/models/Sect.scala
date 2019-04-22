@@ -10,5 +10,5 @@ case class Sect(name: String)(implicit db: Database) {
 }
 
 object Sect {
-	def all()(implicit db: Database) = Conf.sects.map(s=>Sect(s.getName))
+	def all(implicit db: Database) = Conf.sects.map(s=>Sect(s.getName))
 }

@@ -1,6 +1,6 @@
-@(sections: Seq[Sect])
+@(sections: Seq[Sect])(cfg: play.api.Configuration)
 
-@frame(title = "暫定結果", nav = "lists") {
+@frame(title = "暫定結果", nav = "lists")(cfg) {
 <div class="alert alert-warning">
 	掲載内容に誤りがある場合は、直ちに異議申し立てを行ってください
 </div>

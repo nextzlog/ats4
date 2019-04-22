@@ -1,12 +1,13 @@
-@(post: Post)
+@(post: Post)(cfg: play.api.Configuration)
 
 @import qxsl.field._
+@mail = @{cfg.get[String]("contest.mail")}
 
-@frame(title = "書類提出の完了", nav = "entry") {
+@frame(title = "書類提出の完了", nav = "entry")(cfg) {
 	<div class="alert alert-success">
 		下記の内容で提出書類を受理しました。訂正が必要な場合は期間内に限り再提出できます。</h4>
 	</div>
-	<h2><span class="glyphicon glyphicon-user"/> 登録情報</h2>
+	<h2><span class="glyphicon glyphicon-user"/> 参加局の情報</h2>
 	<br>
 	<br>
 	<table class="table">
@@ -40,7 +41,7 @@
 	</div>
 	<fieldset>
 		<a class="btn btn-primary" onclick="window.print()"><span class="glyphicon glyphicon-print"></span> 印刷する</a>
-		<a class="btn btn-default" href="mailto:@Conf.mail"><span class="glyphicon glyphicon-earphone"></span> 不具合を報告</a>
+		<a class="btn btn-default" href="mailto:@mail"><span class="glyphicon glyphicon-earphone"></span> 不具合を報告</a>
 	</fieldset>
 	<br>
 	<br>

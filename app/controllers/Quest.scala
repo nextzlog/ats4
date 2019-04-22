@@ -1,10 +1,10 @@
 package controllers
 
 import javax.inject.Inject
+import play.api.Configuration
 import play.api.mvc.{Action, InjectedController}
+import views.html
 
-import views._
-
-class Quest @Inject() extends InjectedController {
-	def view = Action(Ok(html.quest()))
+class Quest @Inject()(cfg: Configuration) extends InjectedController {
+	def view = Action(Ok(html.quest(cfg)))
 }

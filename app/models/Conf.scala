@@ -7,17 +7,7 @@ import qxsl.ruler.Contest
 import scala.collection.JavaConverters._
 
 object Conf {
-	val name = "ALLJA1"
-	val what = "ALLJA1コンテストは関東地方を中心としたアマチュア無線の全国大会です"
-	val host = "東大無線部"
-	val mail = "allja1@ja1zlo.u-tokyo.org"
-	val site = "ja1zlo.u-tokyo.org"
-	val rule = "ja1zlo.u-tokyo.org/allja1/%02drule.html".format(time)
-	val ats3 = "allja1.org"
-	val subj = "ALLJA1 Entry Acceptance"
-	val repl = "allja1@ja1zlo.u-tokyo.org"
 	val demo = true
-	def time = LocalDate.of(1988,5,1).until(LocalDate.now()).getYears()
 	def isOK = LocalDate.now().getMonthValue() == 6 || demo
 	def save = new File(System.getProperty("user.home"), "ats4.rcvd")
 	if(!save.isDirectory) save.mkdirs

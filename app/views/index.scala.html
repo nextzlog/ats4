@@ -1,11 +1,14 @@
-@import java.text.SimpleDateFormat
+@(cfg: play.api.Configuration)
 
-@frame(nav = "index") {
+@name = @{cfg.get[String]("contest.name")}
+@rule = @{cfg.get[String]("contest.rule")}
+
+@frame(nav = "index")(cfg) {
 	<div class="jumbotron text-center">
-		<h1>@Conf.name 書類受付システム</h1>
+		<h1>@name 書類受付システム</h1>
 	</div>
 	<div class="page-header text-center">
-		<h3>@Conf.what</h3>
+		<h3>コンテスト参加後、このサイトで交信記録を提出することで、参加者として登録されます。</h3>
 	</div>
 @if(models.Conf.demo){
 	<div class="alert alert-warning">
@@ -15,7 +18,7 @@
 	<div class="row text-center">
 		<div class="btn-group btn-group-justified">
 			<div class="col-md-4">
-				<a class="btn btn-block btn-default" href="http://@Conf.rule">
+				<a class="btn btn-block btn-default" href="http://@rule">
 					<div class="caption">
 						<h3>コンテスト規約</h3>
 						<p>コンテスト規約は変更されることがあります</p>
@@ -25,7 +28,7 @@
 			<div class="col-md-4">
 				<a class="btn btn-block btn-primary" href="@routes.Entry.pull">
 					<div class="caption">
-						<h3>電子ログを提出</h3>
+						<h3>交信記録を提出</h3>
 					@if(Conf.isOK) {
 						<p>事前の参加登録やアカウント作成は不要です</p>
 					} else {

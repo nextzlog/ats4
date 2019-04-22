@@ -1,8 +1,12 @@
-@(title: String = "", nav: String = "")(content: Html)
+@(title: String = "", nav: String = "")(cfg: play.api.Configuration)(content: Html)
+
+@name = @{cfg.get[String]("contest.name")}
+@host = @{cfg.get[String]("contest.host")}
+@site = @{cfg.get[String]("contest.site")}
 
 <html>
 	<head>
-		<title>@Conf.name ATS-4 - @Conf.host</title>
+		<title>@name ATS-4 - @host</title>
 		<link rel="stylesheet" href="@routes.Assets.versioned("css/bootstrap.css")" media="print,screen">
 		<link rel="stylesheet" href="@routes.Assets.versioned("css/bootstrap-combobox.css")">
 		<link rel="stylesheet" href="@routes.Assets.versioned("css/main.css")">
@@ -34,7 +38,7 @@
 					</li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="http://@Conf.site">@Conf.host</a></li>
+					<li><a href="http://@site">@host</a></li>
 					<li><a href="http://pafelog.net">無線部開発班</a></li>
 					<li><a href="http://pafelog.net/ats4.pdf">解説</a></li>
 				</ul>

@@ -23,7 +23,7 @@ import models._
 			out.print("アドレス,")
 			out.print("コメント,")
 			out.println
-			for(sect <- Sect.all()(db); post <- sect.sorted) {
+			for(sect <- Sect.all(db); post <- sect.sorted) {
 				val rank = sect.place(post) + 1
 				out.print(s"${post.call},")
 				out.print(s"${post.city},")

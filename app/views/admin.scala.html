@@ -1,6 +1,6 @@
-@(sections: Seq[Sect])
+@(sections: Seq[Sect])(cfg: play.api.Configuration)
 
-@frame(title = "管理画面", nav = "admin") {
+@frame(title = "管理画面", nav = "admin")(cfg) {
 <div class="alert alert-danger">
 	このページが外部から閲覧可能である場合は、直ちに設定を修正してください
 </div>

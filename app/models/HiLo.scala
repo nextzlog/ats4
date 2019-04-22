@@ -3,7 +3,7 @@ package models
 import play.api.db.Database
 
 object HiLo {
-	def post(post: Post)(implicit db: Database): Option[Post] = {
+	def apply(post: Post)(implicit db: Database): Option[Post] = {
 		val postAM = Post.ofCall(post.call).filter(post => Conf.sectsAM.contains(post.sect))
 		val postPM = Post.ofCall(post.call).filter(post => Conf.sectsPM.contains(post.sect))
 		if(postAM.nonEmpty && postPM.nonEmpty) {
