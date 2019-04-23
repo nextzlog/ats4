@@ -1,6 +1,6 @@
 @(entries: Seq[Post])(implicit cfg: play.api.Configuration)
 
-@frame(title = "コメント集", nav = "board") {
+@frame(title = "皆様の声", nav = "board") {
 @for(entry <- entries.filter(_.comm.nonEmpty)) {
 	<blockquote>
 		<p>@entry.comm <footer>@entry.disp (@entry.city)</footer></p>

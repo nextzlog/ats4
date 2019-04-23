@@ -2,8 +2,12 @@
 
 @link(post: Post, sect: Sect) = @{if(admin) routes.Admin.sums(post.id) else "#%s".format(sect.name)}
 
-@frame(title = "暫定結果", nav = if(admin) "admin" else "lists") {
-@if(!admin) {
+@frame(title = if(admin) "管理画面" else "暫定結果", nav = if(admin) "admin" else "lists") {
+@if(admin) {
+<div class="alert alert-danger">
+	このページは管理者用につき、外部から閲覧可能な場合は直ちに設定を変更せよ。
+</div>
+} else {
 <div class="alert alert-info">
 	掲載内容に誤りがある場合は、直ちに主催者に連絡してください。
 	赤太字は暫定入賞局ですが、精査により失格することがあります。
