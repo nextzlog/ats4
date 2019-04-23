@@ -6,9 +6,11 @@ import play.api.libs.Files.TemporaryFile
 import play.libs.mailer.MailerClient
 
 class Flow(implicit smtp: MailerClient, cfg: Configuration, db: Database) {
-	def apply(prof: Prof, temp: TemporaryFile): Post = {
-		temp.moveFileTo(Elog(prof.elog))
-		val post = prof.post(Scan(prof.elog).summ(prof))
+	def apply(user: User, temp: TemporaryFile): Post = {
+		val path = temp.moveFileTo(user.file)
+		val file = path.getFileName.toString
+		val summ = QSOs(path.toString).summ(user)
+		val post = user.post.copy(file=file, cnt=summ.calls, mul=summ.mults)
 		Dupe.delete(post)(db)
 		Logger.info(s"accept: $post")
 		val postAllBands = HiLo(post)

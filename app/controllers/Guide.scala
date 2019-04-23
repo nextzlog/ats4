@@ -4,6 +4,6 @@ import javax.inject.Inject
 import play.api.Configuration
 import play.api.mvc.{Action, InjectedController}
 
-class Guide @Inject()(cfg: Configuration) extends InjectedController {
-	def view = Action(Ok(views.html.pages.guide(cfg)))
+class Guide @Inject()(implicit cfg: Configuration) extends InjectedController {
+	def view = Action(Ok(views.html.pages.guide()))
 }

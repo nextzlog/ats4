@@ -10,9 +10,9 @@ create table post (
 	addr varchar(128),
 	mail varchar(128),
 	comm varchar(512),
+	file varchar(48),
 	cnt int,
 	mul int,
-	elog varchar(23),
 	primary key(id)
 );
 

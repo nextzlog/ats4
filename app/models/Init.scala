@@ -1,17 +1,15 @@
 package models
 
-import java.io._
-import java.util._
-import javax.inject._
-import play.api._
+import java.io.PrintStream
+import java.util.{Timer, TimerTask}
+import javax.inject.{Inject, Singleton}
 import play.api.db.Database
-import models._
+import models.{QSOs, Sect}
 
 @Singleton class Init @Inject()(db: Database) {
 	class FinishTask extends TimerTask {
 		override def run() {
-			if(!Conf.save.isDirectory) Conf.save.mkdirs
-			val out = new PrintStream(new File(Conf.save, "report.csv"), "SJIS")
+			val out = new PrintStream(QSOs.save.resolve("report.csv").toFile, "SJIS")
 			out.print("呼出符号,")
 			out.print("運用場所,")
 			out.print("参加部門,")

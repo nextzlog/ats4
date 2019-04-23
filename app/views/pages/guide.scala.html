@@ -1,8 +1,8 @@
-@(cfg: play.api.Configuration)
+@()(implicit cfg: play.api.Configuration)
 
 @mail = @{cfg.get[String]("contest.mail")}
 
-@frame(title = "よくあるご質問", nav = "quest")(cfg) {
+@frame(title = "よくあるご質問", nav = "quest") {
 	<h2><span class="glyphicon glyphicon-user"/> 未対応のフォーマットと表示される</h2>
 	<br>
 	<ul>

@@ -1,19 +1,20 @@
-@(post: Post, postAllBands: Option[Post])(cfg: play.api.Configuration)
+@(post: Post, postAllBands: Option[Post])(implicit cfg: play.api.Configuration)
 
 @host = @{cfg.get[String]("contest.host")}
 @name = @{cfg.get[String]("contest.name")}
 @site = @{cfg.get[String]("contest.site")}
 @mail = @{cfg.get[String]("contest.mail")}
 
-@post.call 様
+@{post.call}様
 
 この度は@{name}コンテストに参加いただきありがとうございます。
 
 @{(Some(post.sect) ++ postAllBands).mkString("・")}にて受理いたしました。
+受付番号は@{post.id}です。
 今後とも当コンテストをよろしくお願いいたします。
 
 ---
-このメールに心当たりがない場合はお手数ですが下記のアドレスまでご連絡ください。
+このメールに心当たりがない場合はお手数ですが下記の連絡先までご連絡ください。
 
 ---
 @{host}

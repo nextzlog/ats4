@@ -1,8 +1,8 @@
-@(pform: Form[Prof], warn: Option[Warn] = None)(cfg: play.api.Configuration)(implicit req: RequestHeader)
+@(pform: Form[User], warn: Option[Warn] = None)(implicit cfg: play.api.Configuration, req: RequestHeader)
 
 @import comps._
 
-@frame(title = "書類提出", nav = "entry")(cfg) {
+@frame(title = "書類提出", nav = "entry") {
 @if(warn.nonEmpty) {
 	<fieldset class="alert alert-danger">
 		<span class="glyphicon glyphicon-warning-sign"></span> @warn
@@ -12,9 +12,9 @@
 		午前と午後の双方の部門に参加した場合は、午前と午後で別々に提出してください
 	</fieldset>
 }
-@helper.form(action = routes.Entry.push, 'class->"form-horizontal", 'enctype->"multipart/form-data") {
+@helper.form(action = routes.Entry.post, 'class->"form-horizontal", 'enctype->"multipart/form-data") {
 	@helper.CSRF.formField
-	<h3><span class="glyphicon glyphicon-user"></span> 参加局の情報</h3>
+	<h2><span class="glyphicon glyphicon-user"></span> 参加局の情報</h2>
 	<fieldset class="well">
 		@input(
 			pform("call"),
@@ -23,7 +23,7 @@
 		)
 		@combo(
 			pform("city"),
-			opts = (models.Conf.inner ++ models.Conf.outer).map(_.getCityName),
+			opts = models.Area.total,
 			text = "運用場所",
 			hint = "未選択"
 		)
@@ -55,7 +55,7 @@
 		)
 	</fieldset>
 	<br>
-	<h3><span class="glyphicon glyphicon-th-list"></span> 交信記録</h3>
+	<h2><span class="glyphicon glyphicon-th-list"></span> 交信記録</h2>
 	<fieldset class="alert alert-info">
 		JARLサマリーシートをアップロードした場合は、交信記録の部分のみを読み取ります
 	</fieldset>
@@ -65,7 +65,6 @@
 			name  = "eLog",
 			hint  = "右のボタンをクリックして交信記録ファイルを選択してください"
 		)
-		<br>
 		<div class="panel-group" id="accformats">
 			<div class="panel panel-default">
 				<div class="panel-heading">
@@ -92,7 +91,7 @@
 	<br>
 	<fieldset>
 		<input class="btn btn-primary" type="submit" value="この内容で提出します">
-		<a type="button" id="error-button" class="btn btn-default pull-right" href="@routes.Guide.view">よくあるご質問</a>
+		<a type="button" id="error-button" class="btn btn-default" href="@routes.Guide.view">よくあるご質問</a>
 	</fieldset>
 }
 }

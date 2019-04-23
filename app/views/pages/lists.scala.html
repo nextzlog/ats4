@@ -1,17 +1,18 @@
-@(sections: Seq[Sect])(cfg: play.api.Configuration)(implicit admin: Boolean = false)
+@(sections: Seq[Sect])(implicit cfg: play.api.Configuration, admin: Boolean = false)
 
-@link(post: Post, sect: Sect) = @{if(admin) routes.Proof.pull(post.id) else "#%s".format(sect.name)}
+@link(post: Post, sect: Sect) = @{if(admin) routes.Admin.sums(post.id) else "#%s".format(sect.name)}
 
-@frame(title = "暫定結果", nav = if(admin) "admin" else "lists")(cfg) {
+@frame(title = "暫定結果", nav = if(admin) "admin" else "lists") {
 @if(!admin) {
-<div class="alert alert-warning">
-	掲載内容に誤りがある場合は、直ちに異議申し立てを行ってください
+<div class="alert alert-info">
+	掲載内容に誤りがある場合は、直ちに主催者に連絡してください。
+	赤太字は暫定入賞局ですが、精査により失格することがあります。
 </div>
 }
 @for(sect <- sections) {
-<div class="panel panel-default">
+<div class="par panel panel-default">
 	<div class="panel-heading">
-		<h4>@{sect.name}</h4>
+		<h2>@{sect.name}</h2>
 	</div>
 	<div class="panel-body">
 		<table class="table table-striped" id="@sect.name">
@@ -39,11 +40,6 @@
 			</tbody>
 		</table>
 	</div>
-</div>
-}
-@if(!admin) {
-<div class="alert alert-warning">
-	赤太字は暫定入賞局ですが、審査によって除外されることがあります
 </div>
 }
 }

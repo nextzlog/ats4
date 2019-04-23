@@ -1,9 +1,6 @@
 body {
 	padding-top: 60px;
-}
-
-fieldset {
-	max-width: 600px;
+	margin-bottom: 30px;
 }
 
 blockquote {
@@ -26,6 +23,10 @@ blockquote p {
 	display: inline;
 }
 
+div.filer {
+	margin-bottom: 1em;
+}
+
 .upload-hidden {
 	display: inline-block;
 	opacity: 0;
@@ -38,6 +39,11 @@ blockquote p {
 	width: 85%;
 	z-index: 99;
 	cursor: pointer;
+}
+
+div.par {
+	margin-top: 3em;
+	margin-bottom: 3em;
 }
 
 tr.link > td {

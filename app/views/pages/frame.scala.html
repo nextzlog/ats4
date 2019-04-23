@@ -1,4 +1,4 @@
-@(title: String = "", nav: String = "")(cfg: play.api.Configuration)(content: Html)
+@(title: String = "", nav: String = "")(content: Html)(implicit cfg: play.api.Configuration)
 
 @name = @{cfg.get[String]("contest.name")}
 @host = @{cfg.get[String]("contest.host")}
@@ -22,7 +22,7 @@
 				</div>
 				<ul class="nav navbar-nav">
 					<li class="@("active".when(nav == "entry"))">
-						<a href="@routes.Entry.pull">書類提出</a>
+						<a href="@routes.Entry.form">書類提出</a>
 					</li>
 					<li class="@("active".when(nav == "lists"))">
 						<a href="@routes.Lists.view">暫定結果</a>
@@ -31,7 +31,7 @@
 						<a href="@routes.Board.view">皆様の声</a>
 					</li>
 					<li class="@("active".when(nav == "admin"))">
-						<a href="@routes.Admin.view">管理画面</a>
+						<a href="@routes.Admin.root">管理画面</a>
 					</li>
 					<li class="@("active".when(nav == "quest"))">
 						<a href="@routes.Guide.view">FAQ</a>
