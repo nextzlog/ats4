@@ -16,7 +16,7 @@ class Mail(implicit smtp: MailerClient, cfg: Configuration, db: Database) {
 			mail.setFrom("%s <%s>".format(host,repl))
 			mail.addTo("%s <%s>".format(post.call,to))
 			mail.addBcc(repl)
-			mail.setBodyText(views.txt.email(post, postAllBands)(cfg).body.trim)
+			mail.setBodyText(views.txt.pages.email(post,postAllBands)(cfg).body)
 			Try(smtp.send(mail)).recover{case ex=>Logger.error("mail error",ex)}
 		}
 	}

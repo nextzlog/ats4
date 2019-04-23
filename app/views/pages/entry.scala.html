@@ -1,5 +1,7 @@
 @(pform: Form[Prof], warn: Option[Warn] = None)(cfg: play.api.Configuration)(implicit req: RequestHeader)
 
+@import comps._
+
 @frame(title = "書類提出", nav = "entry")(cfg) {
 @if(warn.nonEmpty) {
 	<fieldset class="alert alert-danger">
@@ -90,9 +92,7 @@
 	<br>
 	<fieldset>
 		<input class="btn btn-primary" type="submit" value="この内容で提出します">
-		<a type="button" id="error-button" class="btn btn-default pull-right" href="@routes.Quest.view">よくあるご質問</a>
+		<a type="button" id="error-button" class="btn btn-default pull-right" href="@routes.Guide.view">よくあるご質問</a>
 	</fieldset>
-	<br>
-	<br>
 }
 }

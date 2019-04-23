@@ -1,0 +1,116 @@
+@(post: Post)(cfg: play.api.Configuration)(implicit admin: Boolean = false)
+
+@import qxsl.field._
+
+@import java.time.{LocalDateTime, ZoneId}
+@import java.time.format.DateTimeFormatter
+@import qxsl.field._
+
+@summ = @{Scan(post.elog).summ(post)}
+@mail = @{cfg.get[String]("contest.mail")}
+@dfmt = @{DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")}
+@time(t: Time) = @{LocalDateTime.ofInstant(t.value.toInstant,ZoneId.systemDefault).format(dfmt)}
+
+@frame(title = "提出書類の確認", nav = if(admin) "admin" else "entry")(cfg) {
+@if(!admin) {
+	<div class="alert alert-success">
+		下記の内容で提出書類を受理しました。訂正が必要な場合は期間内に限り再提出できます。</h4>
+	</div>
+}
+	<h2><span class="glyphicon glyphicon-user"/> 参加局の情報</h2>
+	<br>
+	<br>
+@if(admin) {
+	<h4>@post.disp (@post.sect)</h4>
+} else {
+	<table class="table">
+		<tr>
+			<th>番号</th>
+			<th>呼出符号</th>
+			<th>部門</th>
+			<th>運用地</th>
+			<th>お名前</th>
+			<th>メール</th>
+			<th>ご住所</th>
+		</tr>
+		<tr>
+			<td>@post.id</td>
+			<td>@post.disp</td>
+			<td>@post.sect</td>
+			<td>@post.city</td>
+			<td>@post.name 様</td>
+			<td>@post.mail</td>
+			<td>@post.addr</td>
+		</tr>
+	</table>
+}
+@if(post.comm.nonEmpty) {
+	<p class="well">@post.comm</p>
+}
+	<br>
+	<h2><span class="glyphicon glyphicon-tower"/> 暫定の得点</h2>
+	<br>
+	<p class="well"><strong>@{summ.score}点</strong> (交信局数@summ.calls 獲得マルチ数@summ.mults)</p>
+	<br>
+	<h2><span class="glyphicon glyphicon-ok"/> 有効な交信</h2>
+	<br>
+	<div class="alert alert-warning">
+		相手局の呼出符号や運用地が正しく処理されているかご確認ください
+	</div>
+	<table class="table">
+		<tr>
+			<th width="26%">交信日時</th>
+			<th width="16%">相手局</th>
+			<th width="16%">周波数帯</th>
+			<th width="16%">通信方式</th>
+			<th width="16%">運用地</th>
+		</tr>
+	@for(item <- summ.accepted()) {
+		<tr>
+			<td>@{time(item.get(classOf[Time]))}</td>
+			<td>@{item.get(classOf[Call])}</td>
+			<td>@{item.get(classOf[Band])}</td>
+			<td>@{item.get(classOf[Mode])}</td>
+			<td>@{item.getRcvd.get(classOf[Code])}</td>
+		</tr>
+	}
+	</table>
+	<br>
+	<h2><span class="glyphicon glyphicon-remove"/> 無効な交信</h2>
+	<br>
+	<div class="alert alert-info">
+		時間外の交信や部門外の周波数帯など、<strong>書類の不備</strong>により、得点計算の対象と認められない交信です
+	</div>
+	<div class="alert alert-warning">
+		参加局は無効な交信リストを読み、得点に加算されるべき交信があれば、<strong>主催者に連絡</strong>してください
+	</div>
+	<br>
+	<table class="table">
+		<tr>
+			<th width="26%">交信日時</th>
+			<th width="16%">相手局</th>
+			<th width="16%">周波数帯</th>
+			<th width="16%">通信方式</th>
+			<th width="16%">運用地</th>
+		</tr>
+	@for(item <- summ.rejected()) {
+		<tr>
+			<td>@{time(item.get(classOf[Time]))}</td>
+			<td>@{item.get(classOf[Call])}</td>
+			<td>@{item.get(classOf[Band])}</td>
+			<td>@{item.get(classOf[Mode])}</td>
+			<td>@{item.getRcvd.get(classOf[Code])}</td>
+		</tr>
+	}
+	</table>
+	<br>
+@if(!admin) {
+	<div class="alert alert-warning">
+		このページを閉じると二度と表示されません。必ず控えを保存してください。
+	</div>
+	<fieldset>
+		<a class="btn btn-primary" onclick="window.print()"><span class="glyphicon glyphicon-print"></span> 印刷する</a>
+		<a class="btn btn-default" href="mailto:@mail"><span class="glyphicon glyphicon-earphone"></span> 不具合を報告</a>
+	</fieldset>
+}
+}

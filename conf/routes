@@ -18,15 +18,18 @@ GET     /lists            controllers.Lists.view
 # Admin (Private)
 GET     /admin            controllers.Admin.view
 
-# Posts (Private)
-GET     /admin/:id        controllers.Posts.pull(id: Long)
-POST    /admin/:id        controllers.Posts.push(id: Long)
+# Proof (Private)
+GET     /admin/proof/:id  controllers.Proof.pull(id: Long)
+POST    /admin/proof/:id  controllers.Proof.push(id: Long)
+
+# Table (Private)
+GET     /admin/table/:id  controllers.Table.pull(id: Long)
 
 # Board
 GET     /board            controllers.Board.view
 
 # FAQ
-GET     /quest            controllers.Quest.view
+GET     /guide            controllers.Guide.view
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file     controllers.Assets.versioned(path="/public", file: Asset)

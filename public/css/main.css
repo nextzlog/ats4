@@ -39,3 +39,12 @@ blockquote p {
 	z-index: 99;
 	cursor: pointer;
 }
+
+tr.link > td {
+	cursor: pointer;
+}
+
+tr.prize > td {
+	color: red;
+	font-weight: bold;
+}

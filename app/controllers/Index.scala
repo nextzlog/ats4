@@ -5,5 +5,5 @@ import play.api.Configuration
 import play.api.mvc.{Action, InjectedController}
 
 class Index @Inject()(cfg: Configuration) extends InjectedController {
-	def view = Action(Ok(views.html.index(cfg)))
+	def view = Action(Ok(views.html.pages.index(cfg)))
 }
