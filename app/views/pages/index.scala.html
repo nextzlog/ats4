@@ -4,47 +4,54 @@
 @rule = @{cfg.get[String]("contest.rule")}
 
 @frame(nav = "index") {
-	<div class="jumbotron text-center">
-		<h1>@name 書類受付システム</h1>
+<div class="jumbotron text-center">
+	<h1>@name 書類受付システム</h1>
+</div>
+<div class="page-header text-center">
+	<h3>コンテスト参加後、このサイトで交信記録を提出することで、参加者として登録されます。</h3>
+</div>
+@if(Gate.demo) {
+<div class="panel panel-info">
+	<div class="panel-heading">
+		<h4>お知らせ</h4>
 	</div>
-	<div class="page-header text-center">
-		<h3>コンテスト参加後、このサイトで交信記録を提出することで、参加者として登録されます。</h3>
+	<div class="panel-body">
+		<p>現在、デモ期間中です。本番と同じ流れで書類提出を練習できます。</p>
 	</div>
-@if(models.Conf.demo){
-	<div class="alert alert-warning">
-		現在、検証モードで稼働しています。コンテスト参加予定の皆様は、書類提出と結果発表のリハーサルが可能です。
-	</div>
+</div>
 }
-	<div class="row text-center">
-		<div class="btn-group btn-group-justified">
-			<div class="col-md-4">
-				<a class="btn btn-block btn-default" href="http://@rule">
-					<div class="caption">
-						<h3>コンテスト規約</h3>
-						<p>コンテスト規約は変更されることがあります</p>
-					</div>
-				</a>
-			</div>
-			<div class="col-md-4">
-				<a class="btn btn-block btn-primary" href="@routes.Entry.form">
-					<div class="caption">
-						<h3>交信記録を提出</h3>
-					@if(Conf.isOK) {
-						<p>事前の参加登録やアカウント作成は不要です</p>
-					} else {
-						<p>提出期間外につき提出書類は受理できません</p>
-					}
-					</div>
-				</a>
-			</div>
-			<div class="col-md-4">
-				<a class="btn btn-block btn-default" href="@routes.Lists.view">
-					<div class="caption">
-						<h3>暫定結果を確認</h3>
-						<p>提出期間が満了したら必ず確認してください</p>
-					</div>
-				</a>
-			</div>
+<div class="row text-center">
+	<div class="btn-group btn-group-justified">
+		<div class="col-md-4">
+			<a class="btn btn-block btn-default" href="http://@rule">
+				<div class="caption">
+					<h3>コンテスト規約</h3>
+					<p>コンテスト規約は変更されることがあります</p>
+				</div>
+			</a>
+		</div>
+		<div class="col-md-4">
+			<a class="btn btn-block btn-primary" href="@routes.Entry.form">
+				<div class="caption">
+					<h3>交信記録を提出</h3>
+				@if(Gate.demo) {
+					<p>本番と同じ手順で書類提出の練習ができます</p>
+				} else if(Gate.isOK) {
+					<p>事前の参加登録やアカウント作成は不要です</p>
+				} else {
+					<p>提出期間外につき提出書類は受理できません</p>
+				}
+				</div>
+			</a>
+		</div>
+		<div class="col-md-4">
+			<a class="btn btn-block btn-default" href="@routes.Lists.view">
+				<div class="caption">
+					<h3>暫定結果を確認</h3>
+					<p>提出期間が満了したら必ず確認してください</p>
+				</div>
+			</a>
 		</div>
 	</div>
+</div>
 }

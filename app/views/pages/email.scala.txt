@@ -5,6 +5,8 @@
 @site = @{cfg.get[String]("contest.site")}
 @mail = @{cfg.get[String]("contest.mail")}
 
+ALLJA1書類提出の完了 (@{post.sect}) // 空白を除く先頭行はメールの件名
+
 @{post.call}様
 
 この度は@{name}コンテストに参加いただきありがとうございます。

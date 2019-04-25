@@ -10,6 +10,8 @@ case class Post(id: Long, call: S, disp: S, city: S, sect: S, name: S, addr: S, 
 		copy(id=SQL"insert into post values(NULL,$call,$disp,$city,$sect,$name,$addr,$mail,$comm,$file,$cnt,$mul)".executeInsert().get)
 	}
 	def score = cnt * mul
+	def place(implicit db: Database) = Post.ofSect(sect).sortBy(-_.score).indexWhere(_.score == score)
+	def award(implicit db: Database) = this.place < Math.min(1 + Post.ofSect(this.sect).size * 0.1, 7)
 }
 
 object Post {

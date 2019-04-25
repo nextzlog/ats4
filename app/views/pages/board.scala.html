@@ -2,8 +2,8 @@
 
 @frame(title = "皆様の声", nav = "board") {
 @for(entry <- entries.filter(_.comm.nonEmpty)) {
-	<blockquote>
-		<p>@entry.comm <footer>@entry.disp (@entry.city)</footer></p>
-	</blockquote>
+<blockquote>
+	<p>@entry.comm <footer>@entry.disp (@entry.city)</footer></p>
+</blockquote>
 }
 }

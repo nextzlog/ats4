@@ -50,7 +50,7 @@ tr.link > td {
 	cursor: pointer;
 }
 
-tr.prize > td {
+tr.award > td {
 	color: red;
 	font-weight: bold;
 }

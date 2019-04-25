@@ -12,123 +12,123 @@
 
 @frame(title = "提出書類の確認", nav = if(admin) "admin" else "entry") {
 @if(!admin) {
-	<div class="alert alert-info">
-		下記の内容で受理しました。
-		交信記録が正しく読み込まれたかご確認ください。
-		訂正が必要な場合は期間内に限り再提出できます。
+<div class="alert alert-info">
+	下記の内容で受理しました。
+	交信記録が正しく読み込まれたかご確認ください。
+	訂正が必要な場合は期間内に限り再提出できます。
+</div>
+}
+<div class="par panel panel-default">
+	<div class="panel-heading">
+		<h2>@post.sect</h2>
+	</div>
+	<div class="panel-body">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>呼出符号</th>
+					<th>運用場所</th>
+					<th>お名前</th>
+					<th>ご住所</th>
+					<th>メール</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>@post.disp</td>
+					<td>@post.city</td>
+					<td>@post.name</td>
+					<td>@if(admin) {**********} else {@post.addr}</td>
+					<td>@post.mail</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+@if(post.comm.nonEmpty) {
+	<div class="panel-footer">
+		@post.comm
 	</div>
 }
-	<div class="par panel panel-default">
-		<div class="panel-heading">
-			<h2>@post.sect</h2>
-		</div>
-		<div class="panel-body">
-			<table class="table">
-				<thead>
-					<tr>
-						<th>呼出符号</th>
-						<th>運用場所</th>
-						<th>お名前</th>
-						<th>ご住所</th>
-						<th>メール</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>@post.disp</td>
-						<td>@post.city</td>
-						<td>@post.name</td>
-						<td>@post.addr</td>
-						<td>@post.mail</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	@if(post.comm.nonEmpty) {
-		<div class="panel-footer">
-			@post.comm
-		</div>
-	}
+</div>
+<div class="par panel panel-default">
+	<div class="panel-heading">
+		<h2>暫定の得点</h2>
 	</div>
-	<div class="par panel panel-default">
-		<div class="panel-heading">
-			<h2>暫定の得点</h2>
-		</div>
-		<div class="panel-body">
-			<strong>@{summ.score}点</strong> (交信局数@summ.calls 獲得マルチ数@summ.mults)
-		</div>
+	<div class="panel-body">
+		<strong>@{summ.score}点</strong> (交信局数@summ.calls 獲得マルチ数@summ.mults)
 	</div>
-	<div class="par panel panel-default">
-		<div class="panel-heading">
-			<h2>有効な交信</h2>
-		</div>
-		<div class="panel-body">
-			<table class="table">
-				<tr>
-					<th width="26%">交信日時</th>
-					<th width="16%">相手局</th>
-					<th width="16%">周波数帯</th>
-					<th width="16%">通信方式</th>
-					<th width="16%">運用地</th>
-				</tr>
-			@for(item <- summ.accepted()) {
-				<tr>
-					<td>@{time(item.get(classOf[Time]))}</td>
-					<td>@{item.get(classOf[Call])}</td>
-					<td>@{item.get(classOf[Band])}</td>
-					<td>@{item.get(classOf[Mode])}</td>
-					<td>@{item.getRcvd.get(classOf[Code])}</td>
-				</tr>
-			}
-			</table>
-		</div>
+</div>
+<div class="par panel panel-default">
+	<div class="panel-heading">
+		<h2>有効な交信</h2>
 	</div>
-	<div class="par panel panel-default">
-		<div class="panel-heading">
-			<h2>無効な交信</h2>
-		</div>
-		<div class="panel-body">
-			<table class="table">
-				<tr>
-					<th width="26%">交信日時</th>
-					<th width="16%">相手局</th>
-					<th width="16%">周波数帯</th>
-					<th width="16%">通信方式</th>
-					<th width="16%">運用地</th>
-				</tr>
-			@for(item <- summ.rejected()) {
-				<tr>
-					<td>@{time(item.get(classOf[Time]))}</td>
-					<td>@{item.get(classOf[Call])}</td>
-					<td>@{item.get(classOf[Band])}</td>
-					<td>@{item.get(classOf[Mode])}</td>
-					<td>@{item.getRcvd.get(classOf[Code])}</td>
-				</tr>
-			}
-			</table>
-		</div>
-		<div class="panel-footer">
-			時間外の交信や部門外の周波数帯など、書類の不備により、得点計算の対象と認められない交信です
-		</div>
+	<div class="panel-body">
+		<table class="table">
+			<tr>
+				<th width="26%">交信日時</th>
+				<th width="16%">相手局</th>
+				<th width="16%">周波数帯</th>
+				<th width="16%">通信方式</th>
+				<th width="16%">運用地</th>
+			</tr>
+		@for(item <- summ.accepted()) {
+			<tr>
+				<td>@{time(item.get(classOf[Time]))}</td>
+				<td>@{item.get(classOf[Call])}</td>
+				<td>@{item.get(classOf[Band])}</td>
+				<td>@{item.get(classOf[Mode])}</td>
+				<td>@{item.getRcvd.get(classOf[Code])}</td>
+			</tr>
+		}
+		</table>
 	</div>
+</div>
+<div class="par panel panel-default">
+	<div class="panel-heading">
+		<h2>無効な交信</h2>
+	</div>
+	<div class="panel-body">
+		<table class="table">
+			<tr>
+				<th width="26%">交信日時</th>
+				<th width="16%">相手局</th>
+				<th width="16%">周波数帯</th>
+				<th width="16%">通信方式</th>
+				<th width="16%">運用地</th>
+			</tr>
+		@for(item <- summ.rejected()) {
+			<tr>
+				<td>@{time(item.get(classOf[Time]))}</td>
+				<td>@{item.get(classOf[Call])}</td>
+				<td>@{item.get(classOf[Band])}</td>
+				<td>@{item.get(classOf[Mode])}</td>
+				<td>@{item.getRcvd.get(classOf[Code])}</td>
+			</tr>
+		}
+		</table>
+	</div>
+	<div class="panel-footer">
+		時間外の交信や部門外の周波数帯など、書類の不備により、得点計算の対象と認められない交信です
+	</div>
+</div>
 @if(admin) {
 @helper.form(action = routes.Admin.post(post.id), 'class->"form-horizontal", 'enctype->"multipart/form-data") {
-	@helper.CSRF.formField
-	<div class="par panel panel-default">
-		<div class="panel-heading">
-			<h2>内容の修正</h2>
-		</div>
-		<div class="panel-body">
-			@filer(
-				id    = "eLog",
-				name  = "eLog"
-			)
-			<input class="btn btn-primary" type="submit" value="交信記録を更新">
-		</div>
+@helper.CSRF.formField
+<div class="par panel panel-default">
+	<div class="panel-heading">
+		<h2>内容の修正</h2>
 	</div>
+	<div class="panel-body">
+		@filer(
+			id    = "eLog",
+			name  = "eLog"
+		)
+		<input class="btn btn-primary" type="submit" value="交信記録を更新">
+	</div>
+</div>
 }
 } else {
-	<a class="btn btn-primary" onclick="window.print()"><span class="glyphicon glyphicon-print"></span> 印刷する</a>
-	<a class="btn btn-default" href="mailto:@mail"><span class="glyphicon glyphicon-earphone"></span> 不具合を報告</a>
+<a class="btn btn-primary" onclick="window.print()"><span class="glyphicon glyphicon-print"></span> 印刷する</a>
+<a class="btn btn-default" href="mailto:@mail"><span class="glyphicon glyphicon-earphone"></span> 不具合を報告</a>
 }
 }

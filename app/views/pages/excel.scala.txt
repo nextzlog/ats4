@@ -1,0 +1,8 @@
+@(implicit db: play.api.db.Database)
+
+@MVP(post: Post) = @{if(post.place == 1) "優勝" else "%d位".format(1+post.place)}
+
+呼出符号,運用場所,参加部門,順位,入賞,得点,名前,住所,アドレス,コメント
+@for(sect <- Test.sects; post <- Post.ofSect(sect.getName).sortBy(-_.score)) {
+@post.call,@post.city,@post.sect,@MVP(post),@if(post.award){入賞局},@post.score,@post.name,@post.addr,@post.mail,@post.comm
+}

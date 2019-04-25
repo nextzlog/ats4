@@ -12,7 +12,7 @@ import scala.util.Try
 import views.html.pages
 
 class Entry @Inject() (implicit smtp: MailerClient, cfg: Configuration, db: Database) extends InjectedController {
-	def form = Action(implicit req => Ok(if(Conf.isOK) pages.entry(User.form) else pages.index()))
+	def form = Action(implicit req => Ok(if(Gate.isOK) pages.entry(User.form) else pages.index()))
 	def post = Action(parse.multipartFormData) (implicit req => Try {
 		val prof = User.form.bindFromRequest.get
 		val elog = req.body.file("eLog").get.ref

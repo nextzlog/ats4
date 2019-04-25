@@ -1,6 +1,6 @@
-@(sections: Seq[Sect])(implicit cfg: play.api.Configuration, admin: Boolean = false)
+@(sections: Seq[qxsl.ruler.Section])(implicit cfg: play.api.Configuration, db: play.api.db.Database, admin: Boolean = false)
 
-@link(post: Post, sect: Sect) = @{if(admin) routes.Admin.sums(post.id) else "#%s".format(sect.name)}
+@link(post: Post) = @{if(admin) routes.Admin.sums(post.id) else "#%s".format(post.sect)}
 
 @frame(title = if(admin) "管理画面" else "暫定結果", nav = if(admin) "admin" else "lists") {
 @if(admin) {
@@ -16,34 +16,41 @@
 @for(sect <- sections) {
 <div class="par panel panel-default">
 	<div class="panel-heading">
-		<h2>@{sect.name}</h2>
+		<h3>@{sect.getName}</h3>
 	</div>
+@if(!Gate.isOK) {
 	<div class="panel-body">
-		<table class="table table-striped" id="@sect.name">
-			<thead>
-				<tr>
-					<th width="10%">順位</th>
-					<th width="20%">呼出符号</th>
-					<th width="10%">交信局数</th>
-					<th width="10%">マルチ数</th>
-					<th width="10%">総得点</th>
-					<th width="40%">運用地</th>
-				</tr>
-			</thead>
-			<tbody>
-			@for(post <- sect.sorted) {
-				<tr class="link @if(sect.prize(post)) {prize}" onclick="window.location='@link(post,sect)';">
-					<td>@{sect.place(post) + 1}</td>
-					<td>@{post.disp}</td>
-					<td>@{post.cnt}</td>
-					<td>@{post.mul}</td>
-					<td>@{post.score}</td>
-					<td>@{post.city}</td>
-				</tr>
-			}
-			</tbody>
-		</table>
+		<p class="text-info">現在、受付期間につき非公開とする。</p>
 	</div>
+} else if(Post.ofSect(sect.getName).nonEmpty) {
+	<table class="table table-hover" id="@sect.getName">
+		<thead>
+			<tr>
+				<th width="10%">順位</th>
+				<th width="20%">呼出符号</th>
+				<th width="10%">交信局数</th>
+				<th width="10%">マルチ数</th>
+				<th width="10%">総得点</th>
+				<th width="40%">運用地</th>
+			</tr>
+		</thead>
+		<tbody>
+		@for(post <- Post.ofSect(sect.getName).sortBy(-_.score)) {
+			<tr class="link @if(post.award) {award}" onclick="window.location='@link(post)';">
+				<td>@{1 + post.place}</td>
+				<td>@{post.disp}</td>
+				<td>@{post.cnt}</td>
+				<td>@{post.mul}</td>
+				<td>@{post.score}</td>
+				<td>@{post.city}</td>
+			</tr>
+		}
+		</tbody>
+	</table>
+	<div class="panel-footer">
+		<p>受賞者数は、当該部門の登録者数の10%未満の整数に1を足した数 (ただし最大7局まで) とする。</p>
+	</div>
+}
 </div>
 }
 }

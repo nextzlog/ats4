@@ -14,8 +14,8 @@ case class QSOs(path: String) {
 	val source = Paths.get(path).toUri.toURL
 	val sheet = Try(sheets.decode(source).get("LOGSHEET").getBytes)
 	val table = Try(tables.decode(sheet.get)).getOrElse(tables.decode(source))
-	def summ(user: User) = new Summary(table, Conf.sect(Area.sect(user)))
-	def summ(post: Post) = new Summary(table, Conf.sect(post.sect))
+	def summ(user: User) = new Summary(table, Test.sect(Area.sect(user)))
+	def summ(post: Post) = new Summary(table, Test.sect(post.sect))
 }
 
 object QSOs {
