@@ -1,0 +1,19 @@
+@(id: String, title: String)(content: Html)
+
+<div class="panel-group" id="@id-accord">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3 class="panel-title">
+				<a data-toggle="collapse" data-parent="#@id-accord" href="#@id-body">
+					@title
+					<span class="glyphicon glyphicon-chevron-down pull-right"></span>
+				</a>
+			</h3>
+		</div>
+		<div class="panel-collapse collapse" id="@id-body">
+			<div class="panel-body">
+				@content
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,9 +1,13 @@
-@(field: Field, text: String = "", hint: String = "")
+@(field: Field, text: String = "", hint: String = "", multiline: Boolean = false)
 
 <div class="form-group @if(field.hasErrors){has-error} has-feedback">
 	<label for="@field.id" class="col-md-1 control-label">@text</label>
 	<div class="col-md-11">
-		<input type="text" class="form-control" id="@field.id" name="@field.name" placeholder="@hint" value="@field.value">
+	@if(multiline) {
+		<textarea class="form-control" name="@field.id" placeholder="@hint" rows="5">@field.value</textarea>
+	} else {
+		<input type="text" class="form-control" name="@field.name" placeholder="@hint" value="@field.value">
+	}
 	@if(field.hasErrors) {
 		<span class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
 	}

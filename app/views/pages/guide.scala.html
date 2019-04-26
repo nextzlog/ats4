@@ -1,133 +1,41 @@
 @()(implicit cfg: play.api.Configuration)
 
+@import comps._
 @mail = @{cfg.get[String]("contest.mail")}
 
 @frame(title = "よくあるご質問", nav = "quest") {
-<div class="panel panel-info">
-	<div class="panel-heading">
-		<h3>未対応のフォーマットと表示される</h3>
-	</div>
-	<div class="panel-body">
-		<p>万一読み込めない場合は下記の方法をお試しください。</p>
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h4>zLogをご利用の場合</h4>
-			</div>
-			<div class="panel-body">
-				<p>zLogバイナリファイルでの提出をお試しください。</p>
-			</div>
-		</div>
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h4>HLTSTをご利用の場合</h4>
-			</div>
-			<div class="panel-body">
-				<p>JARLサマリーシートR2.0での提出をお試しください。</p>
-			</div>
-		</div>
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h4>CTESTWINをご利用の場合</h4>
-			</div>
-			<div class="panel-body">
-				<p>JARLサマリーシートR2.0での提出をお試しください。</p>
-			</div>
-		</div>
-	</div>
-	<div class="panel-footer">
-		<a href="mailto:@mail">その他のフォーマットをご利用の方は主催者にご連絡ください</a>
-	</div>
-</div>
-<br>
-<h2><span class="glyphicon glyphicon-user"/> 無効な交信の基準を教えてください</h2>
-<br>
-<ul>
-	<p class="well">無効交信のリストには以下の基準で無効と判定された交信が表示されます</p>
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			無効な周波数帯
-		</div>
-		<div class="panel-body">
-			<p>例えば7MHz帯部門で参加する場合、3.5MHz帯での交信は得点になりません</p>
-		</div>
-	</div>
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			無効な通信方式
-		</div>
-		<div class="panel-body">
-			<p>電信部門で参加する場合、電話方式での交信は得点になりません</p>
-		</div>
-	</div>
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			無効な交信相手
-		</div>
-		<div class="panel-body">
-			<p>1エリア外の無線局は1エリア内の無線局と交信した場合のみ得点になります</p>
-		</div>
-	</div>
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			無効なシリアル番号
-		</div>
-		<div class="panel-body">
-			<p>1エリアでは市区町村番号、その他のエリアでは府県支庁番号を使用します</p>
-		</div>
-	</div>
-	<p class="well">提出締切前の時点では交信相手との照会を行い、その結果を表示することはありません</p>
-</ul>
-<br>
-<h2><span class="glyphicon glyphicon-user"/> 書類を間違えたまま提出してしまった</h2>
-<br>
-<ul>
-	<p class="well">受付期間内であれば上書き再提出することができます</p>
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			1.9/3.5/7MHz部門
-		</div>
-		<div class="panel-body">
-			<p>この範囲内で過去に提出した交信記録は自動的に上書きされます</p>
-		</div>
-	</div>
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			14/21/28/50MHz部門
-		</div>
-		<div class="panel-body">
-			<p>この範囲内で過去に提出した交信記録は自動的に上書きされます</p>
-		</div>
-	</div>
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			オールバンド部門
-		</div>
-		<div class="panel-body">
-			<p>この範囲内で過去に提出した交信記録は自動的に上書きされます</p>
-		</div>
-	</div>
-</ul>
-<br>
-<h2><span class="glyphicon glyphicon-user"/> 提出したのに通知メールが届かない</h2>
-<br>
-<ul>
-	<p class="well">受付期間内であれば上書き再提出することができます</p>
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			未提出かもしれません
-		</div>
-		<div class="panel-body">
-			<p>書類提出ボタンを押さないままページを閉じた可能性があります</p>
-		</div>
-	</div>
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			誤記入はありませんか？
-		</div>
-		<div class="panel-body">
-			<p>メールアドレスを誤って記入し書類を提出した可能性があります</p>
-		</div>
-	</div>
-	<p><a class="btn btn-default" href="mailto:@mail">書類が正常に受理されたか確認したい場合には遠慮なく主催者にご連絡ください</a></p>
-</ul>
+<p>お困りの内容に応じて、パネルをクリックします。</p>
+@accord(id = "fmts", title = "書式崩れ・未対応と表示される場合") {
+@accord(id = "zlog", title = "zLogをご利用の場合") {
+<p>zLogバイナリファイルでの提出をお試しください。</p>
+}
+@accord(id = "HLOG", title = "HLTSTをご利用の場合") {
+<p>JARLサマリーシートR2.0での提出をお試しください。</p>
+}
+@accord(id = "CTST", title = "CTESTWINをご利用の場合") {
+<p>JARLサマリーシートR2.0での提出をお試しください。</p>
+}
+}
+
+@accord(id = "rjct", title = "有効な交信と無効な交信の判断基準") {
+@accord(id = "freq", title = "無効な周波数帯") {
+<p>例えば7MHz帯部門で参加する場合、3.5MHz帯での交信は得点になりません。</p>
+}
+@accord(id = "mode", title = "無効な通信方式") {
+<p>電信部門で参加する場合、電話方式での交信は得点になりません。</p>
+}
+@accord(id = "area", title = "無効な交信相手") {
+<p>1エリア外の無線局は1エリア内の無線局と交信した場合のみ得点になります。</p>
+}
+@accord(id = "city", title = "無効なシリアル番号") {
+<p>1エリアでは市区町村番号、その他のエリアでは府県支庁番号を使用します。</p>
+}
+}
+@accord(id = "rsub", title = "誤った内容で提出してしまった場合") {
+<p>受付期間内であれば上書き再提出することができます。</p>
+}
+@accord(id = "mail", title = "提出したのにメールが届かない場合") {
+<p>照会をご希望の場合は主催者に問い合わせてください。</p>
+}
+<a class="btn btn-lg btn-primary" href="mailto:@mail"><span class="glyphicon glyphicon-envelope"></span> お問い合わせ</a>
 }

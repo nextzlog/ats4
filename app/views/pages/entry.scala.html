@@ -1,16 +1,17 @@
 @(pform: Form[User], warn: Option[Warn] = None)(implicit cfg: play.api.Configuration, req: RequestHeader)
 
 @import comps._
+@sects = @{Test.sects.map(_.getName.split(" ").tail.mkString(" ")).filterNot(_.contains("総合")).distinct}
 
 @frame(title = "書類提出", nav = "entry") {
 @if(warn.nonEmpty) {
-<fieldset class="alert alert-danger">
+<div class="alert alert-danger">
 	<span class="glyphicon glyphicon-warning-sign"></span> @warn
-</fieldset>
+</div>
 } else {
-<fieldset class="alert alert-info">
+<div class="alert alert-info">
 	午前と午後の双方の部門に参加した場合は、午前と午後で別々に提出してください。
-</fieldset>
+</div>
 }
 @helper.form(action = routes.Entry.post, 'class->"form-horizontal", 'enctype->"multipart/form-data") {
 @helper.CSRF.formField
@@ -19,43 +20,13 @@
 		<h2>登録内容</h2>
 	</div>
 	<fieldset class="panel-body">
-		@input(
-			pform("call"),
-			text = "呼出符号",
-			hint = "移動運用の例: JA1ZLO/1"
-		)
-		@combo(
-			pform("city"),
-			opts = Area.total,
-			text = "運用場所",
-			hint = "未選択"
-		)
-		@combo(
-			pform("sect"),
-			opts = Test.sects.map(_.getName.split(" ").tail.mkString(" ")).filterNot(_.contains("総合")).distinct,
-			text = "参加部門",
-			hint = "未選択"
-		)
-		@input(
-			pform("name"),
-			text = "お名前",
-			hint = "この宛名で賞を発送します"
-		)
-		@input(
-			pform("addr"),
-			text = "ご住所",
-			hint = "この宛先に賞を発送します"
-		)
-		@input(
-			pform("mail"),
-			text = "メール",
-			hint = "受理通知メールが届きます"
-		)
-		@tarea(
-			pform("comm"),
-			text = "ご感想",
-			hint = "呼出符号付きで公表します"
-		)
+		@input(pform("call"), text = "呼出符号", hint = "移動運用の例: JA1ZLO/1")
+		@choice(pform("city"), opts = Area.total, text = "運用場所", hint = "未選択")
+		@choice(pform("sect"), opts = sects, text = "参加部門", hint = "未選択")
+		@input(pform("name"), text = "お名前", hint = "この宛名で賞を発送します")
+		@input(pform("addr"), text = "ご住所", hint = "この宛先に賞を発送します")
+		@input(pform("mail"), text = "メール", hint = "受理通知メールが届きます")
+		@input(pform("comm"), text = "ご感想", hint = "呼出符号付きで公表します", multiline = true)
 	</fieldset>
 </div>
 <div class="panel panel-default">
@@ -63,33 +34,14 @@
 		<h2>交信記録</h2>
 	</div>
 	<fieldset class="panel-body">
-		@filer(
-			id    = "eLog",
-			name  = "eLog",
-			hint  = "右のボタンをクリックして交信記録ファイルを選択してください"
-		)
-		<div class="panel-group" id="accformats">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h4 class="panel-title">
-						<a data-toggle="collapse" data-parent="#accformats" href="#colformats">
-							対応済みの電子ログのフォーマットの一覧を見る
-						</a>
-					</h4>
-				</div>
-				<div class="panel-collapse collapse" id="colformats">
-					<div class="panel-body">
-						<ul>
-					@{
-						for(format <- new qxsl.table.Tables()) yield(
-							<li>{format}</li>
-						)
-					}
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
+		@upload(id = "eLog", name  = "eLog", hint = "右のボタンをクリックして交信記録ファイルを選択してください")
+		@accord(id = "fmts", title = "対応済みの電子ログのフォーマットの一覧を見る") {
+		<ul>
+		@for(fmt <- new qxsl.table.Tables()) {
+			<li>@{fmt}</li>
+		}
+		</ul>
+		}
 	</fieldset>
 	<div class="panel-footer">
 		JARLサマリーシートをアップロードした場合は、交信記録の部分のみを読み取ります

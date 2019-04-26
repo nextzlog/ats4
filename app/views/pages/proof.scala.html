@@ -2,7 +2,7 @@
 
 @import java.time.format.DateTimeFormatter
 @import java.time.{LocalDateTime, ZoneId}
-@import comps.filer
+@import comps.upload
 @import qxsl.field._
 
 @summ = @{QSOs(QSOs.file(post.file).toString).summ(post)}
@@ -20,7 +20,7 @@
 }
 <div class="par panel panel-default">
 	<div class="panel-heading">
-		<h2>@post.sect</h2>
+		<h3>@post.sect</h3>
 	</div>
 	<div class="panel-body">
 		<table class="table">
@@ -52,7 +52,7 @@
 </div>
 <div class="par panel panel-default">
 	<div class="panel-heading">
-		<h2>暫定の得点</h2>
+		<h3>暫定の得点</h3>
 	</div>
 	<div class="panel-body">
 		<strong>@{summ.score}点</strong> (交信局数@summ.calls 獲得マルチ数@summ.mults)
@@ -60,7 +60,7 @@
 </div>
 <div class="par panel panel-default">
 	<div class="panel-heading">
-		<h2>有効な交信</h2>
+		<h3>有効な交信</h3>
 	</div>
 	<div class="panel-body">
 		<table class="table">
@@ -85,7 +85,7 @@
 </div>
 <div class="par panel panel-default">
 	<div class="panel-heading">
-		<h2>無効な交信</h2>
+		<h3>無効な交信</h3>
 	</div>
 	<div class="panel-body">
 		<table class="table">
@@ -116,10 +116,10 @@
 @helper.CSRF.formField
 <div class="par panel panel-default">
 	<div class="panel-heading">
-		<h2>内容の修正</h2>
+		<h3>内容の修正</h3>
 	</div>
 	<div class="panel-body">
-		@filer(
+		@upload(
 			id    = "eLog",
 			name  = "eLog"
 		)
@@ -129,6 +129,6 @@
 }
 } else {
 <a class="btn btn-primary" onclick="window.print()"><span class="glyphicon glyphicon-print"></span> 印刷する</a>
-<a class="btn btn-default" href="mailto:@mail"><span class="glyphicon glyphicon-earphone"></span> 不具合を報告</a>
+<a class="btn btn-default" href="mailto:@mail"><span class="glyphicon glyphicon-envelope"></span> 不具合を報告</a>
 }
 }

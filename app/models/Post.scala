@@ -11,7 +11,7 @@ case class Post(id: Long, call: S, disp: S, city: S, sect: S, name: S, addr: S, 
 	}
 	def score = cnt * mul
 	def place(implicit db: Database) = Post.ofSect(sect).sortBy(-_.score).indexWhere(_.score == score)
-	def award(implicit db: Database) = this.place < Math.min(1 + Post.ofSect(this.sect).size * 0.1, 7)
+	def award(implicit db: Database) = place <= math.min(6, math.floor(Post.ofSect(sect).length * .1))
 }
 
 object Post {
