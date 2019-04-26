@@ -10,7 +10,7 @@
 <div class="page-header text-center">
 	<h3>コンテスト参加後、このサイトで交信記録を提出することで、参加者として登録されます。</h3>
 </div>
-@if(Gate.demo) {
+@if(DeadLine.demo) {
 <div class="panel panel-info">
 	<div class="panel-heading">
 		<h4>お知らせ</h4>
@@ -34,9 +34,9 @@
 			<a class="btn btn-block btn-primary" href="@routes.Entry.form">
 				<div class="caption">
 					<h3>交信記録を提出</h3>
-				@if(Gate.demo) {
+				@if(DeadLine.demo) {
 					<p>本番と同じ手順で書類提出の練習ができます</p>
-				} else if(Gate.isOK) {
+				} else if(DeadLine.isOK) {
 					<p>事前の参加登録やアカウント作成は不要です</p>
 				} else {
 					<p>提出期間外につき提出書類は受理できません</p>

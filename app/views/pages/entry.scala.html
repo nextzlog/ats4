@@ -1,7 +1,7 @@
-@(pform: Form[User], warn: Option[Warn] = None)(implicit cfg: play.api.Configuration, req: RequestHeader)
+@(pform: Form[User], warn: Option[Html] = None)(implicit cfg: play.api.Configuration, req: RequestHeader)
 
 @import comps._
-@sects = @{Test.sects.map(_.getName.split(" ").tail.mkString(" ")).filterNot(_.contains("総合")).distinct}
+@sects = @{Sections.all.map(_.getName.split(" ").tail.mkString(" ")).filterNot(_.contains("総合")).distinct}
 
 @frame(title = "書類提出", nav = "entry") {
 @if(warn.nonEmpty) {
@@ -21,7 +21,7 @@
 	</div>
 	<fieldset class="panel-body">
 		@input(pform("call"), text = "呼出符号", hint = "移動運用の例: JA1ZLO/1")
-		@choice(pform("city"), opts = Area.total, text = "運用場所", hint = "未選択")
+		@choice(pform("city"), opts = CallArea.total, text = "運用場所", hint = "未選択")
 		@choice(pform("sect"), opts = sects, text = "参加部門", hint = "未選択")
 		@input(pform("name"), text = "お名前", hint = "この宛名で賞を発送します")
 		@input(pform("addr"), text = "ご住所", hint = "この宛先に賞を発送します")

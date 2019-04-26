@@ -4,15 +4,21 @@ import java.nio.file.Files
 import java.util.{Timer, TimerTask}
 import javax.inject.{Inject, Singleton}
 import play.api.db.Database
+import play.api.{Configuration, Environment}
 import scala.collection.JavaConverters._
 
-@Singleton class Init @Inject()(implicit db: Database) {
-	class FinishTask extends TimerTask {
+class Module extends play.api.inject.Module {
+	def bindings(env: Environment, conf: Configuration) = {
+		Seq(bind[Report].toSelf.eagerly)
+	}
+}
+
+@Singleton class Report @Inject()(implicit db: Database) {
+	new Timer(true).schedule(new TimerTask {
 		override def run() {
 			val path = QSOs.save.resolve("report.csv")
 			val list = views.txt.pages.excel(db).body.lines
 			Files.write(path, list.filter(_.nonEmpty).toSeq.asJava)
 		}
-	}
-	new Timer(true).schedule(new FinishTask, 0, 3600000)
+	}, 0, 3600000)
 }
