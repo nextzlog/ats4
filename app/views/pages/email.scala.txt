@@ -1,18 +1,19 @@
-@(post: Post, postAllBands: Option[Post])(implicit cfg: play.api.Configuration)
+@(record: Record, sougou: Option[Record])(implicit cfg: play.api.Configuration)
 
 @host = @{cfg.get[String]("contest.host")}
 @name = @{cfg.get[String]("contest.name")}
 @site = @{cfg.get[String]("contest.site")}
 @mail = @{cfg.get[String]("contest.mail")}
 
-ALLJA1書類提出の完了 (@{post.sect}) // 空白を除く先頭行はメールの件名
+ALLJA1書類提出の完了 (@{record.sect}) // 空白を除く先頭行はメールの件名
 
-@{post.call}様
+@{record.call}様
 
 この度は@{name}コンテストに参加いただきありがとうございます。
-
-@{(Some(post.sect) ++ postAllBands).mkString("・")}にて受理いたしました。
-受付番号は@{post.id}です。
+@{record.sect}@if(sougou.nonEmpty){
+@{sougou.get.sect}}
+にて受理いたしました。
+受付番号は@{record.id}です。
 今後とも当コンテストをよろしくお願いいたします。
 
 ---

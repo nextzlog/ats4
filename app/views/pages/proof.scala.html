@@ -1,11 +1,11 @@
-@(post: Post)(implicit cfg: play.api.Configuration, req: RequestHeader = null, admin: Boolean = false)
+@(record: Record)(implicit cfg: play.api.Configuration, req: RequestHeader = null, admin: Boolean = false)
 
 @import java.time.format.DateTimeFormatter
 @import java.time.{LocalDateTime, ZoneId}
 @import comps.upload
 @import qxsl.field._
 
-@summ = @{QSOs(QSOs.file(post.file).toString).summ(post)}
+@summ = @{Tables(record.file,record.sect).score}
 @mail = @{cfg.get[String]("contest.mail")}
 @dfmt = @{DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")}
 @time(t: Time) = @{LocalDateTime.ofInstant(t.value.toInstant,ZoneId.systemDefault).format(dfmt)}
@@ -20,7 +20,7 @@
 }
 <div class="par panel panel-default">
 	<div class="panel-heading">
-		<h3>@post.sect</h3>
+		<h3>@record.sect</h3>
 	</div>
 	<div class="panel-body">
 		<table class="table">
@@ -35,18 +35,18 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td>@post.disp</td>
-					<td>@post.city</td>
-					<td>@post.name</td>
-					<td>@if(admin) {**********} else {@post.addr}</td>
-					<td>@post.mail</td>
+					<td>@record.call</td>
+					<td>@record.city</td>
+					<td>@record.name</td>
+					<td>@if(admin) {**********} else {@record.addr}</td>
+					<td>@record.mail</td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
-@if(post.comm.nonEmpty) {
+@if(record.comm.nonEmpty) {
 	<div class="panel-footer">
-		@post.comm
+		@record.comm
 	</div>
 }
 </div>
@@ -112,7 +112,7 @@
 	</div>
 </div>
 @if(admin) {
-@helper.form(action = routes.Admin.post(post.id), 'class->"form-horizontal", 'enctype->"multipart/form-data") {
+@helper.form(action = routes.Admin.post(record.id), 'class->"form-horizontal", 'enctype->"multipart/form-data") {
 @helper.CSRF.formField
 <div class="par panel panel-default">
 	<div class="panel-heading">

@@ -1,9 +1,9 @@
-@(entries: Seq[Post])(implicit cfg: play.api.Configuration)
+@(entries: Seq[Record])(implicit cfg: play.api.Configuration)
 
 @frame(title = "皆様の声", nav = "board") {
 @for(entry <- entries.filter(_.comm.nonEmpty)) {
 <blockquote>
-	<p>@entry.comm <footer>@entry.disp (@entry.city)</footer></p>
+	<p>@entry.comm <footer>@entry.call (@entry.city)</footer></p>
 </blockquote>
 }
 }

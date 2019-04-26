@@ -1,11 +1,11 @@
 package controllers
 
 import javax.inject.Inject
-import models.Post
+import models.Record
 import play.api.Configuration
 import play.api.db.Database
 import play.api.mvc.{Action, InjectedController}
 
 class Board @Inject()(implicit cfg: Configuration, db: Database) extends InjectedController {
-	def view = Action(Ok(views.html.pages.board(Post.all)))
+	def view = Action(Ok(views.html.pages.board(Record.all)))
 }

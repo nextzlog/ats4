@@ -1,5 +1,6 @@
 package models
 
+import java.nio.file.Paths
 import java.time.LocalDate
 import play.api.Configuration
 import play.api.db.Database
@@ -14,34 +15,33 @@ object DeadLine {
 }
 
 class WorkFlow(implicit smtp: MailerClient, cfg: Configuration, db: Database) {
-	def apply(user: User, temp: TemporaryFile): Post = {
-		val path = temp.moveFileTo(user.file)
-		val file = path.getFileName.toString
-		val summ = QSOs(path.toString).summ(user)
-		val post = user.post.copy(file=file, cnt=summ.calls, mul=summ.mults)
-		Conflict(post)(db)
-		Logger.info(s"accept: $post")
-		val postAllBands = AllBands(post)
-		postAllBands.foreach(_.insert)
+	def apply(scaned: Scaned, temp: TemporaryFile): Record = {
+		val scored = scaned.next(Tables(temp.path.toString, scaned.sect).score)
+		Conflict(scored)(db)
+		val record = scored.next.get
+		temp.moveFileTo(Paths.get(scored.file).toFile)
+		Logger.info(s"accept: $record")
+		val sougou = Sougou(record)
+		if (sougou.nonEmpty) sougou.get.scored.next
 		val mail = new SendMail
-		mail(post,postAllBands)
-		post.insert
+		mail(record,sougou)
+		record
 	}
 }
 
 class SendMail(implicit smtp: MailerClient, cfg: Configuration, db: Database) {
-	def apply(post: Post, postAllBands: Option[Post]) {
+	def apply(record: Record, sougou: Option[Record]) {
 		val host = cfg.get[String]("contest.host")
 		val repl = cfg.get[String]("contest.repl")
-		val text = views.txt.pages.email(post,postAllBands).body.trim
-		for(to <- Post.ofCall(post.call).map(_.mail).distinct) {
+		val text = views.txt.pages.email(record,sougou).body.trim
+		for(to <- Record.ofCall(record.call).map(_.mail).distinct) {
 			val mail = new Email
 			mail.setSubject(text.lines.toSeq.head)
 			mail.setFrom("%s <%s>".format(host,repl))
-			mail.addTo("%s <%s>".format(post.call,to))
+			mail.addTo("%s <%s>".format(record.call,to))
 			mail.addBcc(repl)
-			mail.setBodyText(text.linesWithSeparators.toSeq.tail.mkString("\n"))
-			Try(smtp.send(mail)).recover{case ex=>Logger.error("mail error",ex)}
+			mail.setBodyText(text.linesWithSeparators.toSeq.tail.mkString.trim)
+			Try(smtp.send(mail)).recover{case ex=>Logger.error("mail error", ex)}
 		}
 	}
 }

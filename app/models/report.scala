@@ -1,6 +1,7 @@
 package models
 
-import java.nio.file.Files
+import java.nio.charset.Charset
+import java.nio.file.{Files, Paths}
 import java.util.{Timer, TimerTask}
 import javax.inject.{Inject, Singleton}
 import play.api.db.Database
@@ -16,9 +17,10 @@ class Module extends play.api.inject.Module {
 @Singleton class Report @Inject()(implicit db: Database) {
 	new Timer(true).schedule(new TimerTask {
 		override def run() {
-			val path = QSOs.save.resolve("report.csv")
-			val list = views.txt.pages.excel(db).body.lines
-			Files.write(path, list.filter(_.nonEmpty).toSeq.asJava)
+			val cset = Charset.forName("SJIS")
+			val path = Paths.get("ats4.rcvd", "report.csv")
+			val list = views.txt.pages.excel(db).body.lines.toSeq
+			Files.write(path, list.filter(_.nonEmpty).asJava,cset)
 		}
 	}, 0, 3600000)
 }

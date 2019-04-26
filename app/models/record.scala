@@ -9,59 +9,61 @@ import java.time.format.DateTimeFormatter
 import play.api.data.{Form, Forms}
 import play.api.db.Database
 import qxsl.ruler.Summary
-import qxsl.sheet.Sheets
-import qxsl.table.Tables
 import scala.util.Try
 
 object UserForm extends Form(Forms.mapping(
-	"call" -> Forms.nonEmptyText,
+	"disp" -> Forms.nonEmptyText,
 	"city" -> Forms.nonEmptyText,
-	"sect" -> Forms.nonEmptyText,
+	"part" -> Forms.nonEmptyText,
 	"name" -> Forms.nonEmptyText,
 	"addr" -> Forms.nonEmptyText,
 	"mail" -> Forms.email,
 	"comm" -> Forms.text
-)(User.apply)(User.unapply), Map.empty, Nil, None)
+)(Scaned.apply)(Scaned.unapply), Map.empty, Nil, None)
 
-case class User(call: String, city: String, sect: String, name: String, addr: String, mail: String, comm: String) {
-	def disp = Normalizer.normalize(call.toUpperCase, Normalizer.Form.NFKC)
-	def safe = disp.split('/').head.replaceAll("[^0-9A-Z]", "")
-	val file = QSOs.file(QSOs.name(safe)) // safety against directory traversal
-	def post = Post(-1,call=safe,disp=disp,city=city,sect=CallArea.sect(this),name=name,addr=addr,mail=mail,comm=comm)
+case class Scaned(disp: S, city: S, part: S, name: S, addr: S, mail: S, comm: S) {
+	def call = Normalizer.normalize(disp.toUpperCase, Normalizer.Form.NFKC)
+	def area = "1エリア%s".format(if(CallArea.inner.contains(city)) "内" else "外")
+	def sect = s"$area $part"
+	def next(summ: Summary) = Scored(this, summ.calls, summ.mults)
 }
 
-case class Post(id: Long, call: S, disp: S, city: S, sect: S, name: S, addr: S, mail: S, comm: S, file: S = null, cnt: Int = 0, mul: Int = 0) {
-	def delete(implicit db: Database) = db.withConnection(implicit c => SQL"delete from post where id=$id".executeUpdate)
-	def insert(implicit db: Database) = db.withConnection{implicit c => 
-		copy(id=SQL"insert into post values(NULL,$call,$disp,$city,$sect,$name,$addr,$mail,$comm,$file,$cnt,$mul)".executeInsert().get)
-	}
-	def score = cnt * mul
-	def place(implicit db: Database) = Post.ofSect(sect).sortBy(-_.score).indexWhere(_.score == score)
-	def award(implicit db: Database) = place <= math.min(6, math.floor(Post.ofSect(sect).length * .1))
+case class Tables(path: String, sect: String) {
+	def bytes = Files.readAllBytes(Paths.get(path))
+	def sheet = new qxsl.sheet.Sheets().decode(bytes).get("LOGSHEET").getBytes()
+	def table = new qxsl.table.Tables().decode(util.Try(sheet).getOrElse(bytes))
+	val score = new Summary(table, Sections.forName(sect))
 }
 
-object Post {
-	val parser = Macro.namedParser[Post]
-	def all(implicit db: Database) = db.withConnection(implicit c => SQL"select * from post".as(parser.*))
-	def forId(id: Long)(implicit db: Database) = db.withConnection(implicit c => SQL"select * from post where id=$id".as(parser.*)).headOption
-	def ofSect(sect: S)(implicit db: Database) = db.withConnection(implicit c => SQL"select * from post where sect=$sect".as(parser.*))
-	def ofCall(call: S)(implicit db: Database) = db.withConnection(implicit c => SQL"select * from post where call=$call".as(parser.*))
+case class Scored(scaned: Scaned, calls: Int, mults: Int) {
+	def call = scaned.call
+	def city = scaned.city
+	def sect = scaned.sect
+	def comm = scaned.comm
+	def name = scaned.name
+	def addr = scaned.addr
+	def mail = scaned.mail
+	def path = Files.createDirectories(Paths.get("ats4.rcvd"))
+	def safe = call.split('/').head.replaceAll("[^0-9A-Z]","")
+	def dfmt = DateTimeFormatter.ofPattern("'%s'.yyyyMMdd.HHmmss.'log'")
+	val file = path.resolve(LocalDateTime.now.format(dfmt).format(safe)).toString
+	def post = SQL"insert into posts values(NULL,$call,$city,$sect,$name,$addr,$mail,$comm,$file,$calls,$mults)"
+	def next(implicit db: Database) = db.withConnection(implicit c => Record.forId(id=post.executeInsert().get))
 }
 
-case class QSOs(path: String) {
-	val sheets = new Sheets()
-	val tables = new Tables()
-	val source = Paths.get(path).toUri.toURL
-	val sheet = Try(sheets.decode(source).get("LOGSHEET").getBytes)
-	val table = Try(tables.decode(sheet.get)).getOrElse(tables.decode(source))
-	def summ(user: User) = new Summary(table, Sections.forName(CallArea.sect(user)))
-	def summ(post: Post) = new Summary(table, Sections.forName(post.sect))
+case class Record(id: Long, call: S, city: S, sect: S, name: S, addr: S, mail: S, comm: S, file: S, calls: Int, mults: Int) {
+	def score = calls * mults
+	def place(implicit db: Database) = Record.ofSect(sect).sortBy(-_.score).indexWhere(_.score == score)
+	def award(implicit db: Database) = place <= math.min(6, math.floor(Record.ofSect(sect).length * .1))
+	def purge(implicit db: Database) = db.withConnection(implicit c=>SQL"delete from posts where id=$id".executeUpdate)
+	def scaned = Scaned(call,city=city,part=sect.split(" ").tail.mkString(" "),name=name,addr=addr,mail=mail,comm=comm)
+	def scored = Scored(scaned, calls=calls, mults=mults)
 }
 
-object QSOs {
-	val save = Paths.get(System.getProperty("user.dir")).resolve("rcvd")
-	val dfmt = DateTimeFormatter.ofPattern("'%s'.yyyyMMdd.HHmmss.'log'")
-	def file(name: String) = save.resolve(name).toFile
-	def name(call: String) = LocalDateTime.now.format(dfmt).format(call)
-	if(Files.notExists(save)) Files.createDirectories(save)
+object Record {
+	private val parser = Macro.namedParser[Record]
+	def all(implicit db: Database) = db.withConnection(implicit c => SQL"select * from posts".as(parser.*))
+	def forId(id: Long)(implicit db: Database) = db.withConnection(implicit c => SQL"select * from posts where id=$id".as(parser.*)).headOption
+	def ofSect(sect: S)(implicit db: Database) = db.withConnection(implicit c => SQL"select * from posts where sect=$sect".as(parser.*))
+	def ofCall(call: S)(implicit db: Database) = db.withConnection(implicit c => SQL"select * from posts where call=$call".as(parser.*))
 }
