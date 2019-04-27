@@ -15,6 +15,7 @@ object DeadLine {
 }
 
 class Acceptor(implicit smtp: MailerClient, cfg: Configuration, db: Database) {
+	val logger = Logger(classOf[Acceptor])
 	def accept(scaned: Scaned, temp: TemporaryFile): Record = {
 		val scored = scaned.next(Tables(temp.path.toString, scaned.sect).score)
 		Conflict(scored)(db)
@@ -36,7 +37,7 @@ class Acceptor(implicit smtp: MailerClient, cfg: Configuration, db: Database) {
 			mail.addTo("%s <%s>".format(record.call,to))
 			mail.addBcc(from)
 			mail.setBodyText(text.linesWithSeparators.toSeq.tail.mkString.trim)
-			Try(smtp.send(mail)).recover{case ex=>Logger.error("mail error", ex)}
+			Try(smtp.send(mail)).recover{case e=>logger.error("mail error", e)}
 		}
 	}
 }

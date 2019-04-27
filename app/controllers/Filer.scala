@@ -1,7 +1,8 @@
 package controllers
 
-import play.api.mvc.{Action,Controller}
+import javax.inject.Singleton
+import play.api.mvc.{Action,InjectedController}
 
-class Filer extends Controller {
+@Singleton class Filer extends InjectedController {
 	def view(id: String) = Action(Ok(views.js.comps.upload(id)))
 }

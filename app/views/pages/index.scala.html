@@ -31,7 +31,7 @@
 			</a>
 		</div>
 		<div class="col-md-4">
-			<a class="btn btn-block btn-primary" href="@routes.Entry.form">
+			<a class="btn btn-block @if(DeadLine.isOK){btn-primary} else {btn-default}" href="@routes.Entry.form">
 				<div class="caption">
 					<h3>交信記録を提出</h3>
 				@if(DeadLine.demo) {
@@ -45,7 +45,7 @@
 			</a>
 		</div>
 		<div class="col-md-4">
-			<a class="btn btn-block btn-default" href="@routes.Lists.view">
+			<a class="btn btn-block @if(DeadLine.isOK){btn-default} else {btn-primary}" href="@routes.Lists.view">
 				<div class="caption">
 					<h3>暫定結果を確認</h3>
 					<p>提出期間が満了したら必ず確認してください</p>
