@@ -1,4 +1,4 @@
-@(record: Record, sougou: Option[Record])(implicit cfg: play.api.Configuration)
+@(record: Record, sougou: Option[Record])(implicit cfg: Configuration)
 
 @host = @{cfg.get[String]("contest.host")}
 @name = @{cfg.get[String]("contest.name")}
