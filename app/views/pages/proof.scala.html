@@ -8,7 +8,7 @@
 @summ = @{Tables(record.file,record.sect).score}
 @mail = @{cfg.get[String]("contest.mail")}
 @dfmt = @{DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")}
-@time(t: Time)=@{LocalDateTime.ofInstant(t.value.toInstant,ZoneOffset.UTC).format(dfmt)}
+@time(t: Time)=@{t.value.format(dfmt)}
 
 @comps.frame(title="提出書類の確認", nav=if(admin) "admin" else "entry") {
 @if(admin && warn.nonEmpty) {
