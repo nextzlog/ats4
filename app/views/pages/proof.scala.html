@@ -1,8 +1,8 @@
-@(record: Record)(implicit cfg: play.api.Configuration, req: RequestHeader = null, admin: Boolean = false)
+@(record: Record, warn: Option[Html] = None)(implicit cfg: play.api.Configuration, req: RequestHeader = null, admin: Boolean = false)
 
 @import java.time.format.DateTimeFormatter
 @import java.time.{LocalDateTime, ZoneId}
-@import comps.upload
+@import comps._
 @import qxsl.field._
 
 @summ = @{Tables(record.file,record.sect).score}
@@ -11,7 +11,11 @@
 @time(t: Time) = @{LocalDateTime.ofInstant(t.value.toInstant,ZoneId.systemDefault).format(dfmt)}
 
 @frame(title = "提出書類の確認", nav = if(admin) "admin" else "entry") {
-@if(!admin) {
+@if(admin && warn.nonEmpty) {
+<div class="alert alert-danger">
+	<span class="glyphicon glyphicon-warning-sign"></span> @warn
+</div>
+} else {
 <div class="alert alert-info">
 	下記の内容で受理しました。
 	交信記録が正しく読み込まれたかご確認ください。
@@ -108,24 +112,16 @@
 		</table>
 	</div>
 	<div class="panel-footer">
-		時間外の交信や部門外の周波数帯など、書類の不備により、得点計算の対象と認められない交信です
+		時間外の交信や部門外の周波数帯など、書類の不備により、得点計算の対象と認められない交信です。
 	</div>
 </div>
-@if(admin) {
+@if(admin && !record.sect.contains("総合部門")) {
 @helper.form(action = routes.Admin.post(record.id), 'class->"form-horizontal", 'enctype->"multipart/form-data") {
 @helper.CSRF.formField
-<div class="par panel panel-default">
-	<div class="panel-heading">
-		<h3>内容の修正</h3>
-	</div>
-	<div class="panel-body">
-		@upload(
-			id    = "eLog",
-			name  = "eLog"
-		)
-		<input class="btn btn-primary" type="submit" value="交信記録を更新">
-	</div>
-</div>
+@accord(id = "edit", title = "内容の修正", header = 3) {
+@upload(id = "eLog", name = "eLog", hint = "交信記録を更新すると参加者にメール通知されます。")
+<input class="btn btn-primary" type="submit" value="交信記録を更新">
+}
 }
 } else {
 <a class="btn btn-primary" onclick="window.print()"><span class="glyphicon glyphicon-print"></span> 印刷する</a>

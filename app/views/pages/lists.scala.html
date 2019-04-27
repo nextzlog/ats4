@@ -1,7 +1,5 @@
 @(sections: Seq[qxsl.ruler.Section])(implicit cfg: play.api.Configuration, db: play.api.db.Database, admin: Boolean = false)
 
-@link(record: Record) = @{if(admin) routes.Admin.sums(record.id) else "#%s".format(record.sect)}
-
 @frame(title = if(admin) "管理画面" else "暫定結果", nav = if(admin) "admin" else "lists") {
 @if(admin) {
 <div class="alert alert-danger">
@@ -23,7 +21,7 @@
 		<p class="text-info">現在、受付期間につき非公開とする。</p>
 	</div>
 } else if(Record.ofSect(sect.getName).nonEmpty) {
-	<table class="table table-hover" id="@sect.getName">
+	<table class="table table-hover">
 		<thead>
 			<tr>
 				<th width="10%">順位</th>
@@ -36,7 +34,7 @@
 		</thead>
 		<tbody>
 		@for(record <- Record.ofSect(sect.getName).sortBy(-_.score)) {
-			<tr class="link @if(record.award) {award}" onclick="window.location='@link(record)';">
+			<tr class="link @if(record.award) {award}" @if(admin) {onclick="window.location='@routes.Admin.sums(record.id)';"}>
 				<td>@{1 + record.place}</td>
 				<td>@{record.call}</td>
 				<td>@{record.calls}</td>

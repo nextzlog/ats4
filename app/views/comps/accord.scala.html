@@ -1,15 +1,17 @@
-@(id: String, title: String)(content: Html)
+@(id: String, title: String, header: Int = 4)(content: Html)
 
 <div class="panel-group" id="@id-accord">
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			<h3 class="panel-title">
+			<div class="panel-title">
 				<a data-toggle="collapse" data-parent="#@id-accord" href="#@id-body">
-					<span class="glyphicon glyphicon-chevron-down"></span>
-					@title
-					<span class="glyphicon glyphicon-chevron-down pull-right"></span>
+					<h@header>
+						<span class="glyphicon glyphicon-chevron-down"></span>
+						@title
+						<span class="glyphicon glyphicon-chevron-down pull-right"></span>
+					</h@header>
 				</a>
-			</h3>
+			</div>
 		</div>
 		<div class="panel-collapse collapse" id="@id-body">
 			<div class="panel-body">
