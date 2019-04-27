@@ -5,7 +5,6 @@ import java.util.{NoSuchElementException=>Omiss}
 import javax.inject.{Inject,Singleton}
 import models.Record.forId
 import models.{Acceptor,Sections}
-import util.Try
 import play.api.Configuration
 import play.api.db.Database
 import play.api.mvc.{Action,InjectedController}
@@ -21,12 +20,12 @@ import views.html.warns.{omiss,unsup}
 	private implicit val admin = true
 	private implicit val ec = ExecutionContext.global
 	def root = Action(Ok(lists(Sections.all)))
-	def sums(id: Long) = Action(implicit r=>Try {
+	def sums(id: Long) = Action(implicit r=>util.Try {
 		Ok(proof(forId(id).get))
 	}.getOrElse {
 		NotFound(lists(Sections.all))
 	})
-	def logs(id: Long) = Action(Try {
+	def logs(id: Long) = Action(util.Try {
 		Ok.sendFile(content=new File(forId(id).get.file))
 	}.getOrElse {
 		NotFound(lists(Sections.all))
