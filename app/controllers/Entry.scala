@@ -16,7 +16,7 @@ class Entry @Inject() (implicit smtp: MailerClient, cfg: Configuration, db: Data
 	def post = Action(parse.multipartFormData) (implicit req => Try {
 		val prof = UserForm.bindFromRequest.get
 		val elog = req.body.file("eLog").get.ref
-		Ok(pages.proof(new WorkFlow()(smtp,cfg,db)(prof,elog)))
+		Ok(pages.proof(new Acceptor().accept(prof,elog)))
 	}.recover {
 		case ex: OmissException => {
 			play.api.Logger.error(warns.omiss().body, ex)

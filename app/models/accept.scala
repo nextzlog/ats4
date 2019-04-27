@@ -14,8 +14,8 @@ object DeadLine {
 	def isOK(implicit cfg: Configuration) = LocalDate.now.getMonthValue == 6 || demo
 }
 
-class WorkFlow(implicit smtp: MailerClient, cfg: Configuration, db: Database) {
-	def apply(scaned: Scaned, temp: TemporaryFile): Record = {
+class Acceptor(implicit smtp: MailerClient, cfg: Configuration, db: Database) {
+	def accept(scaned: Scaned, temp: TemporaryFile): Record = {
 		val scored = scaned.next(Tables(temp.path.toString, scaned.sect).score)
 		Conflict(scored)(db)
 		val record = scored.next.get
@@ -23,14 +23,10 @@ class WorkFlow(implicit smtp: MailerClient, cfg: Configuration, db: Database) {
 		Logger.info(s"accept: $record")
 		val sougou = Sougou(record)
 		if (sougou.nonEmpty) sougou.get.scored.next
-		val mail = new SendMail
-		mail(record,sougou)
+		notify(record,sougou)
 		record
 	}
-}
-
-class SendMail(implicit smtp: MailerClient, cfg: Configuration, db: Database) {
-	def apply(record: Record, sougou: Option[Record]) {
+	def notify(record: Record, sougou: Option[Record]) {
 		val host = cfg.get[String]("contest.host")
 		val repl = cfg.get[String]("contest.repl")
 		val text = views.txt.pages.email(record,sougou).body.trim
