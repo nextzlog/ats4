@@ -1,9 +1,10 @@
 package controllers
 
-import javax.inject.Inject
+import javax.inject.{Inject,Singleton}
 import play.api.Configuration
-import play.api.mvc.{Action, InjectedController}
+import play.api.mvc.{Action,InjectedController}
 
-class Index @Inject()(implicit cfg: Configuration) extends InjectedController {
+@Singleton class Index extends InjectedController {
+	@Inject implicit var cfg: Configuration = null
 	def view = Action(Ok(views.html.pages.index()))
 }
