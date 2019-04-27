@@ -1,6 +1,6 @@
-@(sections: Seq[qxsl.ruler.Section])(implicit cfg: play.api.Configuration, db: play.api.db.Database, admin: Boolean = false)
+@(sections: Seq[qxsl.ruler.Section])(implicit cfg: Configuration, db: Database, admin: Boolean=false)
 
-@frame(title = if(admin) "管理画面" else "暫定結果", nav = if(admin) "admin" else "lists") {
+@comps.frame(title=if(admin) "管理画面" else "暫定結果", nav=if(admin) "admin" else "lists") {
 @if(admin) {
 <div class="alert alert-danger">
 	このページは管理者用につき、外部から閲覧可能な場合は直ちに設定を変更せよ。
@@ -22,26 +22,23 @@
 	</div>
 } else if(Record.ofSect(sect.getName).nonEmpty) {
 	<table class="table table-hover">
-		<thead>
-			<tr>
-				<th width="10%">順位</th>
-				<th width="20%">呼出符号</th>
-				<th width="10%">交信局数</th>
-				<th width="10%">マルチ数</th>
-				<th width="10%">総得点</th>
-				<th width="40%">運用地</th>
-			</tr>
-		</thead>
-		<tbody>
+		<tr>
+			<th width="10%">順位</th>
+			<th width="20%">呼出符号</th>
+			<th width="10%">交信局数</th>
+			<th width="10%">マルチ数</th>
+			<th width="10%">総得点</th>
+			<th width="40%">運用地</th>
+		</tr>
 		@for(record <- Record.ofSect(sect.getName).sortBy(-_.score)) {
-			<tr class="link @if(record.award) {award}" @if(admin) {onclick="window.location='@routes.Admin.sums(record.id)';"}>
-				<td>@{1 + record.place}</td>
-				<td>@{record.call}</td>
-				<td>@{record.calls}</td>
-				<td>@{record.mults}</td>
-				<td>@{record.score}</td>
-				<td>@{record.city}</td>
-			</tr>
+		<tr class="link @if(record.award) {award}" @if(admin) {onclick="window.location='@routes.Admin.sums(record.id)';"}>
+			<td>@{1 + record.place}</td>
+			<td>@{record.call}</td>
+			<td>@{record.calls}</td>
+			<td>@{record.mults}</td>
+			<td>@{record.score}</td>
+			<td>@{record.city}</td>
+		</tr>
 		}
 		</tbody>
 	</table>

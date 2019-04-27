@@ -15,3 +15,8 @@ libraryDependencies ++= Seq(
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 scalacOptions += "-feature"
+
+TwirlKeys.templateImports ++= Seq(
+	"play.api.db.Database",
+	"play.api.Configuration"
+)

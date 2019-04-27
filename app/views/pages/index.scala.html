@@ -1,9 +1,9 @@
-@()(implicit cfg: play.api.Configuration)
+@()(implicit cfg: Configuration)
 
 @name = @{cfg.get[String]("contest.name")}
 @rule = @{cfg.get[String]("contest.rule")}
 
-@frame(nav = "index") {
+@comps.frame(nav="index") {
 <div class="jumbotron text-center">
 	<h1>@name 書類受付システム</h1>
 </div>

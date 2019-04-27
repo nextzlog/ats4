@@ -1,4 +1,4 @@
-@(title: String = "", nav: String = "")(content: Html)(implicit cfg: play.api.Configuration)
+@(title: String = "", nav: String = "")(content: Html)(implicit cfg: Configuration)
 
 @name = @{cfg.get[String]("contest.name")}
 @host = @{cfg.get[String]("contest.host")}
