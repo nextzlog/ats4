@@ -1,8 +1,7 @@
 @(record: Record, warn: Option[Html]=None)(implicit cfg: Configuration, req: RequestHeader=null, admin: Boolean=false)
 
-@import java.time.format.DateTimeFormatter
-@import java.time.{LocalDateTime, ZoneOffset}
 @import comps._
+@import java.time.format.DateTimeFormatter
 @import qxsl.field._
 
 @summ = @{Tables(record.file,record.sect).score}
