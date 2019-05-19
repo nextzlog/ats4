@@ -1,12 +1,7 @@
 ats4.rcvd
 logs
 target
-/*.db
-*.swp
-/.idea
-/.idea_modules
-/.classpath
-/.project
-/.settings
-/RUNNING_PID
-.DS_Store
+RUNNING_PID
+*.db
+.*
+!.gitignore
