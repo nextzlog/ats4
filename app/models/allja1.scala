@@ -6,7 +6,7 @@ import qxsl.ruler.Contest
 import scala.collection.JavaConverters._
 
 object Sections {
-	val all = Contest.forName("allja1.lisp").asScala.toList
+	val all = Contest.defined("allja1.lisp").asScala.toList
 	def AM = all.map(_.getName).filter(_.matches(""".*(1\.9|3\.5|7).*"""))
 	def PM = all.map(_.getName).filter(_.matches(""".*(14|21|28|50).*"""))
 	def RC = all.map(_.getName).filter(_.contains("社団"))

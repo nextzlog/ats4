@@ -25,14 +25,14 @@ case class Scaned(disp: S, city: S, part: S, name: S, addr: S, mail: S, comm: S)
 	def call = Normalizer.normalize(disp.toUpperCase, Normalizer.Form.NFKC)
 	def area = "1エリア%s".format(if(CallArea.inner.contains(city)) "内" else "外")
 	def sect = s"$area $part"
-	def next(summ: Summary) = Scored(this, summ.calls, summ.mults)
+	def next(summ: Summary) = Scored(this, summ.score, summ.mults)
 }
 
 case class Tables(path: String, sect: String) {
 	def bytes = Files.readAllBytes(Paths.get(path))
 	def sheet = new qxsl.sheet.Sheets().decode(bytes).get("LOGSHEET").getBytes()
 	def table = new qxsl.table.Tables().decode(util.Try(sheet).getOrElse(bytes))
-	val score = new Summary(table, Sections.forName(sect))
+	val score = Sections.forName(sect).summarize(table)
 }
 
 case class Scored(scaned: Scaned, calls: Int, mults: Int) {

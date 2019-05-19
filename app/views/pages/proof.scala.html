@@ -52,7 +52,7 @@
 		<h3>暫定の得点</h3>
 	</div>
 	<div class="panel-body">
-		<strong>@{summ.score}点</strong> (交信局数@summ.calls 獲得マルチ数@summ.mults)
+		<strong>@{summ.score}点</strong> (素点@summ.score 乗数@summ.mults)
 	</div>
 </div>
 <div class="par panel panel-default">
@@ -67,13 +67,13 @@
 			<th width="16%">通信方式</th>
 			<th width="16%">運用地</th>
 		</tr>
-	@for(item <- summ.accepted()) {
+	@for(succ <- summ.accepted()) {
 		<tr>
-			<td>@{time(item.get(classOf[Time]))}</td>
-			<td>@{item.get(classOf[Call])}</td>
-			<td>@{item.get(classOf[Band])}</td>
-			<td>@{item.get(classOf[Mode])}</td>
-			<td>@{item.getRcvd.get(classOf[Code])}</td>
+			<td>@{time(succ.item.get(classOf[Time]))}</td>
+			<td>@{succ.item.get(classOf[Call])}</td>
+			<td>@{succ.item.get(classOf[Band])}</td>
+			<td>@{succ.item.get(classOf[Mode])}</td>
+			<td>@{succ.item.getRcvd.get(classOf[Code])}</td>
 		</tr>
 	}
 	</table>
@@ -90,13 +90,13 @@
 			<th width="16%">通信方式</th>
 			<th width="16%">運用地</th>
 		</tr>
-	@for(item <- summ.rejected()) {
+	@for(fail <- summ.rejected()) {
 		<tr>
-			<td>@{time(item.get(classOf[Time]))}</td>
-			<td>@{item.get(classOf[Call])}</td>
-			<td>@{item.get(classOf[Band])}</td>
-			<td>@{item.get(classOf[Mode])}</td>
-			<td>@{item.getRcvd.get(classOf[Code])}</td>
+			<td>@{time(fail.item.get(classOf[Time]))}</td>
+			<td>@{fail.item.get(classOf[Call])}</td>
+			<td>@{fail.item.get(classOf[Band])}</td>
+			<td>@{fail.item.get(classOf[Mode])}</td>
+			<td>@{fail.item.getRcvd.get(classOf[Code])}</td>
 		</tr>
 	}
 	</table>
