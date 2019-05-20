@@ -50,7 +50,7 @@ play.mailer.user="***********"
 play.mailer.password="*******"
 ```
 
-Rewrite the mail settings properly.
+Modify the mail settings properly.
 Don't forget to update the rule URL:
 
 ```ini
