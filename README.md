@@ -1,4 +1,4 @@
-ATS-4: WebSystem for Hamradio Contests
+ATS-4: Web System for Hamradio Contests
 ====
 
 ![image](https://img.shields.io/badge/Java-JDK8-green.svg)
@@ -6,7 +6,7 @@ ATS-4: WebSystem for Hamradio Contests
 ![image](https://img.shields.io/badge/license-GPL3-green.svg)
 
 ATS-4 is an Automatic Acceptance & Tabulation System for Amateur-Radio Contests.
-ATS-4 consists of the web components (ATS-4 itself) and the logging & scoring framework [qxsl](https://github.com/nextzlog/qxsl).
+ATS-4 consists of the web components (ATS-4 itself) and [qxsl: Hamradio Logging Library](https://github.com/nextzlog/qxsl).
 
 ## Features
 
@@ -32,7 +32,7 @@ $ git clone https://github.com/nextzlog/ats4
 $ cd ats4
 ```
 
-Next, open the configuration file as follows:
+Open the configuration file as follows:
 
 ```Bash
 $ alias emacs='vim'
@@ -72,6 +72,7 @@ After a period of time, you will find the following message:
 ```
 
 Then, type Ctrl+D and exit.
+Browse the system on port 9000.
 If you would like to run it in the development mode:
 
 ```
@@ -99,6 +100,11 @@ Finally, delete the file.
 ```Bash
 $ rm target/universal/stage/RUNNING_PID
 ```
+
+## Reverse Proxy
+
+We expect that ATS-4 operates as a backend server, which is hidden behind a frontend server such as Apache and Nginx.
+Make sure that **unauthorized clients have no access to admin pages under `/admin`** before you start the system.
 
 ## Contribution
 
