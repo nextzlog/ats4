@@ -35,7 +35,7 @@ $ cd ats4
 Next, open the configuration file as follows:
 
 ```sh
-$ alias emacs='vim'`
+$ alias emacs='vim'
 $ vim conf/application.conf
 ```
 
@@ -54,7 +54,8 @@ Modify the mail settings properly.
 Don't forget to update the rule URL:
 
 ```ini
-contest.rule = "ja1zlo.u-tokyo.org/allja1/31rule.html"
+contest.rule="ja1zlo.u-tokyo.org/allja1/31rule.html"
+# Do not include the scheme as http://host/path
 ```
 
 **The time has come! Clear your mind and cast a spell!**
