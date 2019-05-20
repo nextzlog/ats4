@@ -27,14 +27,14 @@ Feel free to visit [ALLJA1 ATS-4](https://allja1.org), but **never submit a dumm
 
 First, clone this repository:
 
-```sh
+```Bash
 $ git clone https://github.com/nextzlog/ats4
 $ cd ats4
 ```
 
 Next, open the configuration file as follows:
 
-```sh
+```Bash
 $ alias emacs='vim'
 $ vim conf/application.conf
 ```
@@ -60,7 +60,7 @@ contest.rule="ja1zlo.u-tokyo.org/allja1/31rule.html"
 
 **The time has come! Clear your mind and cast a spell!**
 
-```sh
+```Bash
 $ sbt start
 ```
 
@@ -84,19 +84,19 @@ Good luck!
 
 First, find the process which runs the system.
 
-```sh
+```Bash
 $ cat target/universal/stage/RUNNING_PID
 ```
 
 Then, kill the process:
 
-```sh
+```Bash
 $ kill `target/universal/stage/RUNNING_PID`
 ```
 
 Finally, delete the file.
 
-```
+```Bash
 $ rm target/universal/stage/RUNNING_PID
 ```
 
