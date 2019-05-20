@@ -39,7 +39,7 @@ $ alias emacs='vim'`
 $ vim conf/application.conf
 ```
 
-Then, you will find the mail settings as below:
+You will find the mail settings as below:
 
 ```ini
 # Typesafe Mailer Plugin
@@ -50,10 +50,8 @@ play.mailer.user="***********"
 play.mailer.password="*******"
 ```
 
-All you have to do is rewrite the mail settings properly.
-**Oops!**
-I forgot to show you another important setting!
-Please update the rule URL:
+Rewrite the mail settings properly.
+Don't forget to update the rule URL:
 
 ```ini
 contest.rule = "ja1zlo.u-tokyo.org/allja1/31rule.html"
