@@ -26,7 +26,7 @@ import views.html.warns.{omiss,unsup}
 		NotFound(lists(Sections.all))
 	})
 	def logs(id: Long) = Action(util.Try {
-		Ok.sendFile(content=new File(forId(id).get.file))
+		Ok.sendFile(new File(forId(id).get.file),inline=false)
 	}.getOrElse {
 		NotFound(lists(Sections.all))
 	})

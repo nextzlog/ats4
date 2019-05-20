@@ -109,7 +109,8 @@
 @helper.CSRF.formField
 @accord(id="edit", title="内容の修正", header=3) {
 @upload(id="sheet", name="sheet", hint="交信記録を更新すると参加者にメール通知されます。")
-<input class="btn btn-primary" type="submit" value="交信記録を更新">
+<a class="btn btn-default" href="@routes.Admin.logs(record.id)"><span class="glyphicon glyphicon-list"></span> ダウンロード</a>
+<input class="btn btn-primary" type="submit" value="アップロード">
 }
 }
 } else {
