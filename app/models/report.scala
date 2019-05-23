@@ -15,12 +15,13 @@ class Module extends play.api.inject.Module {
 }
 
 @Singleton class Report @Inject()(implicit db: Database) {
+	val path = Files.createDirectories(Paths.get("ats4.rcvd"))
 	new Timer(true).schedule(new TimerTask {
 		override def run() {
 			val cset = Charset.forName("SJIS")
-			val path = Paths.get("ats4.rcvd", "report.csv")
+			val file = path.resolve("report.csv")
 			val list = views.txt.pages.excel(db).body.lines.toSeq
-			Files.write(path, list.filter(_.nonEmpty).asJava,cset)
+			Files.write(file, list.filter(_.nonEmpty).asJava,cset)
 		}
 	}, 0, 3600000)
 }

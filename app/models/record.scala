@@ -11,7 +11,7 @@ import play.api.db.Database
 import qxsl.ruler.Summary
 import scala.util.Try
 
-object Scaner extends Form(Forms.mapping(
+object Format extends Form(Forms.mapping(
 	"disp" -> Forms.nonEmptyText,
 	"city" -> Forms.nonEmptyText,
 	"part" -> Forms.nonEmptyText,
