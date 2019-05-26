@@ -20,7 +20,7 @@ play.mailer.password="*******"
 # play.mailer.mock=false
 play.mailer.mock=true
 
-ats4.demo=true
+ats4.demo = true
 
 contest.name = "ALLJA1"
 contest.host = "東大無線部"

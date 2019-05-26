@@ -105,10 +105,10 @@ $ rm target/universal/stage/RUNNING_PID
 ## Demo Mode
 
 By default, ATS-4 operates in `demo` mode, which is helpful for rehearsal submission.
-Do not forget to disable the mode and clear the database by the day of the contest.
+Do not forget to disable the mode and clear the database by the day of the contest:
 
 ```ini
-ats4.demo = true
+$ sed -i -e 's/ats4.demo=true/ats4.demo=false/g' conf/application.conf
 ```
 
 To clear the database, run the following command, and then restart the system.
