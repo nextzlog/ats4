@@ -6,7 +6,7 @@ ATS-4: Web System for Hamradio Contests
 ![image](https://img.shields.io/badge/license-GPL3-green.svg)
 
 ATS-4 is an Automatic Acceptance & Tabulation System for Amateur-Radio Contests.
-ATS-4 consists of the web components (ATS-4 itself) and [qxsl: Hamradio Logging Library](https://github.com/nextzlog/qxsl).
+ATS-4 consists of two components, namely, the web system (ATS-4) and [qxsl: Hamradio Logging Library](https://github.com/nextzlog/qxsl).
 
 ## Features
 
@@ -27,14 +27,14 @@ Feel free to visit [ALLJA1 ATS-4](https://allja1.org), but **never submit a dumm
 
 First, clone this repository:
 
-```Bash
+```sh
 $ git clone https://github.com/nextzlog/ats4
 $ cd ats4
 ```
 
 Open the configuration file as follows:
 
-```Bash
+```sh
 $ alias emacs='vim'
 $ vim conf/application.conf
 ```
@@ -51,7 +51,14 @@ play.mailer.password="*******"
 ```
 
 Modify the mail settings properly.
-Don't forget to update the rule URL:
+In addition, disable the `mock` mode of the mailer plugin.
+
+```ini
+# If you want to send mail actually:
+play.mailer.mock=false
+```
+
+Do not forget to update the rule URL:
 
 ```ini
 contest.rule="ja1zlo.u-tokyo.org/allja1/31rule.html"
@@ -60,7 +67,7 @@ contest.rule="ja1zlo.u-tokyo.org/allja1/31rule.html"
 
 **The time has come! Clear your mind and cast a spell!**
 
-```Bash
+```sh
 $ sbt start
 ```
 
@@ -83,22 +90,31 @@ Good luck!
 
 ## Stop
 
-First, find the process which runs the system.
+First, kill the process which is running the system:
 
-```Bash
-$ cat target/universal/stage/RUNNING_PID
+```sh
+$ kill `cat target/universal/stage/RUNNING_PID`
 ```
 
-Then, kill the process:
+Then, delete the file.
 
-```Bash
-$ kill `target/universal/stage/RUNNING_PID`
-```
-
-Finally, delete the file.
-
-```Bash
+```sh
 $ rm target/universal/stage/RUNNING_PID
+```
+
+## Demo Mode
+
+By default, ATS-4 operates in `demo` mode, which is helpful for rehearsal submission.
+Do not forget to disable the mode and clear the database by the day of the contest.
+
+```ini
+ats4.demo = true
+```
+
+To clear the database, run the following command, and then restart the system.
+
+```sh
+$ ./clean.sh
 ```
 
 ## Reverse Proxy
