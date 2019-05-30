@@ -1,8 +1,8 @@
 @(field: Field, text: String = "", opts: Seq[Any], hint: String = "")
 
 <div class="form-group @if(field.hasErrors){has-error}">
-	<label for="@field.id" class="col-md-2 control-label">@text</label>
-	<div class="col-md-10">
+	<label for="@field.id" class="col-md-1 control-label">@text</label>
+	<div class="col-md-11">
 		<select class="form-control selectpicker" id="@field.id" name="@field.name">
 			<option class="blank" value="">@hint</option>
 		@for(option <- opts) {
