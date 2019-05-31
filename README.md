@@ -68,7 +68,7 @@ contest.rule="ja1zlo.u-tokyo.org/allja1/31rule.html"
 **The time has come! Clear your mind and cast a spell!**
 
 ```sh
-$ sbt start
+$ sbt "start -Dhttp.port=8000"
 ```
 
 Just wait and relax.
@@ -79,7 +79,7 @@ After a period of time, you will find the following message:
 ```
 
 Then, type Ctrl+D and exit.
-Browse the system on port 9000.
+Browse the system on port 8000.
 If you would like to run it in the development mode:
 
 ```
