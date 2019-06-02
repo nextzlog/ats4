@@ -18,7 +18,7 @@ class Module extends play.api.inject.Module {
 	val path = Files.createDirectories(Paths.get("ats4.rcvd"))
 	new Timer(true).schedule(new TimerTask {
 		override def run() {
-			val cset = Charset.forName("SJIS")
+			val cset = Charset.forName("UTF-8")
 			val file = path.resolve("report.csv")
 			val list = views.txt.pages.excel(db).body.lines.toSeq
 			Files.write(file, list.filter(_.nonEmpty).asJava,cset)
