@@ -32,7 +32,7 @@ class Acceptor(implicit smtp: MailerClient, cfg: Configuration, db: Database) {
 		val text = views.txt.pages.email(record,sougou).body.trim
 		for(to <- Record.ofCall(record.call).map(_.mail).distinct) {
 			val mail = new Email
-			mail.setSubject(text.lines.toSeq.head)
+			mail.setSubject(text.lines.toSeq.head.split("//")(0).trim)
 			mail.setFrom("%s <%s>".format(host,from))
 			mail.addTo("%s <%s>".format(record.call,to))
 			mail.addBcc(from)
