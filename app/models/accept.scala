@@ -29,13 +29,14 @@ class Acceptor(implicit smtp: MailerClient, cfg: Configuration, db: Database) {
 	def notify(record: Record, sougou: Option[Record]) {
 		val host = cfg.get[String]("contest.host")
 		val from = cfg.get[String]("contest.from")
+		val repl = cfg.get[String]("contest.mail")
 		val text = views.txt.pages.email(record,sougou).body.trim
 		for(to <- Record.ofCall(record.call).map(_.mail).distinct) {
 			val mail = new Email
 			mail.setSubject(text.lines.toSeq.head.split("//")(0).trim)
 			mail.setFrom("%s <%s>".format(host,from))
 			mail.addTo("%s <%s>".format(record.call,to))
-			mail.addBcc(from)
+			mail.addBcc(repl)
 			mail.setBodyText(text.linesWithSeparators.toSeq.tail.mkString.trim)
 			Try(smtp.send(mail)).recover{case e=>logger.error("mail error", e)}
 		}
