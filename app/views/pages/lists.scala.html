@@ -1,5 +1,7 @@
 @(sections: Seq[qxsl.ruler.Section])(implicit cfg: Configuration, db: Database, admin: Boolean=false)
 
+@isLinked(record: Record)=@{admin && !record.sect.contains("総合部門")}
+
 @comps.frame(title=if(admin) "管理画面" else "暫定結果", nav=if(admin) "admin" else "lists") {
 @if(admin) {
 <div class="alert alert-danger">
@@ -31,7 +33,7 @@
 			<th width="40%">運用地</th>
 		</tr>
 		@for(record <- Record.ofSect(sect.getName).sortBy(-_.score)) {
-		<tr class="link @if(record.award) {award}" @if(admin) {onclick="window.location='@routes.Admin.sums(record.id)';"}>
+		<tr class="link @if(record.award) {award}" @if(isLinked(record)) {onclick="window.location='@routes.Admin.sums(record.id)';"}>
 			<td>@{1 + record.place}</td>
 			<td>@{record.call}</td>
 			<td>@{record.calls}</td>

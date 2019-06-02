@@ -39,6 +39,7 @@ object Sougou {
 		return Some(recordAM.last.copy(
 			sect = "%s %s %s 総合部門".format(prefixAM.take(2) :+ mode :_*),
 			comm = "",
+			file = null,
 			calls = recordAM.last.calls + recordPM.last.calls,
 			mults = recordAM.last.mults + recordPM.last.mults,
 		))
