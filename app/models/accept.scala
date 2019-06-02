@@ -28,7 +28,7 @@ class Acceptor(implicit smtp: MailerClient, cfg: Configuration, db: Database) {
 	}
 	def notify(record: Record, sougou: Option[Record]) {
 		val host = cfg.get[String]("contest.host")
-		val from = cfg.get[String]("contest.mail")
+		val from = cfg.get[String]("contest.from")
 		val text = views.txt.pages.email(record,sougou).body.trim
 		for(to <- Record.ofCall(record.call).map(_.mail).distinct) {
 			val mail = new Email
