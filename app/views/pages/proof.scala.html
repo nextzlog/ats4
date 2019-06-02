@@ -104,10 +104,7 @@
 		時間外の交信や部門外の周波数帯など、書類の不備により、得点計算の対象と認められない交信です。
 	</div>
 </div>
-@if(!admin) {
-<a class="btn btn-lg btn-primary" onclick="window.print()"><span class="glyphicon glyphicon-print"></span> 印刷する</a>
-<a class="btn btn-lg btn-default" href="mailto:@mail"><span class="glyphicon glyphicon-envelope"></span> 不具合を報告</a>
-} else if(!record.sect.contains("総合部門")) {
+@if(admin) {
 @helper.form(action=routes.Admin.post(record.id), 'class->"form-horizontal", 'enctype->"multipart/form-data") {
 @helper.CSRF.formField
 @accord(id="edit", title="内容の修正", header=3) {
@@ -116,5 +113,8 @@
 <button class="btn btn-primary" type="submit"><span class="glyphicon glyphicon-upload"></span> アップロード</button>
 }
 }
+} else {
+<a class="btn btn-lg btn-primary" onclick="window.print()"><span class="glyphicon glyphicon-print"></span> 印刷する</a>
+<a class="btn btn-lg btn-default" href="mailto:@mail"><span class="glyphicon glyphicon-envelope"></span> 不具合を報告</a>
 }
 }
