@@ -6,7 +6,7 @@
 
 @summ = @{Tables(record.file,record.sect).score}
 @mail = @{cfg.get[String]("contest.mail")}
-@dfmt = @{DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")}
+@dfmt = @{DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss OOOO")}
 @time(t: Time)=@{t.value.format(dfmt)}
 
 @comps.frame(title="提出書類の確認", nav=if(admin) "admin" else "entry") {
