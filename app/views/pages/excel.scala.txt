@@ -1,6 +1,6 @@
 @(implicit db: Database)
 
-@MVP(record: Record) = @{if(record.place == 1) "優勝" else "%d位".format(1+record.place)}
+@MVP(record: Record) = @{if(record.place == 0) "優勝" else "%d位".format(1+record.place)}
 
 呼出符号,運用場所,参加部門,順位,入賞,得点,名前,住所,アドレス,コメント
 @for(sect <- Sections.all; record <- Record.ofSect(sect.getName).sortBy(-_.score)) {
