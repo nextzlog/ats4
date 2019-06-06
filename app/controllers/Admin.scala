@@ -4,9 +4,9 @@ import java.io.File
 import javax.inject.{Inject,Singleton}
 import models.Record.forId
 import models.{Format,Sections}
-import play.api.Configuration
 import play.api.db.Database
 import play.api.mvc.{Action,InjectedController}
+import play.api.{Configuration,Logger}
 import scala.concurrent.ExecutionContext
 import views.html.pages.{entry,lists,proof}
 
@@ -33,6 +33,8 @@ import views.html.pages.{entry,lists,proof}
 		NotFound(lists(Sections.all))
 	})
 	def elim(id: Long) = Action(implicit r=>util.Try {
+		val logger = Logger(classOf[Admin])
+		logger.info(s"deleted: ${forId(id)}")
 		forId(id).get.purge
 		Ok(lists(Sections.all))
 	}.getOrElse {

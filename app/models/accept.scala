@@ -24,6 +24,7 @@ class Acceptor(implicit smtp: MailerClient, cfg: Configuration, db: Database) {
 		val sougou = Sougou(record)
 		if (sougou.nonEmpty) sougou.get.scored.next
 		notify(record,sougou)
+		logger.info(s"accepted: $record")
 		record
 	}
 	def notify(record: Record, sougou: Option[Record]) {
