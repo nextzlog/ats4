@@ -105,13 +105,27 @@
 	</div>
 </div>
 @if(admin) {
-@helper.form(action=routes.Admin.post(record.id), 'class->"form-horizontal", 'enctype->"multipart/form-data") {
-@helper.CSRF.formField
 @accord(id="edit", title="内容の修正", header=3) {
-@upload(id="sheet", name="sheet", hint="交信記録を更新すると参加者にメール通知されます。")
-<a class="btn btn-default" href="@routes.Admin.logs(record.id)"><span class="glyphicon glyphicon-download"></span> ダウンロード</a>
-<button class="btn btn-primary" type="submit"><span class="glyphicon glyphicon-upload"></span> アップロード</button>
-}
+<a class="btn btn-default" href="@routes.Admin.logs(record.id)">交信記録をダウンロードする</a>
+<a class="btn btn-primary" href="@routes.Admin.form(record.id)">上の内容で提出ページを開く</a>
+<a class="btn btn-danger pull-right" href="#deleteModal" data-toggle="modal">書類を削除する</a>
+<div class="modal" id="deleteModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">書類の削除</h4>
+			</div>
+			<div class="modal-body">
+				<p class="recipient">@record.call (@record.sect) を削除します。</p>
+				<p class="text-danger">この操作は取り消せません。</p>
+			</div>
+			<div class="modal-footer">
+				<a class="btn btn-danger" href="@routes.Admin.elim(record.id)">削除する</a>
+				<button class="btn btn-primary" data-dismiss="modal">削除しない</button>
+			</div>
+		</div>
+	</div>
+</div>
 }
 } else {
 <a class="btn btn-lg btn-primary" onclick="window.print()"><span class="glyphicon glyphicon-print"></span> 印刷する</a>
