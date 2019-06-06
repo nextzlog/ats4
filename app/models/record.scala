@@ -43,8 +43,9 @@ case class Scored(scaned: Scaned, calls: Int, mults: Int) {
 	def name = scaned.name
 	def addr = scaned.addr
 	def mail = scaned.mail
-	def path = Files.createDirectories(Paths.get("ats4.rcvd"))
+	// countermeasure against directory-traversal attacks:
 	def safe = call.split('/').head.replaceAll("[^0-9A-Z]","")
+	def path = Files.createDirectories(Paths.get("ats4.rcvd"))
 	def dfmt = DateTimeFormatter.ofPattern("'%s'.yyyyMMdd.HHmmss.'log'")
 	val file = path.resolve(LocalDateTime.now.format(dfmt).format(safe)).toString
 	def post = SQL"insert into posts values(NULL,$call,$city,$sect,$name,$addr,$mail,$comm,$file,$calls,$mults)"
