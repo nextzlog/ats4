@@ -38,7 +38,7 @@
 			<td>@record.city</td>
 			<td>@record.name</td>
 			<td>@if(admin) {**********} else {@record.addr}</td>
-			<td>@record.mail</td>
+			<td><a href="mailto:@mail">@record.mail</a></td>
 		</tr>
 	</table>
 @if(record.comm.nonEmpty) {
