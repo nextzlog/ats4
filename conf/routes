@@ -20,7 +20,7 @@ GET     /admin/           controllers.Admin.root
 GET     /admin/form/:id   controllers.Admin.form(id: Long)
 GET     /admin/logs/:id   controllers.Admin.logs(id: Long)
 GET     /admin/sums/:id   controllers.Admin.sums(id: Long)
-GET     /admin/elim/:id   controllers.Admin.elim(id: Long)
+POST    /admin/elim/:id   controllers.Admin.elim(id: Long)
 
 # Board
 GET     /board            controllers.Board.view
