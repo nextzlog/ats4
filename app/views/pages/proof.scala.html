@@ -109,6 +109,8 @@
 <a class="btn btn-default" href="@routes.Admin.logs(record.id)">交信記録をダウンロードする</a>
 <a class="btn btn-primary" href="@routes.Admin.form(record.id)">上の内容で提出ページを開く</a>
 <a class="btn btn-danger pull-right" href="#deleteModal" data-toggle="modal">書類を削除する</a>
+@helper.form(action=routes.Admin.elim(record.id)) {
+@helper.CSRF.formField
 <div class="modal" id="deleteModal">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -116,16 +118,17 @@
 				<h4 class="modal-title">書類の削除</h4>
 			</div>
 			<div class="modal-body">
-				<p class="recipient">@record.call (@record.sect) を削除します。</p>
+				<p>@record.call (@record.sect) を削除します。</p>
 				<p class="text-danger">この操作は取り消せません。</p>
 			</div>
 			<div class="modal-footer">
-				<a class="btn btn-danger" href="@routes.Admin.elim(record.id)">削除する</a>
+				<button class="btn btn-danger" type="submit">削除する</button>
 				<button class="btn btn-primary" data-dismiss="modal">削除しない</button>
 			</div>
 		</div>
 	</div>
 </div>
+}
 }
 } else {
 <a class="btn btn-lg btn-primary" onclick="window.print()"><span class="glyphicon glyphicon-print"></span> 印刷する</a>
