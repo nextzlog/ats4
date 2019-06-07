@@ -1,14 +1,16 @@
 @(id: String, title: String, header: Int = 4)(content: Html)
 
+@up = {glyphicon-collapse-up}
+@dn = {glyphicon-collapse-down}
+
 <div class="panel-group" id="@id-accord">
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<div class="panel-title">
 				<a data-toggle="collapse" data-parent="#@id-accord" href="#@id-body">
 					<h@header>
-						<span class="glyphicon glyphicon-chevron-down"></span>
 						@title
-						<span class="glyphicon glyphicon-chevron-down pull-right"></span>
+						<span class="glyphicon @dn pull-right"></span>
 					</h@header>
 				</a>
 			</div>
@@ -20,3 +22,13 @@
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+$('#@id-body').on({
+	'show.bs.collapse': function() {
+		$('a[href="#@id-body"] h@header span.@dn').removeClass('@dn').addClass('@up');
+	},
+	'hide.bs.collapse': function() {
+		$('a[href="#@id-body"] h@header span.@up').removeClass('@up').addClass('@dn');
+	}
+});
+</script>

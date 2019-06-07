@@ -15,7 +15,7 @@
 	<span class="glyphicon glyphicon-warning-sign"></span> @warn
 </div>
 } else {
-<div class="alert alert-info">
+<div class="alert alert-success">
 	下記の内容で受理しました。
 	交信記録が正しく読み込まれたかご確認ください。
 	訂正が必要な場合は期間内に限り再提出できます。
@@ -106,7 +106,7 @@
 </div>
 @if(admin) {
 @accord(id="edit", title="内容の修正", header=3) {
-<a class="btn btn-default" href="@routes.Admin.logs(record.id)">交信記録をダウンロードする</a>
+<a class="btn btn-success" href="@routes.Admin.logs(record.id)">交信記録をダウンロードする</a>
 <a class="btn btn-primary" href="@routes.Admin.form(record.id)">上の内容で提出ページを開く</a>
 <a class="btn btn-danger pull-right" href="#deleteModal" data-toggle="modal">書類を削除する</a>
 @helper.form(action=routes.Admin.elim(record.id)) {
@@ -132,6 +132,6 @@
 }
 } else {
 <a class="btn btn-lg btn-primary" onclick="window.print()"><span class="glyphicon glyphicon-print"></span> 印刷する</a>
-<a class="btn btn-lg btn-default" href="mailto:@mail"><span class="glyphicon glyphicon-envelope"></span> 不具合を報告</a>
+<a class="btn btn-lg btn-warning pull-right" href="mailto:@mail"><span class="glyphicon glyphicon-envelope"></span> 不具合を報告</a>
 }
 }
