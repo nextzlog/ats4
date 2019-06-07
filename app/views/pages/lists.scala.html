@@ -7,22 +7,22 @@
 <div class="alert alert-danger">
 	このページは管理者用につき、外部から閲覧可能な場合は直ちに設定を変更せよ。
 </div>
+<div class="text-right">
+	<a class="btn btn-primary" href="@routes.Admin.form(-1)"><span class="glyphicon glyphicon-plus"></span> 書類の追加</a>
+</div>
 } else {
-<div class="alert alert-info">
+<div class="alert alert-warning">
 	掲載内容に誤りがある場合は、直ちに主催者に連絡してください。
 	赤太字は暫定表彰局ですが、審査により失格することがあります。
 </div>
 }
+@if(admin || !DeadLine.isOK || DeadLine.demo) {
 @for(sect <- sections) {
 <div class="par panel panel-default">
 	<div class="panel-heading">
 		<h3>@{sect.getName}</h3>
 	</div>
-@if(DeadLine.isOK && !admin) {
-	<div class="panel-body">
-		<p class="text-info">現在、受付期間につき非公開とする。</p>
-	</div>
-} else if(Record.ofSect(sect.getName).nonEmpty) {
+@if(Record.ofSect(sect.getName).nonEmpty) {
 	<table class="table table-hover">
 		<tr>
 			<th width="10%">順位</th>
@@ -48,6 +48,11 @@
 		<p>当該部門の登録者数の10%(小数点以下切捨て)に1を足した順位 (最大7位) までを表彰する。</p>
 	</div>
 }
+</div>
+}
+} else {
+<div class="alert alert-info">
+	現在、受付期間につき非公開とする。
 </div>
 }
 }

@@ -20,7 +20,7 @@ import views.html.pages.{entry,lists,proof}
 		val scaned = forId(id).get.scaned.copy(addr=null)
 		Ok(entry(Format.fill(scaned)))
 	}.getOrElse {
-		NotFound(lists(Sections.all))
+		Ok(entry(Format))
 	})
 	def logs(id: Long) = Action(util.Try {
 		Ok.sendFile(new File(forId(id).get.file),inline=false)
