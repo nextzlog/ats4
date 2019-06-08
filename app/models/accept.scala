@@ -18,11 +18,10 @@ class Acceptor(implicit smtp: MailerClient, cfg: Configuration, db: Database) {
 	val logger = Logger(classOf[Acceptor])
 	def accept(scaned: Scaned, temp: TemporaryFile): Record = {
 		val scored = scaned.next(Tables(temp.path.toString, scaned.sect).score)
-		Conflict(scored)(db)
+		Disposal(scored)(db)
 		val record = scored.next.get
 		temp.moveFileTo(Paths.get(scored.file).toFile)
-		val sougou = Sougou(record)
-		if (sougou.nonEmpty) sougou.get.scored.next
+		val sougou = Sougou(record.call)
 		notify(record,sougou)
 		logger.info(s"accepted: $record")
 		record
