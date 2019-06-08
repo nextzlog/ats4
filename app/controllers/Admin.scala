@@ -17,8 +17,7 @@ import views.html.pages.{entry,lists,proof}
 	private implicit val ec = ExecutionContext.global
 	def root = Action(Ok(lists(Sections.all)))
 	def form(id: Long) = Action(implicit r=>util.Try {
-		val scaned = forId(id).get.scaned.copy(addr=null)
-		Ok(entry(Format.fill(scaned)))
+		Ok(entry(Format.fill(forId(id).get.scaned)))
 	}.getOrElse {
 		Ok(entry(Format))
 	})
