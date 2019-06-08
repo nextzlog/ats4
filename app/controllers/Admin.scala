@@ -3,7 +3,7 @@ package controllers
 import java.io.File
 import javax.inject.{Inject,Singleton}
 import models.Record.forId
-import models.{Format,Sections}
+import models.{Disposal,Format,Sections}
 import play.api.db.Database
 import play.api.mvc.{Action,InjectedController}
 import play.api.{Configuration,Logger}
@@ -35,7 +35,7 @@ import views.html.pages.{entry,lists,proof}
 	def elim(id: Long) = Action(implicit r=>util.Try {
 		val logger = Logger(classOf[Admin])
 		logger.info(s"deleted: ${forId(id)}")
-		forId(id).get.purge
+		Disposal(forId(id).get.scored)
 		Ok(lists(Sections.all))
 	}.getOrElse {
 		NotFound(lists(Sections.all))

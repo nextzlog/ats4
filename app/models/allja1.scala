@@ -24,29 +24,22 @@ object CallArea {
 }
 
 object Sougou {
-	def apply(record: Record)(implicit db: Database): Option[Record] = {
-		val recordAM = Record.ofCall(record.call).filter(record => Sections.AM.contains(record.sect))
-		val recordPM = Record.ofCall(record.call).filter(record => Sections.PM.contains(record.sect))
-		if(recordAM.isEmpty || recordPM.isEmpty) return None
-		if(!Sections.AB.contains(recordAM.last.sect)) return None
-		if(!Sections.AB.contains(recordPM.last.sect)) return None
-		if(recordAM.last.city != recordPM.last.city) return None
-		val prefixAM = recordAM.last.sect.split(" ").take(3).toList
-		val prefixPM = recordPM.last.sect.split(" ").take(3).toList
-		if(prefixAM.take(2) != prefixPM.take(2)) return None
-		val isPH = Seq(prefixAM.last,prefixPM.last).contains("電信電話")
-		val mode = if(isPH) "電信電話" else "電信限定"
-		return Some(recordAM.last.copy(
-			sect = "%s %s %s 総合部門".format(prefixAM.take(2) :+ mode :_*),
-			comm = "",
-			file = null,
-			calls = recordAM.last.calls + recordPM.last.calls,
-			mults = recordAM.last.mults + recordPM.last.mults,
-		))
+	def apply(call: String)(implicit db: Database): Option[Record] = {
+		val records = Record.ofCall(call).filter(r=>Sections.AB.contains(r.sect))
+		if(!records.exists(r=>Sections.AM.contains(r.sect))) return None
+		if(!records.exists(r=>Sections.PM.contains(r.sect))) return None
+		if(records.map(_.city).distinct.size != 1) return None
+		val isPH = records.exists(_.sect.contains("電信電話"))
+		val club = records.head.sect.split(" ")(1)
+		val part = "%s 電信%s 総合部門".format(club, if(isPH) "電話" else "限定")
+		val sucs = records.map(r=>Tables(r.file,r.sect).score.accepted.asScala)
+		val logs = sucs.flatten.map(_.item)
+		val scan = records.head.scaned.copy(part=part, comm="")
+		return scan.next(Sections.forName(scan.sect).summarize(logs.asJava)).next
 	}
 }
 
-object Conflict {
+object Disposal {
 	// delete conflicting entries
 	def apply(scored: Scored)(implicit db: Database) {
 		for(old <- Record.ofCall(scored.call) if(Sections.RC.contains(old.sect))) old.purge
