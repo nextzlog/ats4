@@ -10,7 +10,8 @@
 @time(t: Time)=@{t.value.format(dfmt)}
 
 @comps.frame(title="提出書類の確認", nav=if(admin) "admin" else "entry") {
-@if(admin && warn.nonEmpty) {
+@if(!admin) {
+@if(warn.nonEmpty) {
 <div class="alert alert-danger">
 	<span class="glyphicon glyphicon-warning-sign"></span> @warn
 </div>
@@ -19,6 +20,10 @@
 	下記の内容で受理しました。
 	交信記録が正しく読み込まれたかご確認ください。
 	訂正が必要な場合は期間内に限り再提出できます。
+</div>
+}
+<div class="text-right">
+	<a class="btn btn-warning" href="mailto:@mail"><span class="glyphicon glyphicon-envelope"></span> 不具合を報告</a>
 </div>
 }
 <div class="par panel panel-default">
@@ -132,6 +137,5 @@
 }
 } else {
 <a class="btn btn-lg btn-primary" onclick="window.print()"><span class="glyphicon glyphicon-print"></span> 印刷する</a>
-<a class="btn btn-lg btn-warning pull-right" href="mailto:@mail"><span class="glyphicon glyphicon-envelope"></span> 不具合を報告</a>
 }
 }
