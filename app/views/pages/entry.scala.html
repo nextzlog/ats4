@@ -12,10 +12,13 @@
 <div class="alert alert-info">
 	午前と午後の双方の部門に参加した場合は、午前と午後で別々に提出してください。
 </div>
+<div class="text-right">
+	<a class="btn btn-primary" href="@routes.Guide.view"><span class="glyphicon glyphicon-phone-alt"></span> よくあるご質問</a>
+</div>
 }
 @helper.form(action=routes.Entry.post, 'class->"form-horizontal", 'enctype->"multipart/form-data") {
 @helper.CSRF.formField
-<div class="panel panel-default">
+<div class="par panel panel-default">
 	<div class="panel-heading">
 		<h2>登録内容</h2>
 	</div>
@@ -29,7 +32,7 @@
 		@input(pform("comm"), text="ご感想", hint="呼出符号付きで公表します。", multiline=true)
 	</fieldset>
 </div>
-<div class="panel panel-default">
+<div class="par panel panel-default">
 	<div class="panel-heading">
 		<h2>交信記録</h2>
 	</div>
@@ -48,6 +51,5 @@
 	</div>
 </div>
 <button class="btn btn-lg btn-primary" type="submit"><span class="glyphicon glyphicon-ok"></span> この内容で提出します</button>
-<a class="btn btn-lg btn-info pull-right" href="@routes.Guide.view"><span class="glyphicon glyphicon-phone-alt"></span> よくあるご質問</a>
 }
 }
