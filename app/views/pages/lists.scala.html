@@ -5,10 +5,10 @@
 @comps.frame(title=if(admin) "管理画面" else "暫定結果", nav=if(admin) "admin" else "lists") {
 @if(admin) {
 <div class="alert alert-danger">
-	このページは秘匿の要あり。外部から閲覧可能な場合は直ちに設定を修正せよ。
+	このページは管理者用につき、外部から閲覧可能な場合は直ちに設定を修正せよ。
 </div>
 <div class="alert alert-info">
-	表をクリックすることで、参加者の個別ページを閲覧できる。総合部門を除く。
+	総合部門を除き、参加者をクリックすることで参加者の個別ページを閲覧できる。
 </div>
 <div class="text-right">
 	<a class="btn btn-primary" href="@routes.Admin.form(-1)"><span class="glyphicon glyphicon-plus"></span> 参加者の追加</a>
