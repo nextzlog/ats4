@@ -27,7 +27,12 @@ div.upload {
 	margin-bottom: 1em;
 }
 
-.upload-hidden {
+label.upload-label {
+	display: inline-block;
+	overflow: auto;
+}
+
+input.upload-hidden {
 	display: inline-block;
 	opacity: 0;
 	position: absolute;
