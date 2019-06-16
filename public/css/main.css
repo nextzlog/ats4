@@ -51,6 +51,10 @@ div.par {
 	margin-bottom: 3em;
 }
 
+div.par-bottom {
+	margin-bottom: 3em;
+}
+
 tr.link > td {
 	cursor: pointer;
 }
