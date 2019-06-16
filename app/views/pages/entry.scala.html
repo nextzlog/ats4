@@ -39,11 +39,12 @@
 	<fieldset class="panel-body">
 		@upload(id="sheet", name="sheet", hint="右のボタンをクリックして交信記録ファイルを選択します。")
 		@accord(id="fmts", title="対応済みの電子ログのフォーマットの一覧を見る") {
-		<ul>
 		@for(fmt <- new qxsl.table.Tables()) {
-			<li>@{fmt}</li>
+		<div class="par-bottom">
+			<h4>@{fmt}:</h4>
+			<pre>@{fmt.getDescription}</pre>
+		</div>
 		}
-		</ul>
 		}
 	</fieldset>
 	<div class="panel-footer">
