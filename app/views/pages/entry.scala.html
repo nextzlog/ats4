@@ -41,8 +41,10 @@
 		@accord(id="fmts", title="対応済みの電子ログのフォーマットの一覧を見る") {
 		@for(fmt <- new qxsl.table.Tables()) {
 		<div class="par-bottom">
-			<h4>@{fmt}:</h4>
+			<h4>@{fmt}</h4>
+		@if(fmt.getDescription.nonEmpty) {
 			<pre>@{fmt.getDescription}</pre>
+		}
 		</div>
 		}
 		}
