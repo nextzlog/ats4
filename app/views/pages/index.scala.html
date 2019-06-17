@@ -1,4 +1,4 @@
-@()(implicit cfg: Configuration)
+@(status: Option[Int]=None)(implicit cfg: Configuration)
 
 @name = @{cfg.get[String]("contest.name")}
 @rule = @{cfg.get[String]("contest.rule")}
@@ -8,7 +8,11 @@
 	<h1>@name 書類受付システム</h1>
 </div>
 <div class="page-header text-center">
+@if(status.nonEmpty) {
+	<h3 class="text-warning">@status</h3>
+} else {
 	<h3>コンテスト参加後、このサイトで交信記録を提出することで、参加者として登録されます。</h3>
+}
 </div>
 @if(DeadLine.demo) {
 <div class="panel panel-info">
