@@ -1,61 +1,51 @@
-@(title: String = "", nav: String = "")(content: Html)(implicit cfg: Configuration)
+@(title: String = "", nav: String = "")(content: Html)(implicit cfg: Configuration, admin: Boolean=false)
 
 @name = @{cfg.get[String]("contest.name")}
 @host = @{cfg.get[String]("contest.host")}
+@mail = @{cfg.get[String]("contest.mail")}
 @site = @{cfg.get[String]("contest.site")}
 
 <html>
 	<head>
 		<title>@name ATS-4 - @host</title>
 		<link rel="stylesheet" href="@routes.Assets.versioned("css/bootstrap.css")" media="print,screen">
-		<link rel="stylesheet" href="@routes.Assets.versioned("css/bootstrap-combobox.css")">
+		<link rel="stylesheet" href="@routes.Assets.versioned("css/fontawesome.css")">
+		<link rel="stylesheet" href="@routes.Assets.versioned("css/fontawesome-solid.css")">
 		<link rel="stylesheet" href="@routes.Assets.versioned("css/main.css")">
-		<script src="@routes.Assets.versioned("js/jquery-1.10.2.min.js")" type="text/javascript"></script>
-		<script src="@routes.Assets.versioned("js/bootstrap.min.js")" type="text/javascript"></script>
+		<script src="@routes.Assets.versioned("js/jquery-3.4.1.js")" type="text/javascript"></script>
+		<script src="@routes.Assets.versioned("js/bootstrap.js")" type="text/javascript"></script>
 		<script src="@routes.Assets.versioned("js/bootstrap-combobox.js")" type="text/javascript"></script>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	</head>
 	<body>
-		<div class="navbar navbar-inverse navbar-fixed-top">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<a class="navbar-brand" href="@routes.Index.view">ATS-4</a>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+			<a class="navbar-brand" href="@routes.Index.view">ATS-4</a>
+			<button class="navbar-toggler" data-toggle="collapse" data-target="#nav">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="nav">
+				<div class="navbar-nav mr-auto">
+					<a class="nav-item nav-link @("active".when(nav == "entry"))" href="@routes.Entry.form">書類提出</a>
+					<a class="nav-item nav-link @("active".when(nav == "lists"))" href="@routes.Lists.view">暫定結果</a>
+					<a class="nav-item nav-link @("active".when(nav == "board"))" href="@routes.Board.view">皆様の声</a>
+					<a class="nav-item nav-link @("active".when(nav == "admin"))" href="@routes.Admin.root">管理画面</a>
+					@if(admin) {
+					<a class="nav-item nav-link @("active".when(nav == "agent"))" href="@routes.Admin.form(-1)">期間外提出</a>
+					}
+					<a class="nav-item nav-link @("active".when(nav == "guide"))" href="@routes.Guide.view">FAQ</a>
 				</div>
-				<div class="collapse navbar-collapse" id="nav">
-					<ul class="nav navbar-nav">
-						<li class="@("active".when(nav == "entry"))">
-							<a href="@routes.Entry.form">書類提出</a>
-						</li>
-						<li class="@("active".when(nav == "lists"))">
-							<a href="@routes.Lists.view">暫定結果</a>
-						</li>
-						<li class="@("active".when(nav == "board"))">
-							<a href="@routes.Board.view">皆様の声</a>
-						</li>
-						<li class="@("active".when(nav == "admin"))">
-							<a href="@routes.Admin.root">管理画面</a>
-						</li>
-						<li class="@("active".when(nav == "quest"))">
-							<a href="@routes.Guide.view">FAQ</a>
-						</li>
-					</ul>
-					<ul class="nav navbar-nav navbar-right">
-						<li><a href="http://@site">@host</a></li>
-						<li><a href="http://pafelog.net">無線部開発班</a></li>
-						<li><a href="http://pafelog.net/ats4.pdf">解説</a></li>
-					</ul>
+				<div class="navbar-nav">
+					<a class="nav-item nav-link" href="http://@site">@host</a>
+					<a class="nav-item nav-link" href="http://pafelog.net">無線部開発班</a>
+					<a class="nav-item nav-link" href="http://pafelog.net/ats4.pdf">解説</a>
+					<a class="nav-item nav-link" href="mailto:@mail">不具合を報告</a>
 				</div>
 			</div>
-		</div>
-		<div class="container">
+		</nav>
+		<div class="container-fluid">
 		@if(title.nonEmpty) {
-			<div class="page-header">
-				<h1>@title</h1>
+			<div class="border-bottom mb-4">
+				<h1 class="my-2">@title</h1>
 			</div>
 		}
 		@content

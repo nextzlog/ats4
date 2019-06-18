@@ -1,34 +1,28 @@
-@(id: String, title: String, header: Int = 4)(content: Html)
+@(id: String, title: String, header: Int=5)(body: Html)
 
-@up = {glyphicon-collapse-up}
-@dn = {glyphicon-collapse-down}
+@up = {fa-caret-square-up}
+@dn = {fa-caret-square-down}
 
-<div class="panel-group" id="@id-accord">
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<div class="panel-title">
-				<a data-toggle="collapse" data-parent="#@id-accord" href="#@id-body">
-					<h@header>
-						@title
-						<span class="glyphicon @dn pull-right"></span>
-					</h@header>
-				</a>
-			</div>
-		</div>
-		<div class="panel-collapse collapse" id="@id-body">
-			<div class="panel-body">
-				@content
-			</div>
+<div class="card">
+	<h@header class="card-header">
+		<a class="text-body text-decoration-none" href="#@id-body" data-toggle="collapse">
+			<i class="fas @dn"></i>
+			<span>@title</span>
+		</a>
+	</h@header>
+	<div class="collapse" id="@id-body">
+		<div class="card-body">
+			@body
 		</div>
 	</div>
 </div>
 <script type="text/javascript">
 $('#@id-body').on({
 	'show.bs.collapse': function() {
-		$('a[href="#@id-body"] h@header span.@dn').removeClass('@dn').addClass('@up');
+		$('a[href="#@id-body"] i.@dn').removeClass('@dn').addClass('@up');
 	},
 	'hide.bs.collapse': function() {
-		$('a[href="#@id-body"] h@header span.@up').removeClass('@up').addClass('@dn');
+		$('a[href="#@id-body"] i.@up').removeClass('@up').addClass('@dn');
 	}
 });
 </script>

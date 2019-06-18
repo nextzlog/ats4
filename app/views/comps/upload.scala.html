@@ -1,12 +1,11 @@
-@(id: String = "", name: String = "", text: String = "", hint: String = "")
+@(id: String = "", text: String = "", hint: String = "")
 
-<div class="input-group upload">
-	<label for="@{id}-button" id="@{id}-name" class="form-control upload-label">@hint</label>
-	<input type="file" id="@id" name="@name" class="upload-hidden">
-	<span class="input-group-btn">
-		<button type="button" id="@{id}-button" class="btn btn-default">
-			<span class="glyphicon glyphicon-folder-open"></span> 選択
-		</button>
-	</span>
+<div class="form-group row">
+	<label for="@id" class="col-md-1 col-form-label">@text</label>
+	<div class="col-md-11">
+		<div class="custom-file">
+			<input type="file" name="@id" class="custom-file-input">
+			<label class="custom-file-label" for="@id" data-browse="参照">@hint</label>
+		</div>
+	</div>
 </div>
-<script src="@routes.Filer.view(id)" type="text/javascript"></script>

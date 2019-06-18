@@ -1,6 +1,6 @@
 body {
-	padding-top: 60px;
-	margin-bottom: 30px;
+	padding-top: 5rem;
+	margin-bottom: 2rem;
 }
 
 blockquote {
@@ -21,33 +21,6 @@ blockquote:before {
 
 blockquote p {
 	display: inline;
-}
-
-div.upload {
-	margin-bottom: 1em;
-}
-
-label.upload-label {
-	display: inline-block;
-	overflow: auto;
-}
-
-input.upload-hidden {
-	display: inline-block;
-	opacity: 0;
-	position: absolute;
-	width: 0px;
-	z-index: 99;
-	cursor: pointer;
-}
-
-div.par {
-	margin-top: 3em;
-	margin-bottom: 3em;
-}
-
-div.par-bottom {
-	margin-bottom: 3em;
 }
 
 tr.link > td {

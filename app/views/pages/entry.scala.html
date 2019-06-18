@@ -1,58 +1,33 @@
-@(pform: Form[Scaned], warn: Option[Html]=None)(implicit cfg: Configuration, req: RequestHeader)
+@(pform: Form[Scaned], warn: Option[Html]=None)(implicit cfg: Configuration, req: RequestHeader, admin: Boolean=false)
 
 @import comps._
 @sects = @{Sections.all.map(_.getName.split(" ").tail.mkString(" ")).filterNot(_.contains("総合部門")).distinct}
 
-@comps.frame(title="書類提出", nav="entry") {
+@comps.frame(title="書類提出", nav=if(admin) "agent" else "entry") {
 @if(warn.nonEmpty) {
 <div class="alert alert-danger">
 	<span class="glyphicon glyphicon-warning-sign"></span> @warn
 </div>
-} else {
-<div class="alert alert-info">
-	午前と午後の双方の部門に参加した場合は、午前と午後で別々に提出してください。
-</div>
-<div class="text-right">
-	<a class="btn btn-primary" href="@routes.Guide.view"><span class="glyphicon glyphicon-phone-alt"></span> よくあるご質問</a>
-</div>
 }
 @helper.form(action=routes.Entry.post, 'class->"form-horizontal", 'enctype->"multipart/form-data") {
 @helper.CSRF.formField
-<div class="par panel panel-default">
-	<div class="panel-heading">
-		<h2>登録内容</h2>
-	</div>
-	<fieldset class="panel-body">
-		@input(pform("disp"), text="呼出符号", hint="移動運用の例: JA1ZLO/1")
-		@choice(pform("city"), opts=CallArea.total, text="運用場所", hint="未選択")
-		@choice(pform("part"), opts=sects, text="参加部門", hint="未選択")
-		@input(pform("name"), text="お名前", hint="この宛名で賞を発送します。")
-		@input(pform("addr"), text="ご住所", hint="この宛先に賞を発送します。")
-		@input(pform("mail"), text="メール", hint="受理通知メールが届きます。")
-		@input(pform("comm"), text="ご感想", hint="呼出符号付きで公表します。", multiline=true)
-	</fieldset>
-</div>
-<div class="par panel panel-default">
-	<div class="panel-heading">
-		<h2>交信記録</h2>
-	</div>
-	<fieldset class="panel-body">
-		@upload(id="sheet", name="sheet", hint="右のボタンをクリックして交信記録ファイルを選択します。")
-		@accord(id="fmts", title="対応済みの電子ログのフォーマットの一覧を見る") {
-		@for(fmt <- new qxsl.table.Tables()) {
-		<div class="par-bottom">
-			<h4>@{fmt}</h4>
-		@if(fmt.getDescription.nonEmpty) {
-			<pre>@{fmt.getDescription}</pre>
-		}
-		</div>
-		}
-		}
-	</fieldset>
-	<div class="panel-footer">
-		Cabrillo/JARLサマリーシートをアップロードした場合は、交信記録の部分のみを読み取ります。
+<div class="card my-5">
+	<div class="card-body bg-light">
+		<fieldset>
+			@input(pform("disp"), text="呼出符号", hint="移動運用の例: JA1ZLO/1")
+			@choice(pform("city"), opts=CallArea.total, text="運用場所", hint="未選択")
+			@choice(pform("part"), opts=sects, text="参加部門", hint="未選択")
+			@input(pform("name"), text="お名前", hint="この宛名で賞を発送します。")
+			@input(pform("addr"), text="ご住所", hint="この宛先に賞を発送します。")
+			@input(pform("mail"), text="メール", hint="受理通知メールが届きます。")
+			@input(pform("comm"), text="ご感想", hint="呼出符号付きで公表します。", multiline=true)
+			@upload(id="sheet", text="交信記録", hint="Cabrillo/JARLサマリーシートを添付した場合は、交信記録のみを読み取ります。")
+		</fieldset>
 	</div>
 </div>
-<button class="btn btn-lg btn-primary" type="submit"><span class="glyphicon glyphicon-ok"></span> この内容で提出します</button>
+<div class="toolbar">
+	<button class="btn btn-lg btn-primary" type="submit"><i class="fas fa-thumbs-up"></i> この内容で提出する</button>
+	<a class="btn btn-lg btn-outline-secondary" href="@routes.Guide.view"><i class="fas fa-question"></i> よくあるご質問</a>
+</div>
 }
 }

@@ -7,12 +7,6 @@
 <div class="alert alert-danger">
 	このページは管理者用につき、外部から閲覧可能な場合は直ちに設定を修正せよ。
 </div>
-<div class="alert alert-info">
-	総合部門を除き、参加者をクリックすることで参加者の個別ページを閲覧できる。
-</div>
-<div class="text-right">
-	<a class="btn btn-primary" href="@routes.Admin.form(-1)"><span class="glyphicon glyphicon-plus"></span> 参加者の追加</a>
-</div>
 } else {
 <div class="alert alert-warning">
 	掲載内容に誤りがある場合は、直ちに主催者に連絡してください。
@@ -21,11 +15,9 @@
 }
 @if(admin || !DeadLine.isOK || DeadLine.demo) {
 @for(sect <- sections) {
-<div class="par panel panel-default">
-	<div class="panel-heading">
-		<h3>@{sect.getName}</h3>
-	</div>
 @if(Record.ofSect(sect.getName).nonEmpty) {
+<div class="card my-5">
+	<h3 class="card-header border-bottom-0">@{sect.getName}</h3>
 	<table class="table table-hover">
 		<tr>
 			<th width="10%">順位</th>
@@ -47,11 +39,11 @@
 		}
 		</tbody>
 	</table>
-	<div class="panel-footer">
-		<p>当該部門の登録者数の10%(小数点以下切捨て)に1を足した順位 (最大7位) までを表彰する。</p>
+	<div class="card-footer">
+		当該部門の登録者数の10%(小数点以下切捨て)に1を足した順位 (最大7位) までを表彰する。
 	</div>
-}
 </div>
+}
 }
 } else {
 <div class="alert alert-info">

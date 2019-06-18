@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter
 import play.api.data.{Form, Forms}
 import play.api.db.Database
 import qxsl.ruler.Summary
+import scala.collection.JavaConverters._
 import scala.util.Try
 
 object Format extends Form(Forms.mapping(
@@ -30,9 +31,9 @@ case class Scaned(disp: S, city: S, part: S, name: S, addr: S, mail: S, comm: S)
 
 case class Tables(path: String, sect: String) {
 	def bytes = Files.readAllBytes(Paths.get(path))
-	def sheet = new qxsl.sheet.Sheets().decode(bytes).get("LOGSHEET").getBytes()
-	def table = new qxsl.table.Tables().decode(util.Try(sheet).getOrElse(bytes))
-	val score = Sections.forName(sect).summarize(table)
+	def table = new qxsl.sheet.Sheets().unseal(bytes).getBytes("Shift_JIS")
+	def items = new qxsl.table.Tables().decode(Try(table).getOrElse(bytes))
+	val score = Sections.forName(sect).summarize(items)
 }
 
 case class Scored(scaned: Scaned, calls: Int, mults: Int) {
