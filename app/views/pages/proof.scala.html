@@ -1,35 +1,23 @@
-@(record: Record, warn: Option[Html]=None)(implicit cfg: Configuration, req: RequestHeader=null, admin: Boolean=false)
+@(record: Record)(implicit cfg: Configuration, req: RequestHeader=null, admin: Boolean=false)
 
 @import comps._
 @import java.time.format.DateTimeFormatter
 @import qxsl.field._
 
 @summ = @{Tables(record.file,record.sect).score}
-@mail = @{cfg.get[String]("contest.mail")}
 @dfmt = @{DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss OOOO")}
 @time(t: Time)=@{t.value.format(dfmt)}
 
 @comps.frame(title="提出書類の確認", nav=if(admin) "admin" else "entry") {
 @if(!admin) {
-@if(warn.nonEmpty) {
-<div class="alert alert-danger">
-	<span class="glyphicon glyphicon-warning-sign"></span> @warn
-</div>
-} else {
 <div class="alert alert-success">
 	下記の内容で受理しました。
 	交信記録が正しく読み込まれたかご確認ください。
 	訂正が必要な場合は期間内に限り再提出できます。
 </div>
 }
-<div class="text-right">
-	<a class="btn btn-warning" href="mailto:@mail"><span class="glyphicon glyphicon-envelope"></span> 不具合を報告</a>
-</div>
-}
-<div class="par panel panel-default">
-	<div class="panel-heading">
-		<h3>@record.sect</h3>
-	</div>
+<div class="card my-5">
+	<h3 class="card-header border-bottom-0">@record.sect</h3>
 	<table class="table">
 		<tr>
 			<th>呼出符号</th>
@@ -43,27 +31,23 @@
 			<td>@record.city</td>
 			<td>@record.name</td>
 			<td>@record.addr</td>
-			<td><a href="mailto:@mail">@record.mail</a></td>
+			<td><a href="mailto:@record.mail">@record.mail</a></td>
 		</tr>
 	</table>
 @if(record.comm.nonEmpty) {
-	<div class="panel-footer">
+	<div class="card-footer">
 		@record.comm
 	</div>
 }
 </div>
-<div class="par panel panel-default">
-	<div class="panel-heading">
-		<h3>暫定の得点</h3>
-	</div>
-	<div class="panel-body">
+<div class="card my-5">
+	<h3 class="card-header">暫定の得点</h3>
+	<div class="card-body">
 		<strong>@{summ.total}点</strong> (素点@summ.score 乗数@summ.mults)
 	</div>
 </div>
-<div class="par panel panel-default">
-	<div class="panel-heading">
-		<h3>有効な交信</h3>
-	</div>
+<div class="card my-5">
+	<h3 class="card-header border-bottom-0">有効な交信</h3>
 	<table class="table table-hover">
 		<tr>
 			<th width="26%">交信日時</th>
@@ -83,10 +67,8 @@
 	}
 	</table>
 </div>
-<div class="par panel panel-default">
-	<div class="panel-heading">
-		<h3>無効な交信</h3>
-	</div>
+<div class="card my-5">
+	<h3 class="card-header border-bottom-0">無効な交信</h3>
 	<table class="table table-hover">
 		<tr>
 			<th width="26%">交信日時</th>
@@ -105,7 +87,7 @@
 		</tr>
 	}
 	</table>
-	<div class="panel-footer">
+	<div class="card-footer">
 		時間外の交信や部門外の周波数帯など、書類の不備により、得点計算の対象と認められない交信です。
 	</div>
 </div>
@@ -113,7 +95,7 @@
 @accord(id="edit", title="内容の修正", header=3) {
 <a class="btn btn-success" href="@routes.Admin.logs(record.id)">交信記録をダウンロードする</a>
 <a class="btn btn-primary" href="@routes.Admin.form(record.id)">上の内容で提出ページを開く</a>
-<a class="btn btn-danger pull-right" href="#deleteModal" data-toggle="modal">書類を削除する</a>
+<a class="btn btn-danger" href="#deleteModal" data-toggle="modal">書類を削除する</a>
 @helper.form(action=routes.Admin.elim(record.id)) {
 @helper.CSRF.formField
 <div class="modal" id="deleteModal">
@@ -135,7 +117,5 @@
 </div>
 }
 }
-} else {
-<a class="btn btn-lg btn-primary" onclick="window.print()"><span class="glyphicon glyphicon-print"></span> 印刷する</a>
 }
 }

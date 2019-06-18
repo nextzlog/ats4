@@ -9,9 +9,6 @@ GET     /                 controllers.Index.view
 GET     /entry            controllers.Entry.form
 POST    /entry            controllers.Entry.post
 
-# Filer
-GET     /filer            controllers.Filer.view(id)
-
 # Lists
 GET     /lists            controllers.Lists.view
 

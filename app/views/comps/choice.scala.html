@@ -1,9 +1,11 @@
 @(field: Field, text: String = "", opts: Seq[Any], hint: String = "")
 
-<div class="form-group @if(field.hasErrors){has-error}">
-	<label for="@field.id" class="col-md-1 control-label">@text</label>
+@style={form-control custom-select @if(field.hasErrors){is-invalid}}
+
+<div class="form-group row">
+	<label for="@field.id" class="col-md-1 col-form-label">@text</label>
 	<div class="col-md-11">
-		<select class="form-control selectpicker" id="@field.id" name="@field.name">
+		<select class="@style" id="@field.id" name="@field.name">
 			<option class="blank" value="">@hint</option>
 		@for(option <- opts) {
 			<option value="@option" @if(field.value.getOrElse("").equals(option)){selected="selected"}>@option</option>

@@ -5,57 +5,31 @@
 
 @comps.frame(nav="index") {
 <div class="jumbotron text-center">
-	<h1>@name 書類受付システム</h1>
+	<h1 class="display-1">@name</h1>
+	<h2 class="display-4">書類受付システム</h2>
+	<p>Automatic hamradio-contest Tabulation System Type 4 powered by <a href="https://github.com/nextzlog/qxsl">Elva LISP</a></p>
+	<a class="btn btn-lg btn-outline-dark" href="http://@rule">コンテストの規約を確認する</a>
 </div>
 <div class="page-header text-center">
 @if(status.nonEmpty) {
 	<h3 class="text-warning">@status</h3>
-} else {
-	<h3>コンテスト参加後、このサイトで交信記録を提出することで、参加者として登録されます。</h3>
 }
 </div>
+<div class="text-center">
 @if(DeadLine.demo) {
-<div class="panel panel-info">
-	<div class="panel-heading">
-		<h4>お知らせ</h4>
-	</div>
-	<div class="panel-body">
-		<p>現在、デモ期間中です。コンテストに参加予定の皆様は、滞りなく書類提出できるか事前に確認いただけます。</p>
-	</div>
-</div>
+	<p>現在、試用期間中です。コンテストに参加予定の皆様は、滞りなく書類提出できるか事前にご確認いただけます。</p>
+} else if(DeadLine.isOK) {
+	<p>コンテスト参加後、このサイトで交信記録を提出することで、参加者として登録されます。事前登録は不要です。</p>
+} else {
+	<p>提出期間外につき、新規の提出書類は原則として受理できません。参加者の皆様は、暫定結果をご確認ください。</p>
 }
-<div class="row text-center">
-	<div class="btn-group btn-group-justified">
-		<div class="col-md-4">
-			<a class="btn btn-block btn-default" href="http://@rule">
-				<div class="caption">
-					<h3>コンテスト規約</h3>
-					<p>コンテスト規約は変更されることがあります</p>
-				</div>
-			</a>
-		</div>
-		<div class="col-md-4">
-			<a class="btn btn-block @if(DeadLine.isOK){btn-primary} else {btn-default}" href="@routes.Entry.form">
-				<div class="caption">
-					<h3>交信記録を提出</h3>
-				@if(DeadLine.demo) {
-					<p>本番と同じ手順で書類提出の練習ができます</p>
-				} else if(DeadLine.isOK) {
-					<p>事前の参加登録やアカウント作成は不要です</p>
-				} else {
-					<p>提出期間外につき提出書類は受理できません</p>
-				}
-				</div>
-			</a>
-		</div>
-		<div class="col-md-4">
-			<a class="btn btn-block @if(DeadLine.isOK){btn-default} else {btn-primary}" href="@routes.Lists.view">
-				<div class="caption">
-					<h3>暫定結果を確認</h3>
-					<p>提出期間が満了したら必ず確認してください</p>
-				</div>
-			</a>
-		</div>
-	</div>
+	<p class="text-info">午前と午後の双方の部門に参加した場合は、午前の部門と午後の部門で別々に提出してください。</p>
+</div>
+<div class="row p-2">
+@if(DeadLine.isOK) {
+	<a class="btn btn-lg btn-outline-primary mx-auto" href="@routes.Entry.form">交信記録を提出する</a>
+} else {
+	<a class="btn btn-lg btn-outline-primary mx-auto" href="@routes.Lists.view">暫定結果を確認する</a>
+}
 </div>
 }
