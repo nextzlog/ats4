@@ -16,7 +16,7 @@
 @if(admin || !DeadLine.isOK || DeadLine.demo) {
 @for(sect <- sections) {
 @if(Record.ofSect(sect.getName).nonEmpty) {
-<div class="card my-5">
+<div class="card mb-5">
 	<h3 class="card-header border-bottom-0">@{sect.getName}</h3>
 	<table class="table table-hover">
 		<tr>
