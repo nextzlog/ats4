@@ -19,24 +19,27 @@
 <div class="card mb-5">
 	<h3 class="card-header border-bottom-0">@{sect.getName}</h3>
 	<table class="table table-hover">
-		<tr>
-			<th width="10%">順位</th>
-			<th width="20%">呼出符号</th>
-			<th width="10%">素点</th>
-			<th width="10%">乗数</th>
-			<th width="10%">総得点</th>
-			<th width="40%">運用地</th>
-		</tr>
-		@for(record <- Record.ofSect(sect.getName).sortBy(-_.score)) {
-		<tr class="link @if(record.award) {award}" @if(isLinked(record)) {onclick="window.location='@routes.Admin.sums(record.id)';"}>
-			<td>@{1 + record.place}</td>
-			<td>@{record.call}</td>
-			<td>@{record.calls}</td>
-			<td>@{record.mults}</td>
-			<td>@{record.score}</td>
-			<td>@{record.city}</td>
-		</tr>
-		}
+		<thead>
+			<tr>
+				<th width="10%">順位</th>
+				<th width="20%">呼出符号</th>
+				<th width="10%">素点</th>
+				<th width="10%">乗数</th>
+				<th width="10%">総得点</th>
+				<th width="40%">運用地</th>
+			</tr>
+		</thead>
+		<tbody>
+			@for(record <- Record.ofSect(sect.getName).sortBy(-_.score)) {
+			<tr class="link @if(record.award) {award}" @if(isLinked(record)) {onclick="window.location='@routes.Admin.sums(record.id)';"}>
+				<td>@{1 + record.place}</td>
+				<td>@{record.call}</td>
+				<td>@{record.calls}</td>
+				<td>@{record.mults}</td>
+				<td>@{record.score}</td>
+				<td>@{record.city}</td>
+			</tr>
+			}
 		</tbody>
 	</table>
 	<div class="card-footer">
