@@ -4,8 +4,13 @@
 	<label for="@id" class="col-md-1 col-form-label">@text</label>
 	<div class="col-md-11">
 		<div class="custom-file">
-			<input type="file" name="@id" class="custom-file-input">
-			<label class="custom-file-label overflow-auto" for="@id" data-browse="参照">@hint</label>
+			<input type="file" name="@id" id="@id" class="custom-file-input">
+			<label class="custom-file-label" id="@id-label" for="@id" data-browse="参照">@hint</label>
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+$('#@id').on('change', function() {
+	$('#@id-label').html($(this)[0].files[0].name);
+});
+</script>
