@@ -1,12 +1,8 @@
 @(record: Record)(implicit cfg: Configuration, req: RequestHeader=null, admin: Boolean=false)
 
 @import comps._
-@import java.time.format.DateTimeFormatter
-@import qxsl.field._
 
 @summ = @{Tables(record.file,record.sect).score}
-@dfmt = @{DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss OOOO")}
-@time(t: Time)=@{t.value.format(dfmt)}
 
 @comps.frame(title="提出書類の確認", nav=if(admin) "admin" else "entry") {
 @if(!admin) {
@@ -17,7 +13,15 @@
 </div>
 }
 <div class="card mb-5">
-	<h3 class="card-header border-bottom-0">@record.sect</h3>
+	<h3 class="card-header border-bottom-0 d-flex align-items-center justify-content-between">
+		<span>@record.sect</span>
+		@if(admin) {
+		<div class="btn-group">
+			<a class="btn btn-outline-primary" href="@routes.Admin.form(record.id)"><i class="fas fa-edit"></i> 再提出する</a>
+			<a class="btn btn-outline-danger" href="#deleteModal" data-toggle="modal"><i class="fas fa-trash"></i> 削除する</a>
+		</div>
+		}
+	</h3>
 	<table class="table">
 		<thead>
 			<tr>
@@ -50,64 +54,9 @@
 		<strong>@{summ.total}点</strong> (素点@summ.score 乗数@summ.mults)
 	</div>
 </div>
-<div class="card mb-5">
-	<h3 class="card-header border-bottom-0">有効な交信</h3>
-	<table class="table table-hover">
-		<thead>
-			<tr>
-				<th width="26%">交信日時</th>
-				<th width="16%">相手局</th>
-				<th width="16%">周波数帯</th>
-				<th width="16%">通信方式</th>
-				<th width="16%">運用地</th>
-			</tr>
-		</thead>
-		<tbody>
-			@for(succ <- summ.accepted()) {
-			<tr>
-				<td>@{time(succ.item.get(classOf[Time]))}</td>
-				<td>@{succ.item.get(classOf[Call])}</td>
-				<td>@{succ.item.get(classOf[Band])}</td>
-				<td>@{succ.item.get(classOf[Mode])}</td>
-				<td>@{succ.item.getRcvd.get(classOf[Code])}</td>
-			</tr>
-			}
-		</tbody>
-	</table>
-</div>
-<div class="card mb-5">
-	<h3 class="card-header border-bottom-0">無効な交信</h3>
-	<table class="table table-hover">
-		<thead>
-			<tr>
-				<th width="26%">交信日時</th>
-				<th width="16%">相手局</th>
-				<th width="16%">周波数帯</th>
-				<th width="16%">通信方式</th>
-				<th width="16%">運用地</th>
-			</tr>
-		</thead>
-		<tbody>
-			@for(fail <- summ.rejected()) {
-			<tr>
-				<td>@{time(fail.item.get(classOf[Time]))}</td>
-				<td>@{fail.item.get(classOf[Call])}</td>
-				<td>@{fail.item.get(classOf[Band])}</td>
-				<td>@{fail.item.get(classOf[Mode])}</td>
-				<td>@{fail.item.getRcvd.get(classOf[Code])}</td>
-			</tr>
-			}
-		</tbody>
-	</table>
-	<div class="card-footer">
-		時間外の交信や部門外の周波数帯など、書類の不備により、得点計算の対象と認められない交信です。
-	</div>
-</div>
+@table(head="有効な交信", record, summ.accepted().map(_.item).toSeq)
+@table(head="無効な交信", record, summ.rejected().map(_.item).toSeq)
 @if(admin) {
-@accord(id="edit", title="内容の修正", header=3) {
-<a class="btn btn-success" href="@routes.Admin.logs(record.id)">交信記録をダウンロードする</a>
-<a class="btn btn-primary" href="@routes.Admin.form(record.id)">上の内容で提出ページを開く</a>
-<a class="btn btn-danger" href="#deleteModal" data-toggle="modal">書類を削除する</a>
 @helper.form(action=routes.Admin.elim(record.id)) {
 @helper.CSRF.formField
 <div class="modal" id="deleteModal">
@@ -127,7 +76,6 @@
 		</div>
 	</div>
 </div>
-}
 }
 }
 }
