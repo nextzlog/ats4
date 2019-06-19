@@ -21,13 +21,14 @@
 			@input(pform("addr"), text="ご住所", hint="この宛先に賞を発送します。")
 			@input(pform("mail"), text="メール", hint="受理通知メールが届きます。")
 			@input(pform("comm"), text="ご感想", hint="呼出符号付きで公表します。", multiline=true)
-			@upload(id="sheet", text="交信記録", hint="Cabrillo/JARLサマリーシートを添付した場合は、交信記録のみを読み取ります。")
+			@upload(id="sheet", text="交信記録", hint="未選択")
 		</fieldset>
 	</div>
+	<div class="card-footer d-flex align-items-center justify-content-between">
+		<span>Cabrillo/JARLサマリーシートを添付した場合は、交信記録のみを読み取ります。</span>
+		<a class="btn btn-lg btn-outline-secondary" href="@routes.Guide.view"><i class="fas fa-question"></i> よくあるご質問</a>
+	</div>
 </div>
-<div class="toolbar mt-5">
-	<button class="btn btn-lg btn-primary" type="submit"><i class="fas fa-thumbs-up"></i> この内容で提出する</button>
-	<a class="btn btn-lg btn-outline-secondary" href="@routes.Guide.view"><i class="fas fa-question"></i> よくあるご質問</a>
-</div>
+<button class="btn btn-lg btn-primary mt-5" type="submit"><i class="fas fa-thumbs-up"></i> この内容で提出する</button>
 }
 }

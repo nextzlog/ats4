@@ -1,0 +1,38 @@
+@(head: String, record: Record, items: Seq[qxsl.model.Item])(implicit admin: Boolean=false)
+
+@import java.time.format.DateTimeFormatter
+@import qxsl.field._
+
+@dfmt = @{DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss OOOO")}
+@time(t: Time)=@{t.value.format(dfmt)}
+
+<div class="card mb-5">
+	<h3 class="card-header border-bottom-0 d-flex align-items-center justify-content-between">
+		<span>@head</span>
+	@if(admin) {
+		<a class="btn btn-outline-success" href="@routes.Admin.logs(record.id)"><i class="fas fa-download"></i></a>
+	}
+	</h3>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th width="26%">交信日時</th>
+				<th width="16%">相手局</th>
+				<th width="16%">周波数帯</th>
+				<th width="16%">通信方式</th>
+				<th width="16%">運用地</th>
+			</tr>
+		</thead>
+		<tbody>
+			@for(item <- items) {
+			<tr>
+				<td>@{time(item.get(classOf[Time]))}</td>
+				<td>@{item.get(classOf[Call])}</td>
+				<td>@{item.get(classOf[Band])}</td>
+				<td>@{item.get(classOf[Mode])}</td>
+				<td>@{item.getRcvd.get(classOf[Code])}</td>
+			</tr>
+			}
+		</tbody>
+	</table>
+</div>
