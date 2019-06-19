@@ -7,13 +7,12 @@
 <div class="alert alert-danger">
 	このページは管理者用につき、外部から閲覧可能な場合は直ちに設定を修正せよ。
 </div>
-} else {
+}
+@if(admin || !DeadLine.isOK || DeadLine.demo) {
 <div class="alert alert-warning">
 	掲載内容に誤りがある場合は、直ちに主催者に連絡してください。
 	赤太字は暫定表彰局ですが、審査により失格することがあります。
 </div>
-}
-@if(admin || !DeadLine.isOK || DeadLine.demo) {
 @for(sect <- sections) {
 @if(Record.ofSect(sect.getName).nonEmpty) {
 <div class="card mb-5">
@@ -50,7 +49,7 @@
 }
 } else {
 <div class="alert alert-info">
-	現在、受付期間につき非公開とする。
+	受付期間の終了と同時に暫定結果を公表します。
 </div>
 }
 }
