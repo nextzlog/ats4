@@ -27,9 +27,9 @@
 					<a class="nav-item nav-link @("active".when(nav == "entry"))" href="@routes.Entry.form">書類提出</a>
 					<a class="nav-item nav-link @("active".when(nav == "lists"))" href="@routes.Lists.view">暫定結果</a>
 					<a class="nav-item nav-link @("active".when(nav == "board"))" href="@routes.Board.view">皆様の声</a>
-					<a class="nav-item nav-link @("active".when(nav == "admin"))" href="@routes.Admin.root">管理画面</a>
+					<a class="nav-item nav-link @("active".when(nav == "admin"))" href="@routes.Admin.view">管理画面</a>
 					@if(admin) {
-					<a class="nav-item nav-link @("active".when(nav == "agent"))" href="@routes.Admin.form(-1)">期間外提出</a>
+					<a class="nav-item nav-link @("active".when(nav == "agent"))" href="@routes.Admin.form(None)">期間外提出</a>
 					}
 					<a class="nav-item nav-link @("active".when(nav == "guide"))" href="@routes.Guide.view">FAQ</a>
 				</div>

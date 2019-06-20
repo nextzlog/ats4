@@ -8,5 +8,5 @@ import play.api.mvc.{Action,InjectedController}
 @Singleton class Lists extends InjectedController {
 	@Inject implicit var cfg: Configuration = null
 	@Inject implicit var db: Database = null
-	def view = Action(Ok(views.html.pages.lists(models.Sections.all)))
+	def view = Action(Ok(views.html.pages.lists()))
 }

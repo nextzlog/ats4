@@ -1,5 +1,6 @@
 package models
 
+import play.api.Logger
 import play.api.db.Database
 import qxsl.field.City
 import qxsl.ruler.Contest
@@ -9,7 +10,6 @@ object Sections {
 	val all = Contest.defined("allja1.lisp").asScala.toList
 	def AM = all.map(_.getName).filter(_.matches(""".*(1\.9|3\.5|7).*"""))
 	def PM = all.map(_.getName).filter(_.matches(""".*(14|21|28|50).*"""))
-	def RC = all.map(_.getName).filter(_.contains("社団"))
 	def AB = (AM ++ PM).filter(_.contains("/"))
 	def forName(name: String) = all.filter(_.getName == name).head
 }
@@ -42,9 +42,13 @@ object Sougou {
 object Disposal {
 	// delete conflicting entries
 	def apply(scored: Scored)(implicit db: Database) {
-		for(old <- Record.ofCall(scored.call) if(Sections.RC.contains(old.sect))) old.purge
-		for(old <- Record.ofCall(scored.call) if(Sections.AM.contains(old.sect))) if(!Sections.PM.contains(scored.sect)) old.purge
-		for(old <- Record.ofCall(scored.call) if(Sections.PM.contains(old.sect))) if(!Sections.AM.contains(scored.sect)) old.purge
-		for(old <- Record.ofCall(scored.call) if(old.sect.contains("総合部門"))) old.purge
+		val recs = Record.ofCall(scored.call)
+		val olds = collection.mutable.Buffer[Record]()
+		if(!Sections.PM.contains(scored.sect)) olds ++= recs.filter(o=>Sections.AM.contains(o.sect))
+		if(!Sections.AM.contains(scored.sect)) olds ++= recs.filter(o=>Sections.PM.contains(o.sect))
+		olds ++= recs.filter(_.sect.contains("社団"))
+		olds ++= recs.filter(_.sect.contains("総合"))
+		val logger = Logger(this.getClass)
+		olds.distinct.foreach(old => {logger.info(s"deleted: $old"); old.purge})
 	}
 }

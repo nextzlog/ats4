@@ -13,53 +13,62 @@
 </div>
 }
 <div class="card mb-5">
-	<h3 class="card-header border-bottom-0 d-flex align-items-center justify-content-between">
+	<h3 class="card-header d-flex align-items-center justify-content-between border-bottom-0">
 		<span>@record.sect</span>
 		@if(admin) {
 		<div class="btn-group">
-			<a class="btn btn-outline-primary" href="@routes.Admin.form(record.id)"><i class="fas fa-edit"></i> 再提出する</a>
-			<a class="btn btn-outline-danger" href="#deleteModal" data-toggle="modal"><i class="fas fa-trash"></i> 削除する</a>
+			<a class="btn btn-outline-dark" href="@routes.Admin.form(Some(record.id))"><i class="fas fa-edit"></i></a>
+			<a class="btn btn-outline-danger" href="#deleteModel" data-toggle="modal"><i class="fas fa-trash"></i></a>
 		</div>
 		}
 	</h3>
 	<table class="table">
-		<thead>
-			<tr>
-				<th>呼出符号</th>
-				<th>運用場所</th>
-				<th>お名前</th>
-				<th>ご住所</th>
-				<th>メール</th>
-			</tr>
-		</thead>
+		<colgroup>
+			<col width="10%"></th>
+			<col width="90%"></th>
+		</colgroup>
 		<tbody>
 			<tr>
+				<td>呼出符号</td>
 				<td>@record.call</td>
+			</tr>
+			<tr>
+				<td>運用場所</td>
 				<td>@record.city</td>
+			</tr>
+			<tr>
+				<td>お名前</td>
 				<td>@record.name</td>
+			</tr>
+			<tr>
+				<td>ご住所</td>
 				<td>@record.addr</td>
+			</tr>
+			<tr>
+				<td>連絡先</td>
 				<td><a href="mailto:@record.mail">@record.mail</a></td>
 			</tr>
 		</tbody>
 	</table>
+</div>
 @if(record.comm.nonEmpty) {
-	<div class="card-footer">
+	<blockquote class="mb-5">
 		@record.comm
-	</div>
+	</blockquote>
 }
+@table(head="有効な交信", record, summ.accepted().map(_.item).toSeq) {
+暫定の得点は<strong>@{summ.total}点</strong>(素点@{summ.score} 乗数@{summ.mults})です。
+}
+@table(head="無効な交信", record, summ.rejected().map(_.item).toSeq) {
+<div class="d-flex align-items-center justify-content-between">
+	<span>時間外の交信や部門外の周波数など、得点計算の対象外の交信です。</span>
+	<a class="btn btn-lg btn-outline-secondary" href="@routes.Guide.view"><i class="fas fa-question"></i> よくあるご質問</a>
 </div>
-<div class="card mb-5">
-	<h3 class="card-header">暫定の得点</h3>
-	<div class="card-body">
-		<strong>@{summ.total}点</strong> (素点@summ.score 乗数@summ.mults)
-	</div>
-</div>
-@table(head="有効な交信", record, summ.accepted().map(_.item).toSeq)
-@table(head="無効な交信", record, summ.rejected().map(_.item).toSeq)
+}
 @if(admin) {
-@helper.form(action=routes.Admin.elim(record.id)) {
+@helper.form(action=routes.Proof.elim(record.id)) {
 @helper.CSRF.formField
-<div class="modal" id="deleteModal">
+<div class="modal" id="deleteModel">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
