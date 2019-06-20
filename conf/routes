@@ -14,7 +14,7 @@ GET     /lists            controllers.Lists.view
 
 # Admin (Private)
 GET     /admin            controllers.Admin.view
-GET     /admin/form       controllers.Admin.form(id: Option[Long])
+GET     /admin/edit       controllers.Admin.form(id: Option[Long])
 GET     /admin/file       controllers.Table.file(id: Option[Long])
 GET     /admin/:id        controllers.Proof.view(id: Long)
 POST    /admin/elim       controllers.Proof.elim(id: Long)
