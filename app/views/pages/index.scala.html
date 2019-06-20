@@ -1,7 +1,8 @@
 @(status: Option[Int]=None)(implicit cfg: Configuration, db: Database)
 
-@name = @{cfg.get[String]("contest.name")}
-@rule = @{cfg.get[String]("contest.rule")}
+@name=@{cfg.get[String]("contest.name")}
+@rule=@{cfg.get[String]("contest.rule")}
+@late=@{models.Record.all.filter(_.comm.nonEmpty).last}
 
 @comps.frame(nav="index") {
 <div class="jumbotron text-center">
@@ -34,9 +35,7 @@
 	<p>提出期間外につき、新規の提出書類は原則として受理できません。参加者の皆様は、暫定結果をご確認ください。</p>
 }
 </div>
-@for(record <- models.Record.all.filter(_.comm.nonEmpty).takeRight(5)) {
 <blockquote>
-	<p>@record.comm <footer><a href="@routes.Board.view#@record.call">@record.call (@record.city)</a></footer></p>
+	<p>@late.comm <footer><a href="@routes.Board.view#@late.call">@late.call (@late.city)</a></footer></p>
 </blockquote>
-}
 }
