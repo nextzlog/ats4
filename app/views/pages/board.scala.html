@@ -2,7 +2,7 @@
 
 @comps.frame(title="皆様の声", nav="board") {
 @for(entry <- entries.filter(_.comm.nonEmpty)) {
-<blockquote>
+<blockquote id="@entry.call">
 	<p>@entry.comm <footer>@entry.call (@entry.city)</footer></p>
 </blockquote>
 }

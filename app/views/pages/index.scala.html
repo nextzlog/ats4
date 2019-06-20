@@ -1,4 +1,4 @@
-@(status: Option[Int]=None)(implicit cfg: Configuration)
+@(status: Option[Int]=None)(implicit cfg: Configuration, db: Database)
 
 @name = @{cfg.get[String]("contest.name")}
 @rule = @{cfg.get[String]("contest.rule")}
@@ -7,8 +7,18 @@
 <div class="jumbotron text-center">
 	<h1 class="display-2">@name</h1>
 	<h2 class="display-4">書類受付システム</h2>
-	<p>Automatic hamradio-contest Tabulation System Type 4 powered by <a href="https://github.com/nextzlog/qxsl">Elva LISP</a></p>
-	<a class="btn btn-lg btn-outline-dark" href="http://@rule">コンテストの規約を確認する</a>
+	<p class="lead my-3">
+		<span>Automatic Acceptance &amp; Tabulation System Type 4 for Amateur-Radio Contests powered by</span>
+		<a href="https://github.com/nextzlog/qxsl">Elva LISP</a>.
+	</p>
+	<div class="row d-flex justify-content-center py-2">
+		<a class="btn btn-lg btn-outline-dark mx-2" href="http://@rule">コンテストの規約を確認する</a>
+	@if(DeadLine.isOK) {
+		<a class="btn btn-lg btn-outline-primary mx-2" href="@routes.Entry.form">交信記録を提出する</a>
+	} else {
+		<a class="btn btn-lg btn-outline-primary mx-2" href="@routes.Lists.view">暫定結果を確認する</a>
+	}
+	</div>
 </div>
 <div class="page-header text-center">
 @if(status.nonEmpty) {
@@ -19,17 +29,14 @@
 @if(DeadLine.demo) {
 	<p>現在、試用期間中です。コンテストに参加予定の皆様は、滞りなく書類提出できるか事前にご確認いただけます。</p>
 } else if(DeadLine.isOK) {
-	<p>コンテスト参加後、このサイトで交信記録を提出することで、参加者として登録されます。事前登録は不要です。</p>
+	<p>午前と午後の双方の部門に参加した場合は、それぞれ別々に提出します。総合部門には、自動的に登録されます。</p>
 } else {
 	<p>提出期間外につき、新規の提出書類は原則として受理できません。参加者の皆様は、暫定結果をご確認ください。</p>
 }
-	<p class="text-info">午前と午後の双方の部門に参加した場合は、午前の部門と午後の部門で別々に提出してください。</p>
 </div>
-<div class="row p-2">
-@if(DeadLine.isOK) {
-	<a class="btn btn-lg btn-outline-primary mx-auto" href="@routes.Entry.form">交信記録を提出する</a>
-} else {
-	<a class="btn btn-lg btn-outline-primary mx-auto" href="@routes.Lists.view">暫定結果を確認する</a>
+@for(record <- models.Record.all.filter(_.comm.nonEmpty).takeRight(5)) {
+<blockquote>
+	<p>@record.comm <footer><a href="@routes.Board.view#@record.call">@record.call (@record.city)</a></footer></p>
+</blockquote>
 }
-</div>
 }

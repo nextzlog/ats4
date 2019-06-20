@@ -8,6 +8,6 @@ import play.api.mvc.{Action,InjectedController}
 
 @Singleton class Board extends InjectedController {
 	@Inject implicit var cfg: Configuration = null
-	@Inject implicit var db: Database = null 
+	@Inject implicit var db: Database = null
 	def view = Action(Ok(views.html.pages.board(Record.all)))
 }
