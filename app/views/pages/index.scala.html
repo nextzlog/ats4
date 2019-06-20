@@ -2,7 +2,6 @@
 
 @name=@{cfg.get[String]("contest.name")}
 @rule=@{cfg.get[String]("contest.rule")}
-@late=@{models.Record.all.filter(_.comm.nonEmpty).lastOption}
 
 @comps.frame(nav="index") {
 <div class="jumbotron text-center">
@@ -35,11 +34,13 @@
 	<p>提出期間外につき、新規の提出書類は原則として受理できません。参加者の皆様は、暫定結果をご確認ください。</p>
 }
 </div>
+@defining(util.Random.shuffle(models.Record.all.filter(_.comm.nonEmpty)).headOption) {record =>
 <blockquote>
-	@if(late.nonEmpty) {
-	<p>@late.get.comm<footer><a href="@routes.Board.view#@late.get.call">@late.get.call (@late.get.city)</a></footer></p>
+	@if(record.nonEmpty) {
+	<p>@record.get.comm<footer><a href="@routes.Board.view#@record.get.call">@record.get.call (@record.get.city)</a></footer></p>
 	} else {
 	<p>本日は晴天なり<footer></p>
 	}
 </blockquote>
+}
 }
