@@ -1,9 +1,9 @@
-@(entries: Seq[Record])(implicit cfg: Configuration)
+@()(implicit cfg: Configuration, db: Database)
 
 @comps.frame(title="皆様の声", nav="board") {
-@for(entry <- entries.filter(_.comm.nonEmpty)) {
-<blockquote id="@entry.call">
-	<p>@entry.comm <footer>@entry.call (@entry.city)</footer></p>
+@for(record <- models.Record.all.filter(_.comm.nonEmpty)) {
+<blockquote id="@record.call">
+	<p>@record.comm <footer>@record.call (@record.city)</footer></p>
 </blockquote>
 }
 }

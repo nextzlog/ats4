@@ -14,14 +14,14 @@ class Module extends play.api.inject.Module {
 	}
 }
 
-@Singleton class Report @Inject()(implicit db: Database) {
+object Report {
 	val path = Files.createDirectories(Paths.get("ats4.rcvd"))
+	val file = path.resolve("report.csv")
+}
+
+@Singleton class Report @Inject()(implicit db: Database) {
+	def csv = views.txt.pages.excel(db).body.lines.filter(_.nonEmpty)
 	new Timer(true).schedule(new TimerTask {
-		override def run() {
-			val cset = Charset.forName("UTF-8")
-			val file = path.resolve("report.csv")
-			val list = views.txt.pages.excel(db).body.lines.toSeq
-			Files.write(file, list.filter(_.nonEmpty).asJava,cset)
-		}
+		override def run() = Files.write(Report.file, csv.toSeq.asJava)
 	}, 0, 3600000)
 }

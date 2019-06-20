@@ -13,11 +13,11 @@ POST    /entry            controllers.Entry.post
 GET     /lists            controllers.Lists.view
 
 # Admin (Private)
-GET     /admin/           controllers.Admin.root
-GET     /admin/form/:id   controllers.Admin.form(id: Long)
-GET     /admin/logs/:id   controllers.Admin.logs(id: Long)
-GET     /admin/sums/:id   controllers.Admin.sums(id: Long)
-POST    /admin/elim/:id   controllers.Admin.elim(id: Long)
+GET     /admin            controllers.Admin.view
+GET     /admin/form       controllers.Admin.form(id: Option[Long])
+GET     /admin/file       controllers.Table.file(id: Option[Long])
+GET     /admin/:id        controllers.Proof.view(id: Long)
+POST    /admin/elim       controllers.Proof.elim(id: Long)
 
 # Board
 GET     /board            controllers.Board.view

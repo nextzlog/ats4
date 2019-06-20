@@ -20,7 +20,9 @@ object Format extends Form(Forms.mapping(
 	"addr" -> Forms.nonEmptyText,
 	"mail" -> Forms.email,
 	"comm" -> Forms.text
-)(Scaned.apply)(Scaned.unapply), Map.empty, Nil, None)
+)(Scaned.apply)(Scaned.unapply), Map.empty, Nil, None) {
+	def apply(id: Long)(implicit db: Database) = Try(Format.fill(Record.forId(id).get.scaned)).getOrElse(Format)
+}
 
 case class Scaned(disp: S, city: S, part: S, name: S, addr: S, mail: S, comm: S) {
 	def call = Normalizer.normalize(disp.toUpperCase, Normalizer.Form.NFKC)
@@ -55,6 +57,7 @@ case class Scored(scaned: Scaned, calls: Int, mults: Int) {
 
 case class Record(id: Long, call: S, city: S, sect: S, name: S, addr: S, mail: S, comm: S, file: S, calls: Int, mults: Int) {
 	def score = calls * mults
+	def path = Paths.get(file)
 	def place(implicit db: Database) = Record.ofSect(sect).sortBy(-_.score).indexWhere(_.score == score)
 	def award(implicit db: Database) = place <= math.min(6, math.floor(Record.ofSect(sect).length * .1))
 	def purge(implicit db: Database) = db.withConnection(implicit c=>SQL"delete from posts where id=$id".executeUpdate)

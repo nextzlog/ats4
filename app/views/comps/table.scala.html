@@ -1,4 +1,4 @@
-@(head: String, record: Record, items: Seq[qxsl.model.Item])(implicit admin: Boolean=false)
+@(head: String, record: Record, items: Seq[qxsl.model.Item])(footer: Html)(implicit admin: Boolean=false)
 
 @import java.time.format.DateTimeFormatter
 @import qxsl.field._
@@ -10,7 +10,7 @@
 	<h3 class="card-header border-bottom-0 d-flex align-items-center justify-content-between">
 		<span>@head</span>
 	@if(admin) {
-		<a class="btn btn-outline-success" href="@routes.Admin.logs(record.id)"><i class="fas fa-download"></i></a>
+		<a class="btn btn-outline-success" href="@routes.Table.file(Some(record.id))"><i class="fas fa-download"></i></a>
 	}
 	</h3>
 	<table class="table table-hover">
@@ -35,4 +35,7 @@
 			}
 		</tbody>
 	</table>
+	<div class="card-footer">
+		@footer
+	</div>
 </div>

@@ -15,7 +15,7 @@ object DeadLine {
 }
 
 class Acceptor(implicit smtp: MailerClient, cfg: Configuration, db: Database) {
-	val logger = Logger(classOf[Acceptor])
+	val logger = Logger(this.getClass)
 	def accept(scaned: Scaned, temp: TemporaryFile): Record = {
 		val scored = scaned.next(Tables(temp.path.toString, scaned.sect).score)
 		Disposal(scored)(db)
