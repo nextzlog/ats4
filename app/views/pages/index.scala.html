@@ -2,7 +2,7 @@
 
 @name=@{cfg.get[String]("contest.name")}
 @rule=@{cfg.get[String]("contest.rule")}
-@late=@{models.Record.all.filter(_.comm.nonEmpty).last}
+@late=@{models.Record.all.filter(_.comm.nonEmpty).lastOption}
 
 @comps.frame(nav="index") {
 <div class="jumbotron text-center">
@@ -36,6 +36,10 @@
 }
 </div>
 <blockquote>
-	<p>@late.comm <footer><a href="@routes.Board.view#@late.call">@late.call (@late.city)</a></footer></p>
+	@if(late.nonEmpty) {
+	<p>@late.get.comm<footer><a href="@routes.Board.view#@late.get.call">@late.get.call (@late.get.city)</a></footer></p>
+	} else {
+	<p>本日は晴天なり<footer><a href="@routed.Board.view">感想欄</a></p>
+	}
 </blockquote>
 }
