@@ -2,7 +2,7 @@
 
 @comps.frame(title="皆様の声", nav="board") {
 @for(record <- models.Record.all.filter(_.comm.nonEmpty)) {
-<blockquote id="@record.call">
+<blockquote id="@record.id">
 	<p>@record.comm <footer>@record.call (@record.city)</footer></p>
 </blockquote>
 }

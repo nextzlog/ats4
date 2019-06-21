@@ -23,6 +23,14 @@ blockquote p {
 	display: inline;
 }
 
+label.custom-file-label {
+	cursor: pointer;
+}
+
+input.custom-file-input {
+	cursor: pointer;
+}
+
 tr.link > td {
 	cursor: pointer;
 }
