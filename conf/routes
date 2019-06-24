@@ -14,10 +14,10 @@ GET     /lists            controllers.Lists.view
 
 # Admin (Private)
 GET     /admin            controllers.Admin.view
-GET     /admin/edit       controllers.Admin.form(id: Option[Long])
-GET     /admin/file       controllers.Table.file(id: Option[Long])
-GET     /admin/:id        controllers.Proof.view(id: Long)
-POST    /admin/elim       controllers.Proof.elim(id: Long)
+GET     /admin/edit       controllers.Admin.edit(id: Option[Long])
+GET     /admin/save       controllers.Admin.save(id: Option[Long])
+GET     /admin/pages/:id  controllers.Proof.query(id: Long)
+DELETE  /admin/pages/:id  controllers.Proof.purge(id: Long)
 
 # Board
 GET     /board            controllers.Board.view

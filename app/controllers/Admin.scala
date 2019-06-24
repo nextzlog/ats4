@@ -1,10 +1,12 @@
 package controllers
 
 import javax.inject.{Inject,Singleton}
-import models.Format
+import models.Record.forId
+import models.{Format,Report}
 import play.api.Configuration
 import play.api.db.Database
 import play.api.mvc.{Action,InjectedController}
+import scala.concurrent.ExecutionContext
 import scala.util.Try
 import views.html.pages.{entry,lists}
 
@@ -12,8 +14,13 @@ import views.html.pages.{entry,lists}
 	@Inject implicit var cfg: Configuration = null
 	@Inject implicit var db: Database = null
 	private implicit val admin = true
+	private implicit val ec = ExecutionContext.global
 	def view = Action(Ok(lists()))
-	def form(id: Option[Long]) = Action(implicit r=>{
+	def edit(id: Option[Long]) = Action(implicit r=>{
 		Ok(entry(Try(Format(id.get)).getOrElse(Format)))
 	})
+	def save(id: Option[Long]) = Action(Ok.sendPath (
+		Try(forId(id.get).get.path).getOrElse(Report.file),
+		inline=false
+	))
 }
