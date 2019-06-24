@@ -11,6 +11,7 @@
 </div>
 <script type="text/javascript">
 $('#@id').on('change', function() {
-	$('#@id-label').html($(this)[0].files[0].name);
+	let file = $(this).val().split(/[\\\/]+/).pop()
+	$('#@id-label').html(!file? "@hint": file);
 });
 </script>
