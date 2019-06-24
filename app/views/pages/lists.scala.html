@@ -1,7 +1,7 @@
 @()(implicit cfg: Configuration, db: Database, admin: Boolean=false)
 
 @isLinked(record: Record)=@{admin && !record.sect.contains("総合部門")}
-@toRecord(record: Record)={onclick="window.location='@routes.Proof.view(record.id)';"}
+@toRecord(record: Record)={onclick="window.location='@routes.Proof.query(record.id)';"}
 
 @comps.frame(title=if(admin) "管理画面" else "暫定結果", nav=if(admin) "admin" else "lists") {
 @if(admin) {
@@ -20,7 +20,7 @@
 	<h3 class="card-header d-flex align-items-center justify-content-between border-bottom-0">
 		<span>@sect.getName</span>
 		@if(admin) {
-		<a class="btn btn-outline-success" href="@routes.Table.file(None)"><i class="fas fa-download"></i></a>
+		<a class="btn btn-outline-success" href="@routes.Admin.save(None)"><i class="fas fa-download"></i></a>
 		}
 	</h3>
 	<table class="table table-hover">

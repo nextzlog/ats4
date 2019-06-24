@@ -6,7 +6,7 @@
 @comps.frame(title="書類提出", nav=if(admin) "agent" else "entry") {
 @if(warn.nonEmpty) {
 <div class="alert alert-danger">
-	<span class="glyphicon glyphicon-warning-sign"></span> @warn
+	<span class="fas fa-exclamation-triangle"></span> @warn
 </div>
 }
 @helper.form(action=routes.Entry.post, 'class->"form-horizontal", 'enctype->"multipart/form-data") {

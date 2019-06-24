@@ -29,7 +29,7 @@
 					<a class="nav-item nav-link @("active".when(nav == "board"))" href="@routes.Board.view">皆様の声</a>
 					<a class="nav-item nav-link @("active".when(nav == "admin"))" href="@routes.Admin.view">管理画面</a>
 					@if(admin) {
-					<a class="nav-item nav-link @("active".when(nav == "agent"))" href="@routes.Admin.form(None)">期間外提出</a>
+					<a class="nav-item nav-link @("active".when(nav == "agent"))" href="@routes.Admin.edit(None)">代理提出</a>
 					}
 					<a class="nav-item nav-link @("active".when(nav == "guide"))" href="@routes.Guide.view">FAQ</a>
 				</div>
