@@ -47,6 +47,11 @@
 				<h1 class="my-2">@title</h1>
 			</div>
 			}
+			@if(admin) {
+			<div class="alert alert-danger">
+				このページは管理者用につき、外部から閲覧可能な場合は直ちに設定を修正せよ。
+			</div>
+			}
 			@content
 		</div>
 	</body>
