@@ -4,11 +4,6 @@
 @toRecord(record: Record)={onclick="window.location='@routes.Proof.query(record.id)';"}
 
 @comps.frame(title=if(admin) "管理画面" else "暫定結果", nav=if(admin) "admin" else "lists") {
-@if(admin) {
-<div class="alert alert-danger">
-	このページは管理者用につき、外部から閲覧可能な場合は直ちに設定を修正せよ。
-</div>
-}
 @if(admin || !DeadLine.isOK || DeadLine.demo) {
 <div class="alert alert-warning">
 	掲載内容に誤りがある場合は、直ちに主催者に連絡してください。
