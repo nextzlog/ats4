@@ -1,7 +1,7 @@
 @(head: String, record: Record, items: Seq[qxsl.model.Item])(footer: Html)(implicit admin: Boolean=false)
 
 @import java.time.format.DateTimeFormatter
-@import qxsl.field._
+@import qxsl.extra.field.{Qxsl,Time}
 
 @dfmt = @{DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss OOOO")}
 @time(t: Time)=@{t.value.format(dfmt)}
@@ -26,11 +26,11 @@
 		<tbody>
 			@for(item <- items) {
 			<tr>
-				<td>@{time(item.get(classOf[Time]))}</td>
-				<td>@{item.get(classOf[Call])}</td>
-				<td>@{item.get(classOf[Band])}</td>
-				<td>@{item.get(classOf[Mode])}</td>
-				<td>@{item.getRcvd.get(classOf[Code])}</td>
+				<td>@{time(item.get(Qxsl.TIME).asInstanceOf[Time])}</td>
+				<td>@{item.get(Qxsl.CALL)}</td>
+				<td>@{item.get(Qxsl.BAND)}</td>
+				<td>@{item.get(Qxsl.MODE)}</td>
+				<td>@{item.getRcvd.get(Qxsl.CODE)}</td>
 			</tr>
 			}
 		</tbody>
