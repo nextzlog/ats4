@@ -33,8 +33,8 @@ case class Scaned(disp: S, city: S, part: S, name: S, addr: S, mail: S, comm: S)
 
 case class Tables(path: String, sect: String) {
 	def bytes = Files.readAllBytes(Paths.get(path))
-	def table = new qxsl.sheet.Sheets().unseal(bytes).getBytes("Shift_JIS")
-	def items = new qxsl.table.Tables().decode(Try(table).getOrElse(bytes))
+	def table = new qxsl.sheet.SheetFormats().unseal(bytes).getBytes("Shift_JIS")
+	def items = new qxsl.table.TableFormats().decode(Try(table).getOrElse(bytes))
 	val score = Sections.forName(sect).summarize(items)
 }
 

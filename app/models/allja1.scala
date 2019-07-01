@@ -2,7 +2,7 @@ package models
 
 import play.api.Logger
 import play.api.db.Database
-import qxsl.field.City
+import qxsl.extra.field.City
 import qxsl.ruler.Contest
 import scala.collection.JavaConverters._
 
@@ -15,12 +15,12 @@ object Sections {
 }
 
 object CallArea {
-	def cities = City.getAvailableCodes.asScala.map(new City(_)).filter(c=>c.getPrefName!=c.getCityName)
-	def states = City.getAvailableCodes.asScala.map(new City(_)).filter(c=>c.getPrefName==c.getCityName)
+	def cities = City.getCodes("jarl").asScala.map(new City("jarl", _)).filter( _.isTerminal)
+	def states = City.getCodes("jarl").asScala.map(new City("jarl", _)).filter(!_.isTerminal)
 	val area1 = List("東京都","神奈川県","埼玉県","千葉県","群馬県","茨城県","栃木県","山梨県")
-	val inner = cities.filter(c =>  area1.contains(c.getPrefName)).map(_.getCityName)
-	val outer = states.filter(c => !area1.contains(c.getPrefName)).map(_.getCityName)
-	def total = inner ++ outer
+	val inner = cities.filter(c =>  area1.contains(c.getName(0))).toSeq
+	val outer = states.filter(c => !area1.contains(c.getName(0))).toSeq
+	def total = inner.map(c=>c.getName(0)+c.getName(1)) ++ outer.map(_.getName(0))
 }
 
 object Sougou {
