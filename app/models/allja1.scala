@@ -18,9 +18,9 @@ object CallArea {
 	def cities = City.getCodes("jarl").asScala.map(new City("jarl", _)).filter( _.isTerminal)
 	def states = City.getCodes("jarl").asScala.map(new City("jarl", _)).filter(!_.isTerminal)
 	val area1 = List("東京都","神奈川県","埼玉県","千葉県","群馬県","茨城県","栃木県","山梨県")
-	val inner = cities.filter(c =>  area1.contains(c.getName(0))).toSeq
-	val outer = states.filter(c => !area1.contains(c.getName(0))).toSeq
-	def total = inner.map(c=>c.getName(0)+c.getName(1)) ++ outer.map(_.getName(0))
+	val inner = cities.filter(c =>  area1.contains(c.getName(0))).map(c=>c.getName(0)+c.getName(1)).toSeq
+	val outer = states.filter(c => !area1.contains(c.getName(0))).map(c=>c.getName(0)).toSeq
+	def total = inner ++ outer
 }
 
 object Sougou {
