@@ -19,7 +19,7 @@ import views.html.pages.{entry,lists}
 	def edit(id: Option[Long]) = Action(implicit r=>{
 		Ok(entry(Try(Format(id.get)).getOrElse(Format)))
 	})
-	def save(id: Option[Long]) = Action(Ok.sendPath (
+	def file(id: Option[Long]) = Action(Ok.sendPath (
 		Try(forId(id.get).get.path).getOrElse(Report.file),
 		inline=false
 	))

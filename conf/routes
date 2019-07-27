@@ -15,9 +15,9 @@ GET     /lists            controllers.Lists.view
 # Admin (Private)
 GET     /admin            controllers.Admin.view
 GET     /admin/edit       controllers.Admin.edit(id: Option[Long])
-GET     /admin/save       controllers.Admin.save(id: Option[Long])
-GET     /admin/pages/:id  controllers.Proof.query(id: Long)
-DELETE  /admin/pages/:id  controllers.Proof.purge(id: Long)
+GET     /admin/file       controllers.Admin.file(id: Option[Long])
+GET     /admin/proof/:id  controllers.Proof.view(id: Long)
+DELETE  /admin/proof/:id  controllers.Proof.elim(id: Long)
 
 # Board
 GET     /board            controllers.Board.view
