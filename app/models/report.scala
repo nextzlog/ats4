@@ -20,7 +20,7 @@ object Report {
 }
 
 @Singleton class Report @Inject()(implicit db: Database) {
-	def csv = views.txt.pages.excel(db).body.lines.filter(_.nonEmpty)
+	def csv = views.txt.pages.excel(db).body.lines.iterator.asScala.filter(_.nonEmpty)
 	new Timer(true).schedule(new TimerTask {
 		override def run() = Files.write(Report.file, csv.toSeq.asJava)
 	}, 0, 3600000)

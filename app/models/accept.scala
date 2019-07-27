@@ -7,6 +7,7 @@ import play.api.db.Database
 import play.api.libs.Files.TemporaryFile
 import play.api.{Configuration,Logger}
 import play.libs.mailer.{Email,MailerClient}
+import scala.collection.JavaConverters._
 import scala.util.Try
 
 object DeadLine {
@@ -33,7 +34,7 @@ class Acceptor(implicit smtp: MailerClient, cfg: Configuration, db: Database) {
 		val text = views.txt.pages.email(record,sougou).body.trim
 		for(to <- Record.ofCall(record.call).map(_.mail).distinct) {
 			val mail = new Email
-			mail.setSubject(text.lines.toSeq.head.split("//")(0).trim)
+			mail.setSubject(text.lines.iterator.asScala.toSeq.head.split("//")(0).trim)
 			mail.setFrom("%s <%s>".format(host,from))
 			mail.addTo("%s <%s>".format(record.call,to))
 			mail.addBcc(repl)

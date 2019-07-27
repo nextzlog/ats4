@@ -15,12 +15,12 @@ object Sections {
 }
 
 object CallArea {
-	def cities = City.getCodes("jarl").asScala.map(new City("jarl", _)).filter( _.isTerminal)
-	def states = City.getCodes("jarl").asScala.map(new City("jarl", _)).filter(!_.isTerminal)
-	val area1 = List("東京都","神奈川県","埼玉県","千葉県","群馬県","茨城県","栃木県","山梨県")
-	val inner = cities.filter(c =>  area1.contains(c.getName(0))).map(c=>c.getName(0)+c.getName(1)).toSeq
-	val outer = states.filter(c => !area1.contains(c.getName(0))).map(c=>c.getName(0)).toSeq
-	def total = inner ++ outer
+	def cityList = City.all("jarl").asScala.filter(_.getFullPath.size == 2)
+	def prefList = City.all("jarl").asScala.filter(_.getFullPath.size == 1)
+	val area1 = Seq("東京都","神奈川県","埼玉県","千葉県","群馬県","茨城県","栃木県","山梨県")
+	val inner = cityList.filter(c =>  area1.contains(c.getFullPath.get(0))).map(_.getFullName)
+	val outer = prefList.filter(p => !area1.contains(p.getFullPath.get(0))).map(_.getFullName)
+	def total = (inner ++ outer).filterNot(_ == "東京都小笠原")
 }
 
 object Sougou {

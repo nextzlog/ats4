@@ -13,10 +13,10 @@ import views.html.pages.{lists,proof}
 	@Inject implicit var cfg: Configuration = null
 	@Inject implicit var db: Database = null
 	private implicit val admin = true
-	def query(id: Long) = Action(implicit r=>{
+	def view(id: Long) = Action(implicit r=>{
 		Ok(proof(forId(id).get))
 	})
-	def purge(id: Long) = Action(Try {
+	def elim(id: Long) = Action(Try {
 		Disposal(forId(id).get.scored)
 		Ok(lists())
 	}.getOrElse(NotFound(lists())))
