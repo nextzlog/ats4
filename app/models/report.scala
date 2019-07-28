@@ -7,6 +7,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.db.Database
 import play.api.{Configuration, Environment}
 import scala.collection.JavaConverters._
+import views.txt.pages.excel
 
 class Module extends play.api.inject.Module {
 	def bindings(env: Environment, conf: Configuration) = {
@@ -20,8 +21,9 @@ object Report {
 }
 
 @Singleton class Report @Inject()(implicit db: Database) {
-	def csv = views.txt.pages.excel(db).body.lines.iterator.asScala.filter(_.nonEmpty)
+	def total = excel().body.linesIterator.filter(_.nonEmpty)
+	def store = Files.write(Report.file, total.toList.asJava)
 	new Timer(true).schedule(new TimerTask {
-		override def run() = Files.write(Report.file, csv.toSeq.asJava)
+		override def run() = store
 	}, 0, 3600000)
 }
