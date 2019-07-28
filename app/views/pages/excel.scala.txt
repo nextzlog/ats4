@@ -1,4 +1,4 @@
-@(implicit db: Database)
+@()(implicit db: Database)
 
 @MVP(record: Record) = @{if(record.place == 0) "優勝" else "%d位".format(1+record.place)}
 
