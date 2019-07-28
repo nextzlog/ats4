@@ -2,6 +2,7 @@ package models
 
 import anorm.{Macro, SQL, SqlStringInterpolation}
 import java.lang.{String => S}
+import java.nio.charset.Charset
 import java.nio.file.{Files, Paths}
 import java.text.Normalizer
 import java.time.LocalDateTime
@@ -32,7 +33,8 @@ case class Scaned(disp: S, city: S, part: S, name: S, addr: S, mail: S, comm: S)
 }
 
 case class Tables(path: String, sect: String) {
-	def sheet = new qxsl.sheet.SheetFormats().unpack(Files.readString(Paths.get(path)))
+	def chset = Charset.forName("JISAutoDetect")
+	def sheet = new qxsl.sheet.SheetFormats().unpack(Files.readString(Paths.get(path), chset))
 	def table = new qxsl.table.TableFormats().decode(Files.readAllBytes(Paths.get(path)))
 	val score = Sections.forName(sect).summarize(Try(table).getOrElse(sheet))
 }
