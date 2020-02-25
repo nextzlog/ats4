@@ -1,15 +1,13 @@
-@(field: Field, text: String = "", opts: Seq[Any], hint: String = "")
+@(field: Field, text: String = "", hint: String = "", opts: Seq[Any], live: Boolean = false, hasErrors: Boolean = false)
 
-@style={form-control custom-select @if(field.hasErrors){is-invalid}}
+@style={form-control selectpicker custom-select @if(field.hasErrors || hasErrors){is-invalid}}
 
 <div class="form-group row">
 	<label for="@field.id" class="col-md-1 col-form-label">@text</label>
-	<div class="col-md-11">
-		<select class="@style" id="@field.id" name="@field.name">
+	<div class="col-auto flex-md-fill">
+		<select class="@style" id="@field.id" name="@field.name" data-live-search="@live" data-size="10">
 			<option class="blank" value="">@hint</option>
-		@for(option <- opts) {
-			<option value="@option" @if(field.value.getOrElse("").equals(option)){selected="selected"}>@option</option>
-		}
+		@for(option <- opts) {<option value="@option" @if(field.value.getOrElse("").equals(option)){selected="selected"}>@option</option>}
 		</select>
 	</div>
 </div>

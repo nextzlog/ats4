@@ -1,8 +1,8 @@
 package controllers
 
+import java.nio.file.Paths
 import javax.inject.{Inject,Singleton}
-import models.Record.forId
-import models.{Format,Report}
+import models.{Binds,Major,Report,Submit}
 import play.api.Configuration
 import play.api.db.Database
 import play.api.mvc.{Action,InjectedController}
@@ -16,11 +16,11 @@ import views.html.pages.{entry,lists}
 	private implicit val admin = true
 	private implicit val ec = ExecutionContext.global
 	def view = Action(Ok(lists()))
-	def edit(id: Option[Long]) = Action(implicit r=>{
-		Ok(entry(Try(Format(id.get)).getOrElse(Format)))
+	def edit(call: Option[String]) = Action(implicit r=>{
+		Ok(entry(Try(Binds.fill(Submit(call.get).get)).getOrElse(Binds)))
 	})
-	def file(id: Option[Long]) = Action(Ok.sendPath (
-		Try(forId(id.get).get.path).getOrElse(Report.file),
+	def file(call: Option[String]) = Action(Ok.sendPath (
+		Try(Paths.get(Major.ofCall(call.get).get.file)).getOrElse(Report.file),
 		inline=false
 	))
 }

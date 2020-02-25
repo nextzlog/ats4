@@ -1,9 +1,9 @@
 @()(implicit cfg: Configuration, db: Database)
 
 @comps.frame(title="皆様の声", nav="board") {
-@for(record <- models.Record.all.filter(_.comm.nonEmpty)) {
-<blockquote id="@record.id">
-	<p>@record.comm <footer>@record.call (@record.city)</footer></p>
+@for(major <- Major.all.filter(_.comm.nonEmpty)) {
+<blockquote id="@major.call">
+	<p>@major.comm <footer>@major.call</footer></p>
 </blockquote>
 }
 }

@@ -1,9 +1,8 @@
 package controllers
 
 import javax.inject.{Inject,Singleton}
-import models.Disposal
-import models.Record.forId
-import play.api.Configuration
+import models.{Major,Minor}
+import play.api.{Configuration,Logger}
 import play.api.db.Database
 import play.api.mvc.{Action,InjectedController}
 import scala.util.Try
@@ -13,11 +12,15 @@ import views.html.pages.{lists,proof}
 	@Inject implicit var cfg: Configuration = null
 	@Inject implicit var db: Database = null
 	private implicit val admin = true
-	def view(id: Long) = Action(implicit r=>{
-		Ok(proof(forId(id).get))
+	def view(call: String) = Action(implicit r=>{
+		Ok(proof(Major.ofCall(call).get))
 	})
-	def elim(id: Long) = Action(Try {
-		Disposal(forId(id).get.scored)
+	def elim(call: String) = Action(Try {
+		val major = Major.ofCall(call)
+		val minor = Minor.ofCall(call)
+		major.foreach(_.elim)
+		minor.foreach(_.elim)
+		Logger(getClass).info(s"deleted: $major")
 		Ok(lists())
 	}.getOrElse(NotFound(lists())))
 }

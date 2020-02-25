@@ -1,18 +1,17 @@
 @()(implicit cfg: Configuration, db: Database, admin: Boolean=false)
 
-@isLinked(record: Record)=@{admin && !record.sect.contains("総合部門")}
-@toRecord(record: Record)={onclick="window.location='@routes.Proof.view(record.id)';"}
+@link(minor: Minor)={onclick="window.location='@routes.Proof.view(minor.call)';"}
 
 @comps.frame(title=if(admin) "管理画面" else "暫定結果", nav=if(admin) "admin" else "lists") {
-@if(admin || !DeadLine.isOK || DeadLine.demo) {
+@if(admin || !Schedule.isOK || Schedule.demo) {
 <div class="alert alert-warning">
 	掲載内容に誤りがある場合は、直ちに主催者に連絡してください。
 	赤太字は暫定表彰局ですが、審査により失格することがあります。
 </div>
-@for(sect <- models.Sections.all) {
-@if(Record.ofSect(sect.getName).nonEmpty) {
+@for(sect <- Sections.all) {
+@if(Minor.ofSect(sect.getName).nonEmpty) {
 <div class="card mb-5">
-	<h3 class="card-header d-flex align-items-center justify-content-between border-bottom-0">
+	<h3 class="card-header d-flex justify-content-between border-bottom-0">
 		<span>@sect.getName</span>
 		@if(admin) {
 		<a class="btn btn-outline-success" href="@routes.Admin.file(None)"><i class="fas fa-download"></i></a>
@@ -30,14 +29,14 @@
 			</tr>
 		</thead>
 		<tbody>
-			@for(record <- Record.ofSect(sect.getName).sortBy(-_.score)) {
-			<tr class="link @if(record.award) {award}" @if(isLinked(record)) {@toRecord(record)}>
-				<td>@{1 + record.place}</td>
-				<td>@{record.call}</td>
-				<td>@{record.calls}</td>
-				<td>@{record.mults}</td>
-				<td>@{record.score}</td>
-				<td>@{record.city}</td>
+			@for(minor <- Minor.ofSect(sect.getName).sortBy(-_.total)) {
+			<tr class="link @if(minor.award) {award}" @link(minor)>
+				<td>@{1 + minor.place}</td>
+				<td>@{minor.call}</td>
+				<td>@{minor.score}</td>
+				<td>@{minor.mults}</td>
+				<td>@{minor.total}</td>
+				<td>@{minor.city}</td>
 			</tr>
 			}
 		</tbody>
