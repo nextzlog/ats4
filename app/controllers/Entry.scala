@@ -3,7 +3,7 @@ package controllers
 import java.io.{IOException=>Unsup}
 import java.util.{NoSuchElementException=>Omiss}
 import javax.inject.{Inject,Singleton}
-import models.{Acceptor,DeadLine,Format}
+import models.{Binds,Schedule,Submit}
 import play.api.Configuration
 import play.api.db.Database
 import play.api.mvc.{Action,InjectedController}
@@ -15,18 +15,14 @@ import views.html.warns.{omiss,unsup}
 	@Inject implicit var smtp: MailerClient = null
 	@Inject implicit var cfg: Configuration = null
 	@Inject implicit var db: Database = null
-	def form = Action(implicit r=>if(DeadLine.isOK) {
-		Ok(entry(Format))
-	} else {
-		Gone(index())
-	})
-	def post = Action(implicit r=>util.Try {
+	def form = Action(implicit r=>if(Schedule.isOK) Ok(entry(Binds)) else Gone(index()))
+	def post = Action(implicit r=> util.Try {
 		val data = r.body.asMultipartFormData
-		val form = Format.bindFromRequest.get
+		val form = Binds.bindFromRequest.get
 		val file = data.get.file("sheet").get
-		Ok(proof(new Acceptor().accept(form,file.ref)))
+		Ok(proof(form.push(file.ref)))
 	}.recover {
-		case ex: Omiss => Ok(entry(Format.bindFromRequest, Some(omiss())))
-		case ex: Unsup => Ok(entry(Format.bindFromRequest, Some(unsup())))
+		case ex: Omiss => Ok(entry(Binds.bindFromRequest, Some(omiss())))
+		case ex: Unsup => Ok(entry(Binds.bindFromRequest, Some(unsup())))
 	}.get)
 }

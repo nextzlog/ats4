@@ -31,6 +31,14 @@ input.custom-file-input {
 	cursor: pointer;
 }
 
+.bootstrap-select .btn {
+	background-color: white;
+}
+
+th {
+	text-align: left;
+}
+
 tr.link > td {
 	cursor: pointer;
 }

@@ -1,41 +1,46 @@
-@(head: String, record: Record, items: Seq[qxsl.model.Item])(footer: Html)(implicit admin: Boolean=false)
+@(minor: Minor, major: Major)(implicit admin: Boolean=false)
 
+@import java.nio.file.Paths
 @import java.time.format.DateTimeFormatter
 @import qxsl.extra.field.{Qxsl,Time}
 
 @dfmt = @{DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss OOOO")}
 @time(t: Time)=@{t.value.format(dfmt)}
 
+@summ=@{new Tables(Paths.get(major.file),Attend(minor),minor.call).score}
+
 <div class="card mb-5">
 	<h3 class="card-header border-bottom-0 d-flex align-items-center justify-content-between">
-		<span>@head</span>
+		<span>@minor.sect (@minor.city)</span>
 	@if(admin) {
-		<a class="btn btn-outline-success" href="@routes.Admin.file(Some(record.id))"><i class="fas fa-download"></i></a>
+		<a class="btn btn-outline-success" href="@routes.Admin.file(Some(major.call))"><i class="fas fa-download"></i></a>
 	}
 	</h3>
 	<table class="table table-hover">
 		<thead>
 			<tr>
-				<th width="26%">交信日時</th>
-				<th width="16%">相手局</th>
-				<th width="16%">周波数帯</th>
-				<th width="16%">通信方式</th>
-				<th width="16%">運用地</th>
+				<th width="30%">交信日時</th>
+				<th width="12%">相手局</th>
+				<th width="12%">周波数帯</th>
+				<th width="12%">通信方式</th>
+				<th width="12%">運用地</th>
+				<th width="22%">運用者</th>
 			</tr>
 		</thead>
 		<tbody>
-			@for(item <- items) {
+			@for(item <- summ.accepted().map(_.item).toSeq) {
 			<tr>
 				<td>@{time(item.get(Qxsl.TIME).asInstanceOf[Time])}</td>
 				<td>@{item.get(Qxsl.CALL)}</td>
 				<td>@{item.get(Qxsl.BAND)}</td>
 				<td>@{item.get(Qxsl.MODE)}</td>
 				<td>@{item.getRcvd.get(Qxsl.CODE)}</td>
+				<td>@{item.get(Qxsl.NAME)}</td>
 			</tr>
 			}
 		</tbody>
 	</table>
 	<div class="card-footer">
-		@footer
+		暫定の得点は<strong>@{minor.total}点</strong>(素点@{minor.score} 乗数@{minor.mults} / 運用者@{minor.denom}名)です。
 	</div>
 </div>

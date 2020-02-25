@@ -1,7 +1,7 @@
 @()(implicit cfg: Configuration)
 
 @import comps._
-@mail = @{cfg.get[String]("contest.mail")}
+@mail = @{cfg.get[String]("test.mail")}
 
 @comps.frame(title="よくあるご質問", nav="guide") {
 <p>お困りの内容に応じて、パネルをクリックします。</p>

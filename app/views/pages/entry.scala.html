@@ -1,7 +1,6 @@
-@(pform: Form[Scaned], warn: Option[Html]=None)(implicit cfg: Configuration, req: RequestHeader, admin: Boolean=false)
+@(form: Form[Submit], warn: Option[Html]=None)(implicit cfg: Configuration, req: RequestHeader, admin: Boolean=false)
 
 @import comps._
-@sects = @{Sections.all.map(_.getName.split(" ").tail.mkString(" ")).filterNot(_.contains("総合部門")).distinct}
 
 @comps.frame(title="書類提出", nav=if(admin) "agent" else "entry") {
 @if(warn.nonEmpty) {
@@ -9,18 +8,19 @@
 	<span class="fas fa-exclamation-triangle"></span> @warn
 </div>
 }
-@helper.form(action=routes.Entry.post, 'class->"form-horizontal", 'enctype->"multipart/form-data") {
+@helper.form(action=routes.Entry.post, Symbol("class")->"form-horizontal", Symbol("enctype")->"multipart/form-data") {
 @helper.CSRF.formField
-<div class="card bg-light">
+<div class="card bg-light mb-5">
+	<h3 class="card-header">
+		<span>共通事項</span>
+	</h3>
 	<div class="card-body">
 		<fieldset>
-			@input(pform("disp"), text="呼出符号", hint="移動運用の例: JA1ZLO/1")
-			@choice(pform("city"), opts=CallArea.total, text="運用場所", hint="未選択")
-			@choice(pform("part"), opts=sects, text="参加部門", hint="未選択")
-			@input(pform("name"), text="お名前", hint="この宛名で賞を発送します。")
-			@input(pform("addr"), text="ご住所", hint="この宛先に賞を発送します。")
-			@input(pform("mail"), text="メール", hint="受理通知メールが届きます。")
-			@input(pform("comm"), text="ご感想", hint="呼出符号付きで公表します。", multiline=true)
+			@input(form("call"), text="呼出符号", hint="移動運用の例: JA1ZLO/1")
+			@input(form("name"), text="お名前", hint="この宛名で賞を発送します。")
+			@input(form("addr"), text="ご住所", hint="この宛先に賞を発送します。")
+			@input(form("mail"), text="メール", hint="受理通知メールが届きます。")
+			@input(form("comm"), text="ご感想", hint="呼出符号付きで公表します。", multiline=true)
 			@upload(id="sheet", text="交信記録", hint="未選択")
 		</fieldset>
 	</div>
@@ -29,6 +29,9 @@
 		<a class="btn btn-lg btn-outline-secondary" href="@routes.Guide.view"><i class="fas fa-question"></i> よくあるご質問</a>
 	</div>
 </div>
-<button class="btn btn-lg btn-primary mt-5" type="submit"><i class="fas fa-thumbs-up"></i> この内容で提出する</button>
+@for((opts,num) <- Seq(Sections.HBs,Sections.LBs,Sections.ABs,Sections.DBs).zipWithIndex) {
+	@attend(form(s"list[$num]"), opts=opts)
+}
+<button class="btn btn-lg btn-primary" type="submit"><i class="fas fa-thumbs-up"></i> この内容で提出する</button>
 }
 }
