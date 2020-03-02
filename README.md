@@ -1,4 +1,4 @@
-ATS-4: Web System for Hamradio Contests
+ATS-4: Web System for Amateur-Radio Contests
 ====
 
 ![image](https://img.shields.io/badge/Java-JDK11-red.svg)
@@ -8,7 +8,7 @@ ATS-4: Web System for Hamradio Contests
 ![image](https://img.shields.io/badge/license-GPL3-blue.svg)
 
 ATS-4 is an Automatic Acceptance & Tabulation System for Amateur-Radio Contests.
-ATS-4 consists of two components, namely, the web system (ATS-4) and [qxsl: Hamradio Logging Library](https://github.com/nextzlog/qxsl).
+ATS-4 consists of two components, namely, the web system (ATS-4) and [qxsl: Amateur-Radio Logging Library & LISP](https://github.com/nextzlog/qxsl).
 
 ## Features
 

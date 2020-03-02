@@ -1,13 +1,38 @@
-@(field: Field, text: String = "", hint: String = "", opts: Seq[Any], live: Boolean = false, hasErrors: Boolean = false)
+@(field: Field, text: String, opts: Seq[qxsl.ruler.Section])
 
-@style={form-control selectpicker custom-select @if(field.hasErrors || hasErrors){is-invalid}}
+@sect=@{field("sect")}
+@city=@{field("city")}
+
+@sectOpts=@{opts.map(_.getName.split(" ", 2).last).distinct}
+@cityOpts=@{CallArea.total}
+
+@sectStyle={form-control selectpicker custom-select}
+@cityStyle={@sectStyle @if(field.hasErrors){is-invalid}}
 
 <div class="form-group row">
-	<label for="@field.id" class="col-md-1 col-form-label">@text</label>
-	<div class="col-auto flex-md-fill">
-		<select class="@style" id="@field.id" name="@field.name" data-live-search="@live" data-size="10">
-			<option class="blank" value="">@hint</option>
-		@for(option <- opts) {<option value="@option" @if(field.value.getOrElse("").equals(option)){selected="selected"}>@option</option>}
+	<label for="@sect.id" class="col-md-1 col-form-label">@text</label>
+	<div class="col">
+		<select class="@sectStyle" id="@sect.id" name="@sect.name" data-size="10">
+			<option class="blank" value="">不参加</option>
+		@for(opt <- sectOpts) {
+			<option value="@opt" @if(sect.value.contains(opt)){selected="selected"}>@opt</option>
+		}
+		</select>
+	</div>
+	<div class="col">
+		<select class="@cityStyle" id="@city.id" name="@city.name" data-size="10" data-live-search="true">
+			<option class="blank" value="">未選択</option>
+		@for(opt <- cityOpts) {
+			<option value="@opt" @if(city.value.contains(opt)){selected="selected"}>@opt</option>
+		}
 		</select>
 	</div>
 </div>
+<script type="text/javascript">
+function switch_enabled_@{field.id}() {
+	$('#@{city.id}').attr('disabled', !$('#@{sect.id}').val());
+	$('#@{city.id}').selectpicker('refresh');
+}
+$(document).ready(switch_enabled_@field.id);
+$('#@{sect.id}').change(switch_enabled_@field.id);
+</script>

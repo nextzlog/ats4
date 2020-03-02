@@ -21,6 +21,38 @@
 			@input(form("addr"), text="ご住所", hint="この宛先に賞を発送します。")
 			@input(form("mail"), text="メール", hint="受理通知メールが届きます。")
 			@input(form("comm"), text="ご感想", hint="呼出符号付きで公表します。", multiline=true)
+		</fieldset>
+	</div>
+</div>
+<div class="card bg-light mb-5">
+	<h3 class="card-header">
+		<span>個人部門</span>
+	</h3>
+	<div class="card-body">
+		<fieldset>
+			@choice(form("list[0]"), text="ハイバンド", opts=Sections.SinHBs)
+			@choice(form("list[1]"), text="ローバンド", opts=Sections.SinLBs)
+			@choice(form("list[2]"), text="デジタル",   opts=Sections.SinDGs)
+		</fieldset>
+	</div>
+</div>
+<div class="card bg-light mb-5">
+	<h3 class="card-header">
+		<span>団体部門</span>
+	</h3>
+	<div class="card-body">
+		<fieldset>
+			@choice(form("list[3]"), text="アナログ", opts=Sections.MulABs)
+			@choice(form("list[4]"), text="デジタル", opts=Sections.MulDGs)
+		</fieldset>
+	</div>
+</div>
+<div class="card bg-light mb-5">
+	<h3 class="card-header">
+		<span>交信記録</span>
+	</h3>
+	<div class="card-body">
+		<fieldset>
 			@upload(id="sheet", text="交信記録", hint="未選択")
 		</fieldset>
 	</div>
@@ -29,9 +61,22 @@
 		<a class="btn btn-lg btn-outline-secondary" href="@routes.Guide.view"><i class="fas fa-question"></i> よくあるご質問</a>
 	</div>
 </div>
-@for((opts,num) <- Seq(Sections.HBs,Sections.LBs,Sections.ABs,Sections.DBs).zipWithIndex) {
-	@attend(form(s"list[$num]"), opts=opts)
-}
-<button class="btn btn-lg btn-primary" type="submit"><i class="fas fa-thumbs-up"></i> この内容で提出する</button>
+<a class="btn btn-lg btn-primary" href="#submitModel" data-toggle="modal"><i class="fas fa-thumbs-up"></i> この内容で提出する</a>
+<div class="modal" id="submitModel">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">書類提出</h4>
+			</div>
+			<div class="modal-body">
+				<p>以前の登録内容を全て破棄して、指定された部門で参加登録します。</p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" id="submit" type="submit">提出する</button>
+				<button class="btn btn-default" data-dismiss="modal">キャンセル</button>
+			</div>
+		</div>
+	</div>
+</div>
 }
 }

@@ -16,9 +16,8 @@ create table minors (
 	call varchar(32),
 	sect varchar(64),
 	city varchar(64),
-	denom int,
 	score int,
-	mults int,
+	total int,
 	primary key(id)
 );
 

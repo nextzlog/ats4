@@ -4,7 +4,7 @@
 
 <div class="form-group row">
 	<label for="@field.id" class="col-md-1 col-form-label">@text</label>
-	<div class="col-md-11">
+	<div class="col">
 	@if(multiline) {
 		<textarea class="@style" name="@field.id" placeholder="@hint" rows="10">@field.value</textarea>
 	} else {
