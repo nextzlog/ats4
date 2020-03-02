@@ -10,11 +10,10 @@ case class Major(call: String, name: String, addr: String, mail: String, comm: S
 	def elim(implicit db: Database) = db.withConnection(implicit c=>SQL"delete from majors where call=$call".executeUpdate)
 }
 
-case class Minor(call: String, sect: String, city: String, denom: Int, score: Int, mults: Int) {
-	def query = SQL"insert into minors values(NULL,$call,$sect,$city,$denom,$score,$mults)"
+case class Minor(call: String, sect: String, city: String, score: Int, total: Int) {
+	def query = SQL"insert into minors values(NULL,$call,$sect,$city,$score,$total)"
 	def push(implicit db: Database) = db.withConnection(implicit c=>query.executeInsert())
 	def elim(implicit db: Database) = db.withConnection(implicit c=>SQL"delete from minors where call=$call".executeUpdate)
-	def total = math.floor(score * mults.toDouble / denom).toInt
 	def place(implicit db: Database) = Minor.ofSect(sect).sortBy(-_.total).indexWhere(_.total == total)
 	def award(implicit db: Database) = place <= math.min(6, math.floor(Minor.ofSect(sect).length * .1))
 }

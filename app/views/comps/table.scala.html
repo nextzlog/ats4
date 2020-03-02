@@ -3,15 +3,16 @@
 @import java.nio.file.Paths
 @import java.time.format.DateTimeFormatter
 @import qxsl.extra.field.{Qxsl,Time}
+@import qxsl.ruler.Failure
 
 @dfmt = @{DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss OOOO")}
 @time(t: Time)=@{t.value.format(dfmt)}
 
-@summ=@{new Tables(Paths.get(major.file),Attend(minor),minor.call).score}
+@summ=@{new Tables(Paths.get(major.file),minor.call,minor.sect,minor.city).score}
 
 <div class="card mb-5">
 	<h3 class="card-header border-bottom-0 d-flex align-items-center justify-content-between">
-		<span>@minor.sect (@minor.city)</span>
+		<span>@minor.sect</span>
 	@if(admin) {
 		<a class="btn btn-outline-success" href="@routes.Admin.file(Some(major.call))"><i class="fas fa-download"></i></a>
 	}
@@ -19,28 +20,42 @@
 	<table class="table table-hover">
 		<thead>
 			<tr>
-				<th width="30%">交信日時</th>
-				<th width="12%">相手局</th>
-				<th width="12%">周波数帯</th>
-				<th width="12%">通信方式</th>
-				<th width="12%">運用地</th>
-				<th width="22%">運用者</th>
+				<th>交信日時</th>
+				<th>相手局</th>
+				<th>周波数帯</th>
+				<th>通信方式</th>
+				<th>運用地</th>
+				<th>担当者</th>
+				<th>備考</th>
 			</tr>
 		</thead>
 		<tbody>
-			@for(item <- summ.accepted().map(_.item).toSeq) {
+			@for(msg <- summ.accepted().toSeq) {
 			<tr>
-				<td>@{time(item.get(Qxsl.TIME).asInstanceOf[Time])}</td>
-				<td>@{item.get(Qxsl.CALL)}</td>
-				<td>@{item.get(Qxsl.BAND)}</td>
-				<td>@{item.get(Qxsl.MODE)}</td>
-				<td>@{item.getRcvd.get(Qxsl.CODE)}</td>
-				<td>@{item.get(Qxsl.NAME)}</td>
+				<td>@{time(msg.item.get(Qxsl.TIME).asInstanceOf[Time])}</td>
+				<td>@{msg.item.get(Qxsl.CALL)}</td>
+				<td>@{msg.item.get(Qxsl.BAND)}</td>
+				<td>@{msg.item.get(Qxsl.MODE)}</td>
+				<td>@{msg.item.getRcvd.get(Qxsl.CODE)}</td>
+				<td>@{msg.item.get(Qxsl.NAME)}</td>
+				<td>-</td>
+			</tr>
+			}
+			@for(msg <- summ.rejected().toSeq) {
+			<tr>
+				<td>@{time(msg.item.get(Qxsl.TIME).asInstanceOf[Time])}</td>
+				<td>@{msg.item.get(Qxsl.CALL)}</td>
+				<td>@{msg.item.get(Qxsl.BAND)}</td>
+				<td>@{msg.item.get(Qxsl.MODE)}</td>
+				<td>@{msg.item.getRcvd.get(Qxsl.CODE)}</td>
+				<td>@{msg.item.get(Qxsl.NAME)}</td>
+				<td>@{msg.text}</td>
 			</tr>
 			}
 		</tbody>
 	</table>
 	<div class="card-footer">
-		暫定の得点は<strong>@{minor.total}点</strong>(素点@{minor.score} 乗数@{minor.mults} / 運用者@{minor.denom}名)です。
+		@if(minor.city.nonEmpty){運用地は@{minor.city}です。}
+		暫定の得点は<strong>@{minor.total}点</strong>(素点@{minor.score})です。
 	</div>
 </div>
