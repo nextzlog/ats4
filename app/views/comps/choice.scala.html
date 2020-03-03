@@ -21,7 +21,7 @@
 	</div>
 	<div class="col">
 		<select class="@cityStyle" id="@city.id" name="@city.name" data-size="10" data-live-search="true">
-			<option class="blank" value="">未選択</option>
+			<option class="blank" value="">運用地</option>
 		@for(opt <- cityOpts) {
 			<option value="@opt" @if(city.value.contains(opt)){selected="selected"}>@opt</option>
 		}
