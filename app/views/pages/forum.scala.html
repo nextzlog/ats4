@@ -1,0 +1,9 @@
+@()(implicit cfg: Configuration, db: Database)
+
+@comps.frame(title="皆様の声", nav="board") {
+@for(team <- Book.all.filter(_.comm.nonEmpty)) {
+<blockquote id="@team.call">
+	<p>@team.comm <footer>@team.call</footer></p>
+</blockquote>
+}
+}

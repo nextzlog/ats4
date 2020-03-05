@@ -1,4 +1,4 @@
-@(minor: Minor, major: Major)(implicit admin: Boolean=false)
+@(game: Game, team: Team)(implicit admin: Boolean=false)
 
 @import java.nio.file.Paths
 @import java.time.format.DateTimeFormatter
@@ -8,16 +8,16 @@
 @dfmt = @{DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss OOOO")}
 @time(t: Time)=@{t.value.format(dfmt)}
 
-@summ=@{new Tables(Paths.get(major.file),minor.call,minor.sect,minor.city).score}
+@summ=@{new TableLoader(game.file,game.sect).score}
 
 <div class="card mb-5">
 	<h3 class="card-header border-bottom-0 d-flex align-items-center justify-content-between">
-		<span>@minor.sect</span>
+		<span>@game.sect</span>
 	@if(admin) {
-		<a class="btn btn-outline-success" href="@routes.Admin.file(Some(major.call))"><i class="fas fa-download"></i></a>
+		<a class="btn btn-outline-success" href="@routes.Admin.file(team.call)"><i class="fas fa-download"></i></a>
 	}
 	</h3>
-	<table class="table table-hover">
+	<table class="table table-sm table-hover text-monospace">
 		<thead>
 			<tr>
 				<th>交信日時</th>
@@ -42,7 +42,7 @@
 			</tr>
 			}
 			@for(msg <- summ.rejected().toSeq) {
-			<tr>
+			<tr class="table-warning">
 				<td>@{time(msg.item.get(Qxsl.TIME).asInstanceOf[Time])}</td>
 				<td>@{msg.item.get(Qxsl.CALL)}</td>
 				<td>@{msg.item.get(Qxsl.BAND)}</td>
@@ -55,7 +55,7 @@
 		</tbody>
 	</table>
 	<div class="card-footer">
-		@if(minor.city.nonEmpty){運用地は@{minor.city}です。}
-		暫定の得点は<strong>@{minor.total}点</strong>(素点@{minor.score})です。
+		@if(game.city.nonEmpty){運用地は@{game.city}です。}
+		暫定の得点は<strong>@{game.total}点</strong>(素点@{game.score})です。
 	</div>
 </div>

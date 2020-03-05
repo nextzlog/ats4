@@ -1,7 +1,7 @@
 @(status: Option[Int]=None)(implicit cfg: Configuration, db: Database)
 
 @name=@{cfg.get[String]("test.name")}
-@comm=@{Major.all.filter(_.comm.nonEmpty)}
+@comm=@{Book.all.filter(_.comm.nonEmpty)}
 
 @comps.frame(nav="index") {
 <div class="jumbotron text-center">
@@ -25,18 +25,16 @@
 }
 </div>
 <div class="text-center">
-@if(Schedule.demo) {
-	<p>現在、試用期間中です。コンテストに参加予定の皆様は、滞りなく書類提出できるか事前にご確認いただけます。</p>
-} else if(Schedule.isOK) {
+@if(Schedule.isOK) {
 	<p>書類提出の簡略化のため、従来の仕様を改め、アナログ無線・デジタル無線の全部門の書類を同時に受理します。</p>
 } else {
 	<p>提出期間外につき、新規の提出書類は原則として受理できません。参加者の皆様は、暫定結果をご確認ください。</p>
 }
 </div>
 @if(comm.nonEmpty) {
-@defining(util.Random.shuffle(comm).head) {major =>
+@defining(util.Random.shuffle(comm).head) {team =>
 <blockquote>
-	<p>@major.comm<footer><a href="@routes.Board.view#@major.call">@major.call</a></footer></p>
+	<p>@team.comm<footer><a href="@routes.Forum.view#@team.call">@team.call</a></footer></p>
 </blockquote>
 }
 } else {

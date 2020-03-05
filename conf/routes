@@ -14,13 +14,14 @@ GET     /lists              controllers.Lists.view
 
 # Admin (Private)
 GET     /admin              controllers.Admin.view
-GET     /admin/edit         controllers.Admin.edit(call: Option[String])
-GET     /admin/file         controllers.Admin.file(call: Option[String])
+GET     /admin/data         controllers.Admin.data
+GET     /admin/edit         controllers.Admin.edit(call: String)
+GET     /admin/file         controllers.Admin.file(call: String)
 GET     /admin/proof/:call  controllers.Proof.view(call: String)
 DELETE  /admin/proof/:call  controllers.Proof.elim(call: String)
 
-# Board
-GET     /board              controllers.Board.view
+# Forum
+GET     /forum              controllers.Forum.view
 
 # FAQ
 GET     /guide              controllers.Guide.view

@@ -1,8 +1,8 @@
-@(major: Major)(implicit cfg: Configuration, db: Database, req: RequestHeader, admin: Boolean=false)
+@(team: Team)(implicit cfg: Configuration, db: Database, req: RequestHeader, admin: Boolean=false)
 
 @import comps._
 
-@comps.frame(title="提出書類の確認", nav=if(admin) "admin" else "entry") {
+@comps.frame(title="提出書類の確認", nav=if(admin) "admin" else "game") {
 @if(!admin) {
 <div class="alert alert-success">
 	下記の内容で受理しました。
@@ -12,10 +12,10 @@
 }
 <div class="card mb-5">
 	<h3 class="card-header d-flex align-items-center justify-content-between border-bottom-0">
-		<span>@major.call</span>
+		<span>@team.call</span>
 		@if(admin) {
 		<div class="btn-group">
-			<a class="btn btn-outline-dark" href="@routes.Admin.edit(Some(major.call))"><i class="fas fa-edit"></i></a>
+			<a class="btn btn-outline-dark" href="@routes.Admin.edit(team.call)"><i class="fas fa-edit"></i></a>
 			<a class="btn btn-outline-danger" href="#deleteModel" data-toggle="modal"><i class="fas fa-trash"></i></a>
 		</div>
 		}
@@ -28,26 +28,26 @@
 		<tbody>
 			<tr>
 				<td>お名前</td>
-				<td>@major.name</td>
+				<td>@team.name</td>
 			</tr>
 			<tr>
 				<td>ご住所</td>
-				<td>@major.addr</td>
+				<td>@team.addr</td>
 			</tr>
 			<tr>
 				<td>連絡先</td>
-				<td><a href="mailto:@major.mail">@major.mail</a></td>
+				<td><a href="mailto:@team.mail">@team.mail</a></td>
 			</tr>
 		</tbody>
 	</table>
 </div>
-@if(major.comm.nonEmpty) {
+@if(team.comm.nonEmpty) {
 	<blockquote class="mb-5">
-		@major.comm
+		@team.comm
 	</blockquote>
 }
-@for(minor <- Minor.ofCall(major.call)) {
-	@table(minor,major)
+@for(game <- models.Call(team.call).game) {
+	@table(game,team)
 }
 @if(admin) {
 <div class="modal" id="deleteModel">
@@ -57,7 +57,7 @@
 				<h4 class="modal-title">書類の削除</h4>
 			</div>
 			<div class="modal-body">
-				<p>@{major.call}の書類を削除します。</p>
+				<p>@{team.call}の書類を削除します。</p>
 				<p class="text-danger">この操作は取り消せません。</p>
 			</div>
 			<div class="modal-footer">
@@ -69,7 +69,7 @@
 </div>
 <script type="text/javascript">
 $('#deleteButton').click(function () {
-	$.ajax({type: "DELETE", url: "@helper.CSRF(routes.Proof.elim(major.call))"}).done(() => window.location="@routes.Admin.view");
+	$.ajax({type: "DELETE", url: "@helper.CSRF(routes.Proof.elim(team.call))"}).done(() => window.location="@routes.Admin.view");
 });
 </script>
 }

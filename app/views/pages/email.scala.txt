@@ -1,17 +1,12 @@
-@(major: Major)(implicit cfg: Configuration, db: Database)
+@(team: Team)(implicit cfg: Configuration, db: Database)
 
-@host=@{cfg.get[String]("test.host")}
-@name=@{cfg.get[String]("test.name")}
-@site=@{cfg.get[String]("test.site")}
-@mail=@{cfg.get[String]("test.mail")}
+@{Contest.name}書類提出の完了 // 空白を除く先頭行はメールの件名
 
-@{name}書類提出の完了 // 空白を除く先頭行はメールの件名
+@{team.call}様
 
-@{major.call}様
-
-この度は@{name}コンテストに参加いただきありがとうございます。
-@for(minor <- Minor.ofCall(major.call)) {
-@{minor.sect} (運用地@{minor.city})}
+この度は@{Contest.name}コンテストに参加いただきありがとうございます。
+@for(game <- models.Call(team.call).game) {
+@{game.sect} (運用地@{game.city})}
 にて受理いたしました。
 今後とも当コンテストをよろしくお願いいたします。
 
@@ -20,7 +15,7 @@
 このメールに心当たりがない場合はお手数ですが下記の連絡先までご連絡ください。
 
 ---
-@{host}
-@{name}受付担当係
-@{site}
-@{mail}
+@{Contest.host}
+@{Contest.name}受付担当係
+@{Contest.site}
+@{Contest.mail}

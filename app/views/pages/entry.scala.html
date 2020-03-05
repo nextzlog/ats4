@@ -1,11 +1,11 @@
-@(form: Form[Submit], warn: Option[Html]=None)(implicit cfg: Configuration, req: RequestHeader, admin: Boolean=false)
+@(form: Form[Post], warn: Option[Html]=None)(implicit cfg: Configuration, req: RequestHeader, admin: Boolean=false)
 
 @import comps._
 
 @comps.frame(title="書類提出", nav=if(admin) "agent" else "entry") {
 @if(warn.nonEmpty) {
 <div class="alert alert-danger">
-	<span class="fas fa-exclamation-triangle"></span> @warn
+	<i class="fas fa-exclamation-triangle"></i> @warn
 </div>
 }
 @helper.form(action=routes.Entry.post, Symbol("class")->"form-horizontal", Symbol("enctype")->"multipart/form-data") {
@@ -16,13 +16,16 @@
 	</h3>
 	<div class="card-body">
 		<fieldset>
-			@input(form("call"), text="呼出符号", hint="移動運用の例: JA1ZLO/1")
-			@input(form("name"), text="お名前", hint="この宛名で賞を発送します。")
-			@input(form("addr"), text="ご住所", hint="この宛先に賞を発送します。")
-			@input(form("mail"), text="メール", hint="受理通知メールが届きます。")
-			@input(form("comm"), text="ご感想", hint="呼出符号付きで公表します。", multiline=true)
+			@input(form("team.call"), text="呼出符号", hint="移動運用の例: JA1ZLO/1")
+			@input(form("team.name"), text="お名前", hint="この宛名で賞を発送します。")
+			@input(form("team.addr"), text="ご住所", hint="この宛先に賞を発送します。")
+			@input(form("team.mail"), text="メール", hint="受理通知メールが届きます。")
+			@input(form("team.comm"), text="ご感想", hint="呼出符号付きで公表します。", multiline=true)
 		</fieldset>
 	</div>
+</div>
+<div class="alert alert-info">
+	<span>参加した部門ごとに部門の名前と運用地を選択します。不参加の部門は「不参加」を選びます。</span>
 </div>
 <div class="card bg-light mb-5">
 	<h3 class="card-header">
@@ -30,9 +33,9 @@
 	</h3>
 	<div class="card-body">
 		<fieldset>
-			@choice(form("list[0]"), text="ハイバンド", opts=Sections.SinHBs)
-			@choice(form("list[1]"), text="ローバンド", opts=Sections.SinLBs)
-			@choice(form("list[2]"), text="デジタル",   opts=Sections.SinDGs)
+			@choice(form("parts[0]"), text="ハイバンド", opts=Sections.SinHBs)
+			@choice(form("parts[1]"), text="ローバンド", opts=Sections.SinLBs)
+			@choice(form("parts[2]"), text="デジタル",   opts=Sections.SinDGs)
 		</fieldset>
 	</div>
 </div>
@@ -42,8 +45,8 @@
 	</h3>
 	<div class="card-body">
 		<fieldset>
-			@choice(form("list[3]"), text="アナログ", opts=Sections.MulABs)
-			@choice(form("list[4]"), text="デジタル", opts=Sections.MulDGs)
+			@choice(form("parts[3]"), text="アナログ", opts=Sections.MulABs)
+			@choice(form("parts[4]"), text="デジタル", opts=Sections.MulDGs)
 		</fieldset>
 	</div>
 </div>
