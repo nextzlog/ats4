@@ -1,23 +1,23 @@
 @()(implicit cfg: Configuration, db: Database, admin: Boolean=false)
 
-@link(minor: Minor)={onclick="window.location='@routes.Proof.view(minor.call)';"}
+@link(game: Game)={onclick="window.location='@routes.Proof.view(game.call)';"}
 
 @comps.frame(title=if(admin) "管理画面" else "暫定結果", nav=if(admin) "admin" else "lists") {
-@if(admin || !Schedule.isOK || Schedule.demo) {
+@if(admin || !Schedule.isOK) {
 <div class="alert alert-warning">
 	掲載内容に誤りがある場合は、直ちに主催者に連絡してください。
 	赤太字は暫定表彰局ですが、審査により失格することがあります。
 </div>
 @for(sect <- Sections.all) {
-@if(Minor.ofSect(sect.getName).nonEmpty) {
+@if(Sect(sect.getName).game.nonEmpty) {
 <div class="card mb-5">
 	<h3 class="card-header d-flex justify-content-between border-bottom-0">
 		<span>@sect.getName</span>
 		@if(admin) {
-		<a class="btn btn-outline-success" href="@routes.Admin.file(None)"><i class="fas fa-download"></i></a>
+		<a class="btn btn-outline-success" href="@routes.Admin.data"><i class="fas fa-download"></i></a>
 		}
 	</h3>
-	<table class="table table-hover">
+	<table class="table table-hover text-monospace">
 		<thead>
 			<tr>
 				<th width="10%">順位</th>
@@ -28,19 +28,19 @@
 			</tr>
 		</thead>
 		<tbody>
-			@for(minor <- Minor.ofSect(sect.getName).sortBy(-_.total)) {
-			<tr class="link @if(minor.award) {award}" @link(minor)>
-				<td>@{1 + minor.place}</td>
-				<td>@{minor.call}</td>
-				<td>@{minor.score}</td>
-				<td>@{minor.total}</td>
-				<td>@{minor.city}</td>
+			@for(game <- Sect(sect.getName).game.sortBy(-_.total)) {
+			<tr class="link @if(game.best) {award}" @link(game)>
+				<td>@{1 + game.rank}</td>
+				<td>@{game.call}</td>
+				<td>@{game.score}</td>
+				<td>@{game.total}</td>
+				<td>@{game.city}</td>
 			</tr>
 			}
 		</tbody>
 	</table>
 	<div class="card-footer">
-		当該部門の登録者数の10%(小数点以下切捨て)に1を足した順位 (最大7位) までを表彰する。
+		当該部門の登録者数の10%(小数点以下切り上げ)の順位 (最大7位) までを表彰する。
 	</div>
 </div>
 }

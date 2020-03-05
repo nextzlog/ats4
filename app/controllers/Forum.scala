@@ -5,8 +5,8 @@ import play.api.Configuration
 import play.api.db.Database
 import play.api.mvc.{Action,InjectedController}
 
-@Singleton class Board extends InjectedController {
+@Singleton class Forum extends InjectedController {
 	@Inject implicit var cfg: Configuration = null
 	@Inject implicit var db: Database = null
-	def view = Action(Ok(views.html.pages.board()))
+	def view = Action(Ok(views.html.pages.forum()))
 }

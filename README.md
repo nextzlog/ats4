@@ -22,7 +22,7 @@ Feel free to visit [ALLJA1 ATS-4](https://allja1.org), but **never submit a dumm
 
 ## Documents
 
-- [Javadoc of qxsl Library](https://pafelog.net/qxsl/index.html)
+- [Javadoc of QxSL Library](https://nextzlog.github.io/qxsl/doc/index.html)
 - [History and Usage of ATS-4](https://pafelog.net/ats4.pdf)
 
 ## Setup & Start
@@ -104,19 +104,17 @@ Then, delete the file.
 $ rm target/universal/stage/RUNNING_PID
 ```
 
-## Demo Mode
+## Upgrade
 
-By default, ATS-4 operates in `demo` mode, which is helpful for rehearsal submission.
-Do not forget to disable the mode and clear the database by the day of the contest:
-
-```ini
-$ sed -i -e 's/ats4.demo=true/ats4.demo=false/g' conf/application.conf
-```
-
-To clear the database, run the following command, and then restart the system.
+To upgrade ATS-4 components, first stop the system, then clear the database, pull the latest version, and finally restart the system:
 
 ```sh
+$ kill `cat target/universal/stage/RUNNING_PID`
 $ ./clean.sh
+$ git fetch origin master
+$ git reset --hard origin/master
+# modify conf/application.conf properly
+$ sbt "start -Dhttp.port=8000"
 ```
 
 ## Reverse Proxy

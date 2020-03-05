@@ -1,9 +1,0 @@
-@()(implicit cfg: Configuration, db: Database)
-
-@comps.frame(title="皆様の声", nav="board") {
-@for(major <- Major.all.filter(_.comm.nonEmpty)) {
-<blockquote id="@major.call">
-	<p>@major.comm <footer>@major.call</footer></p>
-</blockquote>
-}
-}
