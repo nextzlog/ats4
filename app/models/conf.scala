@@ -1,10 +1,10 @@
 package models
 
+import java.io.InputStreamReader
 import java.nio.file.{Files, Paths}
 import java.time.{LocalDate, LocalDateTime}
 import play.api.Configuration
 import qxsl.extra.field.Call
-import qxsl.ruler.Contest.ALLJA1
 import qxsl.ruler.{RuleKit, Section}
 
 object Contest {
@@ -24,7 +24,7 @@ object Schedule {
 
 object Sections {
 	import scala.jdk.CollectionConverters._
-	val ja1 = new RuleKit().contest(ALLJA1)
+	val ja1 = new RuleKit().contest(new InputStreamReader(getClass.getResourceAsStream("/rule.lisp")))
 	val all = ja1.asScala.toSeq
 	val SinHBs = all.filter(_.getCode == "Sin1").toSeq
 	val SinLBs = all.filter(_.getCode == "Sin2").toSeq
