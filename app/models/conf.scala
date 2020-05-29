@@ -3,23 +3,22 @@ package models
 import java.io.InputStreamReader
 import java.nio.file.{Files, Paths}
 import java.time.{LocalDate, LocalDateTime}
-import play.api.Configuration
 import qxsl.extra.field.Call
 import qxsl.ruler.{RuleKit, Section}
 
 object Contest {
-	def name(implicit cfg: Configuration) = cfg.get[String]("test.name")
-	def host(implicit cfg: Configuration) = cfg.get[String]("test.host")
-	def mail(implicit cfg: Configuration) = cfg.get[String]("test.mail")
-	def site(implicit cfg: Configuration) = cfg.get[String]("test.site")
+	lazy val name = Sections.ja1.invoke("name").asInstanceOf[String]
+	lazy val host = Sections.ja1.invoke("host").asInstanceOf[String]
+	lazy val mail = Sections.ja1.invoke("mail").asInstanceOf[String]
+	lazy val site = Sections.ja1.invoke("site").asInstanceOf[String]
 }
 
 object Schedule {
-	val year = LocalDate.now.getYear
-	val date = Sections.ja1.invoke("starting", year).asInstanceOf[LocalDate]
-	val dead = Sections.ja1.invoke("deadline", year).asInstanceOf[LocalDate]
-	def rule(implicit cfg: Configuration) = cfg.get[String]("test.rule").format(year - 1988)
-	def isOK(implicit cfg: Configuration) = LocalDate.now.isBefore(dead.plusDays(1))
+	lazy val year = LocalDate.now.getYear
+	lazy val date = Sections.ja1.invoke("starting", year).asInstanceOf[LocalDate]
+	lazy val dead = Sections.ja1.invoke("deadline", year).asInstanceOf[LocalDate]
+	lazy val rule = Sections.ja1.invoke("rule").asInstanceOf[String].format(year - 1988)
+	def isOK = LocalDate.now.isBefore(dead.plusDays(1))
 }
 
 object Sections {
@@ -46,7 +45,7 @@ object Storage {
 	import java.time.LocalDate
 	import java.time.format.DateTimeFormatter.ofPattern
 	def now = LocalDateTime.now.format(ofPattern("'%s'.yyyyMMdd.HHmmss.'log'"))
-	def path(implicit cfg: Configuration) = Files.createDirectories(Paths.get(cfg.get[String]("ats4.rcvd")))
-	def file(call: String)(implicit cfg: Configuration) = path.resolve(now.format(new Call(call).strip))
-	def file(implicit cfg: Configuration) = path.resolve("report.csv")
+	def path = Files.createDirectories(Paths.get(Sections.ja1.invoke("output").asInstanceOf[String]))
+	def file(call: String) = path.resolve(now.format(new Call(call).strip))
+	def file = path.resolve(Sections.ja1.invoke("report").asInstanceOf[String])
 }

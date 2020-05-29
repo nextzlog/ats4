@@ -1,4 +1,4 @@
-@(team: Team)(implicit cfg: Configuration, db: Database)
+@(team: Team)(implicit db: Database)
 
 @{Contest.name}書類提出の完了 // 空白を除く先頭行はメールの件名
 

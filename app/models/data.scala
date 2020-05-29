@@ -4,7 +4,7 @@ import anorm.{Macro, SQL, SqlStringInterpolation}
 import java.time.LocalDateTime
 import java.nio.file.Files
 import play.api.db.Database
-import play.api.{Configuration, Logger}
+import play.api.Logger
 import scala.util.Try
 import views.txt.pages.excel
 import java.nio.charset.StandardCharsets.UTF_8
@@ -51,7 +51,7 @@ case class Sect(sect: String) {
 object Book {
 	val team = Macro.namedParser[Team]
 	val game = Macro.namedParser[Game]
-	def dump(implicit cfg: Configuration, db: Database) = Files.write(Storage.file, excel().body.trim.getBytes(UTF_8))
+	def dump(implicit db: Database) = Files.write(Storage.file, excel().body.trim.getBytes(UTF_8))
 	def teamsOfCall(call: String) = SQL"select * from TEAMS where call=$call"
 	def gamesOfCall(call: String) = SQL"select * from GAMES where call=$call"
 	def gamesOfSect(sect: String) = SQL"select * from GAMES where sect=$sect"
