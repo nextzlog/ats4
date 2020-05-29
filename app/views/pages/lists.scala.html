@@ -1,4 +1,4 @@
-@()(implicit cfg: Configuration, db: Database, admin: Boolean=false)
+@()(implicit db: Database, admin: Boolean=false)
 
 @link(game: Game)={onclick="window.location='@routes.Proof.view(game.call)';"}
 

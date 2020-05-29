@@ -1,4 +1,4 @@
-@()(implicit cfg: Configuration, db: Database)
+@()(implicit db: Database)
 
 @comps.frame(title="皆様の声", nav="board") {
 @for(team <- Book.all.filter(_.comm.nonEmpty)) {

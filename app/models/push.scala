@@ -1,13 +1,12 @@
 package models
 
 import java.nio.file.Paths
-import play.api.Configuration
 import play.api.Logger
 import play.api.db.Database
 import play.api.libs.Files.TemporaryFile
 import play.libs.mailer.{Email, MailerClient}
 
-class Scoring(implicit cfg: Configuration, db: Database, smtp: MailerClient) {
+class Scoring(implicit db: Database, smtp: MailerClient) {
 	def push(post: Post, temp: TemporaryFile): Team = {
 		val file = Storage.file(post.team.call).toString
 		temp.moveFileTo(Paths.get(file).toFile)

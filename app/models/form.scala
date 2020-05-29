@@ -3,7 +3,6 @@ package models
 import java.nio.file.{Files, Path, Paths}
 import play.api.data.{Form, Forms}
 import play.api.libs.Files.TemporaryFile
-import play.api.{Configuration, Logger}
 import play.libs.mailer.{Email, MailerClient}
 import qxsl.ruler.{Contest, RuleKit, Section}
 import scala.util.Try
@@ -18,7 +17,7 @@ case class Part(sect: String, city: String = "") {
 }
 
 case class Post(team: Team, parts: Seq[Option[Part]]) {
-	def games(file: String)(implicit cfg: Configuration): Seq[Game] = {
+	def games(file: String): Seq[Game] = {
 		val parts = this.parts.filter(_.nonEmpty).map(_.get)
 		val name = parts.map(_.rule)
 		val sect = Part(Sections.joint(name).getName)

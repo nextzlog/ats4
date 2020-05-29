@@ -23,7 +23,7 @@ Feel free to visit [ALLJA1 ATS-4](https://allja1.org), but **never submit a dumm
 ## Documents
 
 - [Javadoc of QxSL Library](https://nextzlog.github.io/qxsl/doc/index.html)
-- [History and Usage of ATS-4](https://pafelog.net/ats4.pdf)
+- [コンテスト運営を支援する自動集計システム (PDF)](https://pafelog.net/ats4.pdf)
 
 ## Setup & Start
 
@@ -58,13 +58,6 @@ In addition, disable the `mock` mode of the mailer plugin.
 ```ini
 # If you want to send mail actually:
 play.mailer.mock=false
-```
-
-Do not forget to update the rule URL:
-
-```ini
-contest.rule="ja1zlo.u-tokyo.org/allja1/31rule.html"
-# Do not include the scheme as http://host/path
 ```
 
 **The time has come! Clear your mind and cast a spell!**
@@ -110,7 +103,11 @@ To upgrade ATS-4 components, first stop the system, then clear the database, pul
 
 ```sh
 $ kill `cat target/universal/stage/RUNNING_PID`
+
+# CAUTION! clean.sh deletes all records from the database.
 $ ./clean.sh
+# ARE YOU SURE?
+
 $ git fetch origin master
 $ git reset --hard origin/master
 # modify conf/application.conf properly

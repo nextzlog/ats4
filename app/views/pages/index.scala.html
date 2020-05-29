@@ -1,11 +1,10 @@
-@(status: Option[Int]=None)(implicit cfg: Configuration, db: Database)
+@(status: Option[Int]=None)(implicit db: Database)
 
-@name=@{cfg.get[String]("test.name")}
 @comm=@{Book.all.filter(_.comm.nonEmpty)}
 
 @comps.frame(nav="index") {
 <div class="jumbotron text-center">
-	<h1 class="display-2">@name</h1>
+	<h1 class="display-2">@Contest.name</h1>
 	<h2 class="display-4">書類受付システム</h2>
 	<p class="lead my-3">
 		@{Schedule.date}開催 @{Schedule.dead}締切
