@@ -23,7 +23,7 @@ object Schedule {
 
 object Sections {
 	import scala.jdk.CollectionConverters._
-	val ja1 = new RuleKit().contest(new InputStreamReader(getClass.getResourceAsStream("/rule.lisp")))
+	val ja1 = RuleKit.load("elva").contest(new InputStreamReader(getClass.getResourceAsStream("/rule.lisp")))
 	val all = ja1.asScala.toSeq
 	val SinHBs = all.filter(_.getCode == "Sin1").toSeq
 	val SinLBs = all.filter(_.getCode == "Sin2").toSeq
@@ -33,8 +33,7 @@ object Sections {
 	val order = Seq("Sin1","Sin2","Sin3","Mul1","Mul2")
 	def find(name: String) = all.filter(_.getName == name).head
 	def joint(sects: Seq[Section]): Section = {
-		import elva.Cons.wrap
-		return find(ja1.invoke("総合部門の選択", wrap(sects.map(_.getName):_*)).toString)
+		return find(ja1.invoke("総合部門の選択", sects.map(_.getName).toArray).toString)
 	}
 	def valid(part: Part): Boolean = {
 		ja1.invoke("部門と運用地の検査", part.sect, part.city).asInstanceOf[Boolean]
