@@ -13,7 +13,7 @@
 
 <div class="form-group row">
 	<label for="@sect.id" class="col-md-1 col-form-label">@text</label>
-	<div class="col">
+	<div class="col-md">
 		<select class="@style" id="@sect.id" name="@sect.name" data-size="10">
 			<option class="blank" value="">不参加</option>
 		@for(opt <- sectOpts) {
@@ -21,10 +21,9 @@
 		}
 		</select>
 	</div>
-	<label for="@city.id" class="col-form-label">運用地</label>
-	<div class="col">
+	<div class="col-md">
 		<select class="@style" id="@city.id" name="@city.name" data-size="10" data-live-search="true">
-			<option class="blank" value="">未選択</option>
+			<option class="blank" value="">運用地が未選択です。</option>
 		@for(opt <- cityOpts) {
 			<option value="@opt" @if(city.value.contains(opt)){selected="selected"}>@opt</option>
 		}

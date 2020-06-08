@@ -15,7 +15,7 @@ libraryDependencies ++= Seq(
 	"org.playframework.anorm" %% "anorm" % "2.6.+",
 	"com.typesafe.play" %% "play-mailer" % "7.0.+",
 	"com.typesafe.play" %% "play-mailer-guice" % "7.0.+",
-	"qxsl" % "qxsl" % "0.1.141"
+	"qxsl" % "qxsl" % "0.1.+"
 )
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
