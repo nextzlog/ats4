@@ -3,7 +3,7 @@ package controllers
 import java.io.{IOException=>Unsup}
 import java.util.{NoSuchElementException=>Omiss}
 import javax.inject.{Inject,Singleton}
-import models.{Schedule,Scoring,Post,PostForm}
+import models.{Schedule,Scoring,PostForm}
 import play.api.db.Database
 import play.api.mvc.{Action,InjectedController}
 import play.libs.mailer.MailerClient

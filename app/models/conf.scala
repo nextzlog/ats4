@@ -45,6 +45,6 @@ object Storage {
 	import java.time.format.DateTimeFormatter.ofPattern
 	def now = LocalDateTime.now.format(ofPattern("'%s'.yyyyMMdd.HHmmss.'log'"))
 	def path = Files.createDirectories(Paths.get(Sections.ja1.invoke("output").asInstanceOf[String]))
-	def file(call: String) = path.resolve(now.format(new Call(call).strip))
+	def file(call: String) = path.resolve(now.format(new Call(call).strip)) // AGAINST PATH TRAVERSAL ATTACK
 	def file = path.resolve(Sections.ja1.invoke("report").asInstanceOf[String])
 }

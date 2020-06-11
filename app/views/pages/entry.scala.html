@@ -24,19 +24,19 @@
 		</fieldset>
 	</div>
 </div>
-<div class="alert alert-info">
-	<span>参加した部門ごとに部門の名前と運用地を選択します。不参加の部門は「不参加」を選びます。</span>
-</div>
 <div class="card bg-light mb-5">
 	<h3 class="card-header">
 		<span>個人部門</span>
 	</h3>
 	<div class="card-body">
 		<fieldset>
-			@choice(form("parts[0]"), text="ハイバンド", opts=Sections.SinHBs)
-			@choice(form("parts[1]"), text="ローバンド", opts=Sections.SinLBs)
-			@choice(form("parts[2]"), text="デジタル",   opts=Sections.SinDGs)
+			@choice(form("parts[0]"), text="午前の部", opts=Sections.SinHBs)
+			@choice(form("parts[1]"), text="午後の部", opts=Sections.SinLBs)
+			@choice(form("parts[2]"), text="デジタル", opts=Sections.SinDGs)
 		</fieldset>
+	</div>
+	<div class="card-footer">
+		<span>各時間帯で、参加した部門と運用地を選びます。まず部門を選びます。すると運用地を選べます。運用地は部分検索できます。</span>
 	</div>
 </div>
 <div class="card bg-light mb-5">
@@ -49,6 +49,9 @@
 			@choice(form("parts[4]"), text="デジタル", opts=Sections.MulDGs)
 		</fieldset>
 	</div>
+	<div class="card-footer">
+		<span>団体部門の場合は、全ての交信について、運用者を識別する番号もしくは運用者の名前を記入した交信記録のみを受理します。</span>
+	</div>
 </div>
 <div class="card bg-light mb-5">
 	<h3 class="card-header">
@@ -56,11 +59,11 @@
 	</h3>
 	<div class="card-body">
 		<fieldset>
-			@upload(id="sheet", text="交信記録", hint="未選択")
+			@upload(id="sheet", text="交信記録", hint="未選択 (*.ZLO, *.LG8, *.ADI, *.ADX)")
 		</fieldset>
 	</div>
 	<div class="card-footer d-flex align-items-center justify-content-between">
-		<span>Cabrillo/JARLサマリーシートを添付した場合は、交信記録のみを読み取ります。</span>
+		<span>サマリーシートは交信記録のみを読み取ります。バイナリファイルまたは規格化されたテキストファイルの提出を推奨します。</span>
 		<a class="btn btn-lg btn-outline-secondary" href="@routes.Guide.view"><i class="fas fa-question"></i> よくあるご質問</a>
 	</div>
 </div>
