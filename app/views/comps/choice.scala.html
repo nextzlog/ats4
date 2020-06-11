@@ -9,10 +9,10 @@
 @sectOpts=@{opts.map(_.getName)}
 @cityOpts=@{City.all("jarl").asScala.filter(_.getFullPath.size >= 2).map(_.getFullName)}
 
-@style={form-control selectpicker custom-select @if(field.hasErrors){is-invalid}}
+@style={form-control selectpicker custom-select my-1 @if(field.hasErrors){is-invalid}}
 
-<div class="form-group row">
-	<label for="@sect.id" class="col-md-1 col-form-label">@text</label>
+<div class="form-group row py-1 border-top border-bottom">
+	<label for="@sect.id" class="col-md-1 col-form-label my-1">@text</label>
 	<div class="col-md">
 		<select class="@style" id="@sect.id" name="@sect.name" data-size="10">
 			<option class="blank" value="">不参加</option>

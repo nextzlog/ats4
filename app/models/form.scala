@@ -4,10 +4,11 @@ import java.nio.file.{Files, Path, Paths}
 import play.api.data.{Form, Forms}
 import play.api.libs.Files.TemporaryFile
 import play.libs.mailer.{Email, MailerClient}
+import qxsl.extra.field.Call
 import qxsl.ruler.{Contest, RuleKit, Section}
 import scala.util.Try
 
-case class Part(sect: String, city: String = "") {
+case class Part(sect: String, city: String) {
 	def code = rule.getCode
 	def rule = Sections.find(sect)
 	def game(call: String, file: String) = {
@@ -19,15 +20,16 @@ case class Part(sect: String, city: String = "") {
 case class Post(team: Team, parts: Seq[Option[Part]]) {
 	def games(file: String): Seq[Game] = {
 		val parts = this.parts.filter(_.nonEmpty).map(_.get)
-		val name = parts.map(_.rule)
-		val sect = Part(Sections.joint(name).getName)
-		return (parts:+sect).map(_.game(team.call, file))
+		val rules = parts.map(_.rule)
+		val place = parts.map(_.city).distinct.mkString(" ")
+		val joint = Part(Sections.joint(rules).getName, place)
+		return (parts :+ joint).map(_.game(team.call, file))
 	}
 }
 
 object PostForm extends Form[Post](Forms.mapping(
 	"team" -> Forms.mapping(
-		"call" -> Forms.nonEmptyText,
+		"call" -> Forms.nonEmptyText.verifying(s => Try(new Call(s)).isSuccess),
 		"name" -> Forms.nonEmptyText,
 		"addr" -> Forms.nonEmptyText,
 		"mail" -> Forms.email,
