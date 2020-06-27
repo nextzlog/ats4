@@ -1,6 +1,7 @@
 package controllers
 
 import java.io.{IOException=>Unsup}
+import java.nio.charset.{CharacterCodingException=>Chset}
 import java.util.{NoSuchElementException=>Omiss}
 import javax.inject.{Inject,Singleton}
 import models.{Schedule,Scoring,PostForm}
@@ -8,7 +9,7 @@ import play.api.db.Database
 import play.api.mvc.{Action,InjectedController}
 import play.libs.mailer.MailerClient
 import views.html.pages.{entry,index,proof}
-import views.html.warns.{omiss,unsup}
+import views.html.warns.{chset,omiss,unsup}
 
 @Singleton class Entry extends InjectedController {
 	@Inject implicit var smtp: MailerClient = null
@@ -20,6 +21,7 @@ import views.html.warns.{omiss,unsup}
 		val file = data.get.file("sheet").get
 		Ok(proof(new Scoring().push(form,file.ref)))
 	}.recover {
+		case ex: Chset => Ok(entry(PostForm.bindFromRequest, Some(chset())))
 		case ex: Omiss => Ok(entry(PostForm.bindFromRequest, Some(omiss())))
 		case ex: Unsup => Ok(entry(PostForm.bindFromRequest, Some(unsup())))
 	}.get)
