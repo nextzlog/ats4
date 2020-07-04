@@ -23,6 +23,7 @@
 				<div class="navbar-nav mr-auto">
 					<a class="nav-item nav-link @("active".when(nav == "entry"))" href="@routes.Entry.form">書類提出</a>
 					<a class="nav-item nav-link @("active".when(nav == "lists"))" href="@routes.Lists.view">暫定結果</a>
+					<a class="nav-item nav-link @("active".when(nav == "teams"))" href="@routes.Teams.view">全参加局</a>
 					<a class="nav-item nav-link @("active".when(nav == "forum"))" href="@routes.Forum.view">皆様の声</a>
 					<a class="nav-item nav-link @("active".when(nav == "admin"))" href="@routes.Admin.view">管理画面</a>
 					@if(admin) {
