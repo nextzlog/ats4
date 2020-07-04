@@ -1,0 +1,29 @@
+@()(implicit db: Database)
+
+@warn(team: Team)=@{models.Call(team.call).game.exists(_.score == 0)}
+
+@comps.frame(title="全参加局", nav="teams") {
+<table class="table table-hover text-monospace">
+	<thead>
+		<tr>
+			<th>呼出符号</th>
+			<th>警告</th>
+		</tr>
+	</thead>
+	<tbody>
+		@for(team <- Book.all) {
+		@if(warn(team)) {
+		<tr class="table-warning">
+			<td>@team.call</td>
+			<td>0点です。再提出をお勧めします。</td>
+		</tr>
+		} else {
+		<tr>
+			<td>@team.call</td>
+			<td>-</td>
+		</tr>
+		}
+		}
+	</tbody>
+</table>
+}

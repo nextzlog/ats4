@@ -1,6 +1,6 @@
 @()(implicit db: Database)
 
-@comps.frame(title="皆様の声", nav="board") {
+@comps.frame(title="皆様の声", nav="forum") {
 @for(team <- Book.all.filter(_.comm.nonEmpty)) {
 <blockquote id="@team.call">
 	<p>@team.comm <footer>@team.call</footer></p>
