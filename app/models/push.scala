@@ -23,7 +23,7 @@ class Scoring(implicit db: Database, smtp: MailerClient) {
 		mail.addBcc(Contest.mail)
 		mail.setSubject(text.linesIterator.toSeq.head.split(";").head.trim)
 		mail.setBodyText(text.linesWithSeparators.toSeq.tail.mkString.trim)
-		util.Try(smtp.send(mail))
+		util.Try(smtp.send(mail)).failed.foreach(ex => Logger(post.getClass).error("failed in sending mail", ex))
 		Book.dump
 		post.team
 	}
