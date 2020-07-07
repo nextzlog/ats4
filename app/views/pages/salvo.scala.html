@@ -1,0 +1,17 @@
+@(done: Boolean)(implicit req: RequestHeader, admin: Boolean)
+
+@comps.frame(title="メールの再送信", nav="salvo") {
+@helper.form(action=routes.Salvo.send) {
+@helper.CSRF.formField
+@if(done) {
+<div class="alert alert-success">
+	再送信を開始しました。
+</div>
+} else {
+<div class="alert alert-warning">
+	全ての参加者にメールを再送信します。この操作は取り消せません。再送信は@{MailConf.itvl}分間隔で順番に実行されます。
+</div>
+<button class="btn btn-outline-danger" type="submit"><i class="fas fa-envelope"></i> 送信する</button>
+}
+}
+}

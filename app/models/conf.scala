@@ -21,6 +21,10 @@ object Schedule {
 	def isOK = LocalDate.now.isBefore(dead.plusDays(1))
 }
 
+object MailConf {
+	lazy val itvl = Sections.ja1.invoke("mail-interval-minutes").asInstanceOf[Int]
+}
+
 object Sections {
 	import scala.jdk.CollectionConverters._
 	val ja1 = RuleKit.load("elva").contest(new InputStreamReader(getClass.getResourceAsStream("/rule.lisp")))

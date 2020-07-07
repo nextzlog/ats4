@@ -28,6 +28,7 @@
 					<a class="nav-item nav-link @("active".when(nav == "admin"))" href="@routes.Admin.view">管理画面</a>
 					@if(admin) {
 					<a class="nav-item nav-link @("active".when(nav == "agent"))" href="@routes.Admin.edit("")">代理提出</a>
+					<a class="nav-item nav-link @("active".when(nav == "salvo"))" href="@routes.Salvo.view">一斉送信</a>
 					}
 					<a class="nav-item nav-link @("active".when(nav == "guide"))" href="@routes.Guide.view">FAQ</a>
 				</div>

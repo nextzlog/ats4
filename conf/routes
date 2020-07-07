@@ -17,6 +17,8 @@ GET     /admin              controllers.Admin.view
 GET     /admin/data         controllers.Admin.data
 GET     /admin/edit         controllers.Admin.edit(call: String)
 GET     /admin/file         controllers.Admin.file(call: String)
+GET     /admin/mail         controllers.Salvo.view
+POST    /admin/mail         controllers.Salvo.send
 GET     /admin/proof/:call  controllers.Proof.view(call: String)
 DELETE  /admin/proof/:call  controllers.Proof.elim(call: String)
 

@@ -1,13 +1,15 @@
 package models
 
 import anorm.{Macro, SQL, SqlStringInterpolation}
+import java.nio.charset.StandardCharsets.UTF_8
+import java.nio.file.{Files, Paths}
 import java.time.LocalDateTime
-import java.nio.file.Files
-import play.api.db.Database
 import play.api.Logger
+import play.api.db.Database
+import play.api.libs.Files.TemporaryFile
+import play.libs.mailer.MailerClient
 import scala.util.Try
 import views.txt.pages.excel
-import java.nio.charset.StandardCharsets.UTF_8
 
 class TableLoader(path: String, sect: String) {
 	import java.nio.charset.Charset
@@ -18,6 +20,22 @@ class TableLoader(path: String, sect: String) {
 	def table = new qxsl.table.TableFormats().decode(bytes)
 	def sheet = new qxsl.sheet.SheetFormats().unpack(lines)
 	val score = Sections.find(sect).summarize(Try(table).getOrElse(sheet))
+}
+
+class Scoring(implicit db: Database, smtp: MailerClient) {
+	def push(post: Post, temp: TemporaryFile): Team = {
+		val file = Storage.file(post.team.call).toString
+		temp.moveFileTo(Paths.get(file).toFile)
+		val games = post.games(file)
+		Book.del(post.team)
+		Book.add(post.team)
+		games.foreach(Book.del)
+		games.foreach(Book.add)
+		Logger(post.getClass).info(s"accepted: $post")
+		new SendMail().send(post.team)
+		Book.dump
+		post.team
+	}
 }
 
 case class Team(call: String, name: String, addr: String, mail: String, comm: String) {
