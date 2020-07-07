@@ -29,6 +29,9 @@
 (defun starting year (date year "JUNE" "SATURDAY" 4))
 (defun deadline year (date year "JULY" "SATURDAY" 3))
 
+; email
+(defun mail-interval-minutes () 5)
+
 ; routines for ATS-4
 (defmacro 総合部門の選択 sects
 	`(block
