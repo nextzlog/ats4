@@ -2,10 +2,12 @@
 
 (load "qxsl/ruler/radial.lisp")
 
-(import java.time.Month)
 (import java.time.DayOfWeek)
 (import java.time.LocalDate)
+(import java.time.Month)
 (import java.time.temporal.TemporalAdjusters)
+(import java.util.stream.Stream)
+(import java.util.stream.StreamSupport)
 
 ; contest settings
 (defun name () "ALLJA1")
@@ -53,6 +55,7 @@
 (setq JA1 (load "qxsl/ruler/allja1.lisp"))
 
 ; remove 団体部門s
-(dolist (sect (array JA1)) (if (. contains (. getName sect ()) "団体") (. remove JA1 (sect))))
+(setq sects ((access Stream 'toArray) ((access StreamSupport 'stream) null (. spliterator JA1 ()) #f)))
+(dolist (sect sects) (if (. contains (. getName sect ()) "団体") (. remove JA1 (sect))))
 
 JA1
