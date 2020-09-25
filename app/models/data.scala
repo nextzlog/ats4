@@ -12,14 +12,12 @@ import scala.util.Try
 import views.txt.pages.excel
 
 class TableLoader(path: String, sect: String) {
-	import java.nio.charset.Charset
 	import java.nio.file.{Files, Paths}
-	val chset = Charset.forName("JISAutoDetect")
 	def bytes = Files.readAllBytes(Paths.get(path))
-	def lines = Files.readString(Paths.get(path), chset)
-	def table = new qxsl.table.TableFormats().decode(bytes)
-	def sheet = new qxsl.sheet.SheetFormats().unpack(lines)
-	val score = Sections.find(sect).summarize(Try(table).getOrElse(sheet))
+	def sheet = new qxsl.sheet.SheetManager().unpack(bytes)
+	def naked = new qxsl.table.TableManager().decode(bytes)
+	def strip = new qxsl.table.TableManager().decode(sheet)
+	val score = Sections.find(sect).summarize(Try(naked).getOrElse(strip))
 }
 
 class Scoring(implicit db: Database, smtp: MailerClient) {
