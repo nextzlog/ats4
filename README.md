@@ -35,7 +35,7 @@ $ git clone https://github.com/nextzlog/ats4
 $ cd ats4
 ```
 
-Open the configuration file as follows:
+Open the system configuration file as follows:
 
 ```sh
 $ alias emacs='vim'
@@ -61,6 +61,28 @@ In addition, disable the `mock` mode of the mailer plugin.
 play.mailer.mock=false
 ```
 
+Then, open the contest configuration file as follows:
+
+```sh
+$ vim conf/rule.rb
+```
+
+You will find the contest settings as below:
+
+```Ruby
+# contest settings
+NAME = 'ALLJA1'
+HOST = '東大無線部'
+MAIL = 'allja1@ja1zlo.u-tokyo.org'
+SITE = 'ja1zlo.u-tokyo.org'
+RULE = 'ja1zlo.u-tokyo.org/allja1/%02drule.html'
+
+# output directory
+OUTPUT = 'rcvd'
+REPORT = 'report.csv'
+```
+
+Modify the contest settings properly.
 **The time has come! Clear your mind and cast a spell!**
 
 ```sh
