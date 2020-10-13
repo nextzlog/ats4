@@ -10,7 +10,7 @@ import scala.util.Try
 import scala.util.chaining._
 
 object Rule {
-	def path = "/rule.rb"
+	def path = "/application.rb"
 	def stream = getClass.getResourceAsStream(path)
 	def reader = new InputStreamReader(this.stream)
 	def load = RuleKit.load("ruby").contest(reader)
