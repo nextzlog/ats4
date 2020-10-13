@@ -6,9 +6,9 @@ import 'java.time.LocalDate'
 import 'java.time.Month'
 import 'java.time.temporal.TemporalAdjusters'
 import 'java.util.stream.Collectors'
+import 'qxsl.local.LocalCityBase'
 import 'qxsl.ruler.Contest'
 import 'qxsl.ruler.RuleKit'
-import 'qxsl.local.LocalCityBase'
 
 # ALLJA1 rules
 stream = RuleKit.java_class.resource_as_stream('allja1.lisp')
@@ -23,7 +23,8 @@ def date(year, month, dayOfWeek, nth)
 end
 
 CITYDB = LocalCityBase.load('city.ja').toList
-CITIES = CITYDB.stream().filter(->(c) {c.getCode.length > 2}).collect(Collectors.toList)
+stream = CITYDB.stream().filter(->(c) {c.getCode.length > 2})
+CITIES = stream.collect(Collectors.toList)
 
 # extends Contest class to access global variables defined here
 class ExtendedALLJA1 < Contest
@@ -38,6 +39,9 @@ class ExtendedALLJA1 < Contest
 	end
 	def getStartDay(year)
 		date(year, 'JUNE', 'SATURDAY', 4)
+	end
+	def getFinalDay(year)
+		getStartDay(year)
 	end
 	def getDeadLine(year)
 		date(year, 'JULY', 'SATURDAY', 3)
@@ -57,4 +61,4 @@ class ExtendedALLJA1 < Contest
 end
 
 # returns redefined ALLJA1 contest
-ExtendedALLJA1.new
+TEST = ExtendedALLJA1.new

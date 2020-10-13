@@ -1,4 +1,4 @@
-ATS-4: Web System for Amateur-Radio Contests
+ATS-4: Amateur-Radio Contest Administration System
 ====
 
 ![image](https://img.shields.io/badge/sbt-1.2.8-red.svg)
@@ -8,18 +8,17 @@ ATS-4: Web System for Amateur-Radio Contests
 ![image](https://img.shields.io/badge/PlayFramework-2.7-blueviolet.svg)
 ![image](https://img.shields.io/badge/license-GPL3-darkblue.svg)
 
-ATS-4 is an Automatic Acceptance & Tabulation System for Amateur-Radio Contests.
-ATS-4 is based on [qxsl: Amateur-Radio Logging Library & LISP](https://github.com/nextzlog/qxsl).
+ATS-4 is an Automatic Acceptance & Tabulation System for Amateur-Radio Contests, based on [qxsl: Amateur-Radio Logging Library & LISP](https://github.com/nextzlog/qxsl).
 
 ## Features
 
-- ATS-4 provides a web interface for contest-log acceptance.
-- ATS-4 scans the uploaded log and verifies its contents according to the contest rule described in Ruby or LISP forms.
+- provides a web interface for contest-log acceptance.
+- scans the uploaded log and verifies its contents according to the contest rule described in Ruby or LISP forms.
 
 ## Demo
 
-ATS-4 was originally developed for [ALLJA1 contest](http://ja1zlo.u-tokyo.org/allja1/).
-Feel free to visit [ALLJA1 ATS-4](https://allja1.org), but never submit a dummy log.
+ATS-4 supports multiple contests including [UEC contest](https://www.ja1zgp.com/uectest_public_info/) although it was originally developed for [ALLJA1 contest](http://ja1zlo.u-tokyo.org/allja1/).
+Feel free to visit [ALLJA1 ATS-4](https://allja1.org).
 
 ## Documents
 
@@ -61,7 +60,7 @@ Then, open the contest configuration file as follows, and you will find the cont
 Modify the contest settings properly.
 
 ```sh
-$ vim conf/rule.rb
+$ vim conf/application.rb
 ```
 
 The time has come.
@@ -109,8 +108,8 @@ Make sure that unauthorized clients have no access to admin pages under `/admin`
 
 ## Contest Definition
 
-A [`Contest`](https://nextzlog.github.io/qxsl/doc/qxsl/ruler/Contest) object is the entity of the contest rules defined in [`rule.rb`](conf/rule.rb) in the `conf` directory.
-ATS-4 supports any contest once you rewrite `rule.rb`.
+A [`Contest`](https://nextzlog.github.io/qxsl/doc/qxsl/ruler/Contest) object is the entity of the contest rules defined in Ruby files, e.g., [`ja1.rb`](conf/ja1.rb) and [`uec.rb`](conf/uec.rb) in the `conf` directory.
+ATS-4 supports any contest once you rewrite [`application.rb`](conf/application.rb).
 
 ```Ruby
 # extends Contest class to access global variables defined here
@@ -127,25 +126,28 @@ class ExtendedALLJA1 < Contest
   def getStartDay(year)
     date(year, 'JUNE', 'SATURDAY', 4)
   end
+  def getFinalDay(year)
+    getStartDay(year)
+  end
   def getDeadLine(year)
     date(year, 'JULY', 'SATURDAY', 3)
   end
   def getName()
-    'ALLJA1'
+    ALLJA1.getName()
   end
   def getHost()
-    'JA1ZLO'
+    ALLJA1.getHost()
   end
   def getMail()
-    'mail@example.com'
+    ALLJA1.getMail()
   end
   def getLink()
-    'ja1zlo.u-tokyo.org/allja1'
+    ALLJA1.getLink()
   end
 end
 
 # returns redefined ALLJA1 contest
-ExtendedALLJA1.new
+TEST = ExtendedALLJA1.new
 ```
 
 ## Contribution

@@ -24,6 +24,7 @@
 				<th>通信方式</th>
 				<th>運用地</th>
 				<th>担当者</th>
+				<th>素点</th>
 				<th>備考</th>
 			</tr>
 		</thead>
@@ -36,6 +37,7 @@
 				<td>@{msg.item.get(Qxsl.MODE)}</td>
 				<td>@{msg.item.getRcvd.get(Qxsl.CODE)}</td>
 				<td>@{msg.item.get(Qxsl.NAME)}</td>
+				<td>@{msg.score()}</td>
 				<td>-</td>
 			</tr>
 			}
@@ -47,6 +49,7 @@
 				<td>@{msg.item.get(Qxsl.MODE)}</td>
 				<td>@{msg.item.getRcvd.get(Qxsl.CODE)}</td>
 				<td>@{msg.item.get(Qxsl.NAME)}</td>
+				<td>@{msg.score()}</td>
 				<td>@{msg.text}</td>
 			</tr>
 			}
