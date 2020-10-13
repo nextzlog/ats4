@@ -1,4 +1,4 @@
-@comps.frame(title="皆様の声", nav="forum") {
+@comps.frame(title = "皆様の声", nav = "forum") {
 @for(person <- Person.toList.filter(_.comm.nonEmpty)) {
 <blockquote id="@person.call">
 	<p>@person.comm <footer>@person.call</footer></p>

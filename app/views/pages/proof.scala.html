@@ -1,11 +1,11 @@
-@(call: String)(implicit req: RequestHeader, admin: Boolean=false)
+@(call: String)(implicit req: RequestHeader, admin: Boolean = false)
 
 @import comps._
 
-@person=@{Person.findAllByCall(call).head}
-@chrono=@{Chrono.findAllByCall(call).head}
+@person = @{Person.findAllByCall(call).head}
+@chrono = @{Chrono.findAllByCall(call).head}
 
-@comps.frame(title="提出書類の確認", nav=if(admin) "admin" else "proof") {
+@comps.frame(title = "提出書類の確認", nav = if(admin) "admin" else "proof") {
 @if(!admin) {
 <div class="alert alert-success">
 	下記の内容で受理しました。

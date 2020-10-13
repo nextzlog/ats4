@@ -1,14 +1,14 @@
-@(form: Form[Post], warn: Option[Html]=None)(implicit req: RequestHeader, admin: Boolean=false)
+@(form: Form[Post], warn: Option[Html] = None)(implicit req: RequestHeader, admin: Boolean = false)
 
 @import comps._
 
-@comps.frame(title="書類提出", nav=if(admin) "agent" else "entry") {
+@comps.frame(title = "書類提出", nav = if(admin) "agent" else "entry") {
 @if(warn.nonEmpty) {
 <div class="alert alert-danger">
 	<i class="fas fa-exclamation-triangle"></i> @warn
 </div>
 }
-@helper.form(action=routes.Entry.post(), Symbol("class")->"form-horizontal", Symbol("enctype")->"multipart/form-data") {
+@helper.form(action = routes.Entry.post(), Symbol("class")->"form-horizontal", Symbol("enctype")->"multipart/form-data") {
 @helper.CSRF.formField
 <div class="card bg-light mb-5">
 	<h3 class="card-header">

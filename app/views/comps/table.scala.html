@@ -1,12 +1,13 @@
-@(record: Record, person: Person, chrono: Chrono)(implicit admin: Boolean=false)
+@(record: Record, person: Person, chrono: Chrono)(implicit admin: Boolean = false)
 
 @import java.time.format.DateTimeFormatter
 @import qxsl.draft.{Qxsl,Time}
 
 @dfmt = @{DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss OOOO")}
-@time(t: Time)=@{t.value.format(dfmt)}
+@time(t: Time) = @{t.value.format(dfmt)}
 
-@summ=@{chrono.calc(record.sect)}
+@summ = @{chrono.calc(record.sect)}
+@link(call: String) = {@if(admin && Person.findAllByCall(call).nonEmpty) {<a href="@routes.Proof.view(call)">@call</a>} else {@call}}
 
 <div class="card mb-5">
 	<h3 class="card-header border-bottom-0 d-flex align-items-center justify-content-between">
@@ -32,7 +33,7 @@
 			@for(msg <- summ.accepted().toSeq) {
 			<tr>
 				<td>@{time(msg.item.get(Qxsl.TIME).asInstanceOf[Time])}</td>
-				<td>@{msg.item.get(Qxsl.CALL)}</td>
+				<td>@link(String.valueOf(msg.item.get(Qxsl.CALL)))</td>
 				<td>@{msg.item.get(Qxsl.BAND)}</td>
 				<td>@{msg.item.get(Qxsl.MODE)}</td>
 				<td>@{msg.item.getRcvd.get(Qxsl.CODE)}</td>
@@ -44,7 +45,7 @@
 			@for(msg <- summ.rejected().toSeq) {
 			<tr class="table-warning">
 				<td>@{time(msg.item.get(Qxsl.TIME).asInstanceOf[Time])}</td>
-				<td>@{msg.item.get(Qxsl.CALL)}</td>
+				<td>@link(String.valueOf(msg.item.get(Qxsl.CALL)))</td>
 				<td>@{msg.item.get(Qxsl.BAND)}</td>
 				<td>@{msg.item.get(Qxsl.MODE)}</td>
 				<td>@{msg.item.getRcvd.get(Qxsl.CODE)}</td>

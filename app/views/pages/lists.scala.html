@@ -1,11 +1,13 @@
-@()(implicit admin: Boolean=false)
+@()(implicit admin: Boolean = false)
 
-@comps.frame(title=if(admin) "管理画面" else "暫定結果", nav=if(admin) "admin" else "lists") {
+@comps.frame(title = if(admin) "管理画面" else "暫定結果", nav = if(admin) "admin" else "lists") {
 @if(admin || !Schedule.isOK) {
+@if(!admin) {
 <div class="alert alert-warning">
 	掲載内容に誤りがある場合は、直ちに主催者に連絡してください。
 	赤太字は暫定表彰局ですが、審査により失格することがあります。
 </div>
+}
 @for(sect <- Rule.rule.getSections) {
 @if(Record.findAllBySect(sect.getName()).nonEmpty) {
 <div class="card mb-5">
