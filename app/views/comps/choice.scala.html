@@ -1,9 +1,9 @@
 @(field: Field, text: String, sectOpts: Iterable[Section], cityOpts: Iterable[String])
 
-@sect=@{field("sect")}
-@city=@{field("city")}
+@sect = @{field("sect")}
+@city = @{field("city")}
 
-@style={form-control selectpicker custom-select my-1 @if(field.hasErrors){is-invalid}}
+@style = {form-control selectpicker custom-select my-1 @if(field.hasErrors){is-invalid}}
 
 <div class="form-group row py-1">
 	<label for="@sect.id" class="col-md-1 col-form-label my-1">@text</label>

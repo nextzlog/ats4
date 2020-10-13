@@ -1,6 +1,4 @@
-@warn(call: String)=@{Record.findAllByCall(call).toList.exists(_.score == 0)}
-
-@comps.frame(title="全参加局", nav="calls") {
+@comps.frame(title = "全参加局", nav = "calls") {
 <table class="table table-hover text-monospace">
 	<thead>
 		<tr>
@@ -10,7 +8,7 @@
 	</thead>
 	<tbody>
 		@for(person <- Person.toList) {
-		@if(warn(person.call)) {
+		@if(Record.findAllByCall(person.call).exists(_.score == 0)) {
 		<tr class="table-warning">
 			<td>@person.call</td>
 			<td>0点です。再提出をお勧めします。</td>

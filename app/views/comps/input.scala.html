@@ -1,6 +1,6 @@
 @(field: Field, text: String = "", hint: String = "", multiline: Boolean = false)
 
-@style={form-control @if(field.hasErrors){is-invalid}}
+@style = {form-control @if(field.hasErrors){is-invalid}}
 
 <div class="form-group row">
 	<label for="@field.name" class="col-md-1 col-form-label">@text</label>

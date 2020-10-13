@@ -39,7 +39,7 @@ object Person extends ActiveRecordCompanion[Person] {
 		comm = post.info.comm
 	)
 	def toList = all.toList
-	def findAllByCall(call: String) = Person.findAllBy("call", call).toList
+	def findAllByCall(call: String) = this.findAllBy("call", call).toList
 }
 
 object Record extends ActiveRecordCompanion[Record] {
@@ -53,8 +53,8 @@ object Record extends ActiveRecordCompanion[Record] {
 			total = sum.total()
 		)
 	}
-	def findAllByCall(call: String) = Record.findAllBy("call", call).toList
-	def findAllBySect(sect: String) = Record.findAllBy("sect", sect).toList
+	def findAllByCall(call: String) = this.findAllBy("call", call).toList
+	def findAllBySect(sect: String) = this.findAllBy("sect", sect).toList
 }
 
 object Chrono extends ActiveRecordCompanion[Chrono] {
@@ -63,7 +63,7 @@ object Chrono extends ActiveRecordCompanion[Chrono] {
 		call = post.call,
 		data = new String(tables.encode(items.asJava), UTF_8)
 	)
-	def findAllByCall(call: String) = Chrono.findAllBy("call", call).toList
+	def findAllByCall(call: String) = this.findAllBy("call", call).toList
 }
 
 object Tables extends ActiveRecordTables with PlaySupport {

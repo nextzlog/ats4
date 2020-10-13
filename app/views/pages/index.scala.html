@@ -1,8 +1,8 @@
-@(status: Option[Int]=None)(implicit cfg: Configuration)
+@(status: Option[Int] = None)(implicit cfg: Configuration)
 
-@comm=@{Person.toList.filter(_.comm.nonEmpty)}
+@comm = @{Person.toList.filter(_.comm.nonEmpty)}
 
-@comps.frame(nav="index") {
+@comps.frame(nav = "index") {
 <div class="jumbotron text-center">
 	<h1 class="display-2">@HostData.name</h1>
 	<h2 class="display-4">書類受付システム</h2>
