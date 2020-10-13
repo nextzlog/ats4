@@ -17,13 +17,12 @@ GET     /admin              controllers.Admin.view
 GET     /admin/data         controllers.Admin.data
 GET     /admin/edit         controllers.Admin.edit(call: String)
 GET     /admin/file         controllers.Admin.file(call: String)
-GET     /admin/mail         controllers.Salvo.view
-POST    /admin/mail         controllers.Salvo.send
+POST    /admin/email/:call  controllers.Admin.send(call: String)
 GET     /admin/proof/:call  controllers.Proof.view(call: String)
 DELETE  /admin/proof/:call  controllers.Proof.elim(call: String)
 
-# Teams
-GET     /teams              controllers.Teams.view
+# Calls
+GET     /calls              controllers.Calls.view
 
 # Forum
 GET     /forum              controllers.Forum.view

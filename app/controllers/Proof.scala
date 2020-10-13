@@ -1,24 +1,22 @@
 package controllers
 
 import javax.inject.{Inject,Singleton}
-import models.{Book,Call,Team,Game}
+import models.{Person,Record}
 import play.api.Logger
-import play.api.db.Database
 import play.api.mvc.{Action,InjectedController}
 import scala.util.Try
 import views.html.pages.{lists,proof}
 
 @Singleton
 class Proof extends InjectedController {
-	@Inject implicit var db: Database = null
 	private implicit val admin = true
-	def view(call: String) = Action(implicit r=>Ok(proof(Call(call).team.head)))
+	def view(call: String) = Action(implicit r=>Ok(proof(call)))
 	def elim(call: String) = Action(Try {
-		val team = Call(call).team
-		val game = Call(call).game
-		team.foreach(Book.del)
-		game.foreach(Book.del)
-		Logger(getClass).info(s"deleted: $team")
+		val persons = Person.findAllByCall(call)
+		val records = Record.findAllByCall(call)
+		persons.foreach(_.delete())
+		records.foreach(_.delete())
+		Logger(getClass).info(s"deleted: $records")
 		Ok(lists())
 	}.getOrElse(NotFound(lists())))
 }

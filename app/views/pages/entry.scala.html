@@ -8,7 +8,7 @@
 	<i class="fas fa-exclamation-triangle"></i> @warn
 </div>
 }
-@helper.form(action=routes.Entry.post, Symbol("class")->"form-horizontal", Symbol("enctype")->"multipart/form-data") {
+@helper.form(action=routes.Entry.post(), Symbol("class")->"form-horizontal", Symbol("enctype")->"multipart/form-data") {
 @helper.CSRF.formField
 <div class="card bg-light mb-5">
 	<h3 class="card-header">
@@ -16,42 +16,31 @@
 	</h3>
 	<div class="card-body">
 		<fieldset>
-			@input(form("team.call"), text="呼出符号", hint="移動運用の例: JA1ZLO/1")
-			@input(form("team.name"), text="お名前", hint="この宛名で賞を発送します。")
-			@input(form("team.addr"), text="ご住所", hint="この宛先に賞を発送します。")
-			@input(form("team.mail"), text="メール", hint="受理通知メールが届きます。")
-			@input(form("team.comm"), text="ご感想", hint="呼出符号付きで公表します。", multiline=true)
+			@input(form("info.call"), text="呼出符号", hint="移動運用の例: JA1ZLO/1")
+			@input(form("info.name"), text="お名前", hint="この宛名で賞を発送します。")
+			@input(form("info.addr"), text="ご住所", hint="この宛先に賞を発送します。")
+			@input(form("info.mail"), text="メール", hint="受理通知メールが届きます。")
+			@input(form("info.comm"), text="ご感想", hint="呼出符号付きで公表します。", multiline=true)
 		</fieldset>
 	</div>
 </div>
+<div class="alert alert-info">
+	各時間帯で、参加した部門と運用地を選びます。まず部門を選びます。すると運用地を選べます。運用地は部分検索できます。
+</div>
+@for(((group, sects), idx) <- Subtests.groups.zipWithIndex) {
 <div class="card bg-light mb-5">
 	<h3 class="card-header">
-		<span>個人部門</span>
+		<span>@group</span>
 	</h3>
 	<div class="card-body">
 		<fieldset>
-			@choice(form("parts[0]"), text="午前の部", opts=Sections.SinHBs)
-			@choice(form("parts[1]"), text="午後の部", opts=Sections.SinLBs)
-			@choice(form("parts[2]"), text="デジタル", opts=Sections.SinDGs)
+			@choice(form(s"list[$idx]"), text="部門", sectOpts=sects, cityOpts=CityBase.all)
 		</fieldset>
-	</div>
-	<div class="card-footer">
-		<span>各時間帯で、参加した部門と運用地を選びます。まず部門を選びます。すると運用地を選べます。運用地は部分検索できます。</span>
 	</div>
 </div>
-<div class="card bg-light mb-5">
-	<h3 class="card-header">
-		<span>団体部門</span>
-	</h3>
-	<div class="card-body">
-		<fieldset>
-			@choice(form("parts[3]"), text="アナログ", opts=Sections.MulABs)
-			@choice(form("parts[4]"), text="デジタル", opts=Sections.MulDGs)
-		</fieldset>
-	</div>
-	<div class="card-footer">
-		<span>団体部門の場合は、全ての交信について、運用者を識別する番号もしくは運用者の名前を記入した交信記録のみを受理します。</span>
-	</div>
+}
+<div class="alert alert-info">
+	団体部門の場合は、全ての交信について、運用者を識別する番号もしくは運用者の名前を記入した交信記録のみを受理します。
 </div>
 <div class="card bg-light mb-5">
 	<h3 class="card-header">
@@ -64,7 +53,7 @@
 	</div>
 	<div class="card-footer d-flex align-items-center justify-content-between">
 		<span>サマリーシートは交信記録のみを読み取ります。バイナリファイルまたは規格化されたテキストファイルの提出を推奨します。</span>
-		<a class="btn btn-lg btn-outline-secondary" href="@routes.Guide.view"><i class="fas fa-question"></i> よくあるご質問</a>
+		<a class="btn btn-lg btn-outline-secondary" href="@routes.Guide.view()"><i class="fas fa-question"></i> よくあるご質問</a>
 	</div>
 </div>
 <a class="btn btn-lg btn-primary" href="#submitModel" data-toggle="modal"><i class="fas fa-thumbs-up"></i> この内容で提出する</a>

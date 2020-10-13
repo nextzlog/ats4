@@ -1,17 +1,11 @@
-@(field: Field, text: String, opts: Seq[qxsl.ruler.Section])
-
-@import qxsl.extra.field.City
-@import scala.jdk.CollectionConverters._
+@(field: Field, text: String, sectOpts: Iterable[Section], cityOpts: Iterable[String])
 
 @sect=@{field("sect")}
 @city=@{field("city")}
 
-@sectOpts=@{opts.map(_.getName)}
-@cityOpts=@{City.all("jarl").asScala.filter(_.getFullPath.size >= 2).map(_.getFullName)}
-
 @style={form-control selectpicker custom-select my-1 @if(field.hasErrors){is-invalid}}
 
-<div class="form-group row py-1 border-top border-bottom">
+<div class="form-group row py-1">
 	<label for="@sect.id" class="col-md-1 col-form-label my-1">@text</label>
 	<div class="col-md">
 		<select class="@style" id="@sect.id" name="@sect.name" data-size="10">

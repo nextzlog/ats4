@@ -1,21 +1,18 @@
-@()(implicit db: Database)
-
-@import models.Call
-
-@line(team: Team, game: Game) = @{
+@line(record: Record) = @{
+	val person = Person.findAllByCall(record.call).head
 	Seq(
-		team.call,
-		game.city,
-		game.sect,
-		if(game.rank == 0) "優勝" else "%d位".format(1+game.rank),
-		if(game.best) "入賞局" else "",
-		game.total,
-		team.name,
-		team.addr,
-		team.mail,
-		team.comm
+		person.call,
+		record.city,
+		record.sect,
+		if(Rank.rank(record) == 0) "優勝" else "%d位".format(1+Rank.rank(record)),
+		if(Rank.glad(record)) "入賞局" else "",
+		record.total,
+		person.name,
+		person.addr,
+		person.mail,
+		person.comm
 	).mkString(",").concat("\n")
 }
 
 呼出符号,運用場所,参加部門,順位,入賞,得点,名前,住所,アドレス,コメント
-@for(sect <- Sections.all; (team,game) <- Sect(sect.getName).game.sortBy(-_.total).map(m=>Call(m.call).team.head->m)) {@line(team,game)}
+@for(sect <- Rule.rule.getSections; record <- Record.findAllBySect(sect.getName()).toList.sortBy(-_.total)) {@line(record)}

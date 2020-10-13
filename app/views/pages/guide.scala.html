@@ -7,7 +7,7 @@
 <div class="my-3">
 	@accord(id="fmts", title="交信記録のフォーマットの対応状況") {
 	<p>以下のバイナリフォーマットもしくはテキストフォーマットでの提出が可能です。</p>
-	@for(fmt <- new qxsl.table.TableManager()) {
+	@for(fmt <- new TableManager()) {
 		<div class="my-2">
 			<h5>@{fmt}</h5>
 		@if(fmt.getDescription.nonEmpty) {
@@ -20,7 +20,7 @@
 <div class="my-3">
 	@accord(id="summ", title="サマリーシートでの交信記録の提出") {
 	<p>以下のサマリーシートでも提出できます。交信記録の部分は、別記の対応済み書式に従います。</p>
-	@for(fmt <- new qxsl.sheet.SheetManager()) {
+	@for(fmt <- new SheetManager()) {
 		<div class="my-2">
 			<h5>@{fmt}</h5>
 		@if(fmt.getDescription.nonEmpty) {
@@ -56,5 +56,5 @@
 	<p><a href="https://twitter.com/nextzlog">無線部開発班</a>にご連絡いただけば、ご相談を承ります。</p>
 	}
 </div>
-<a class="btn btn-lg btn-primary" href="mailto:@Contest.mail"><i class="fas fa-envelope"></i> お問い合わせ</a>
+<a class="btn btn-lg btn-primary" href="mailto:@HostData.mail"><i class="fas fa-envelope"></i> お問い合わせ</a>
 }

@@ -1,8 +1,11 @@
-@(team: Team)(implicit db: Database, req: RequestHeader, admin: Boolean=false)
+@(call: String)(implicit req: RequestHeader, admin: Boolean=false)
 
 @import comps._
 
-@comps.frame(title="提出書類の確認", nav=if(admin) "admin" else "game") {
+@person=@{Person.findAllByCall(call).head}
+@chrono=@{Chrono.findAllByCall(call).head}
+
+@comps.frame(title="提出書類の確認", nav=if(admin) "admin" else "proof") {
 @if(!admin) {
 <div class="alert alert-success">
 	下記の内容で受理しました。
@@ -12,11 +15,12 @@
 }
 <div class="card mb-5">
 	<h3 class="card-header d-flex align-items-center justify-content-between border-bottom-0">
-		<span>@team.call</span>
+		<span>@person.call</span>
 		@if(admin) {
 		<div class="btn-group">
-			<a class="btn btn-outline-dark" href="@routes.Admin.edit(team.call)"><i class="fas fa-edit"></i></a>
-			<a class="btn btn-outline-danger" href="#deleteModel" data-toggle="modal"><i class="fas fa-trash"></i></a>
+			<a class="btn btn-outline-success" href="#remindModal" data-toggle="modal"><i class="fas fa-paper-plane"></i></a>
+			<a class="btn btn-outline-primary" href="@routes.Admin.edit(person.call)"><i class="fas fa-edit"></i></a>
+			<a class="btn btn-outline-danger" href="#deleteModal" data-toggle="modal"><i class="fas fa-trash"></i></a>
 		</div>
 		}
 	</h3>
@@ -28,36 +32,52 @@
 		<tbody>
 			<tr>
 				<td>お名前</td>
-				<td>@team.name</td>
+				<td>@person.name</td>
 			</tr>
 			<tr>
 				<td>ご住所</td>
-				<td>@team.addr</td>
+				<td>@person.addr</td>
 			</tr>
 			<tr>
 				<td>連絡先</td>
-				<td><a href="mailto:@team.mail">@team.mail</a></td>
+				<td><a href="mailto:@person.mail">@person.mail</a></td>
 			</tr>
 		</tbody>
 	</table>
 </div>
-@if(team.comm.nonEmpty) {
+@if(person.comm.nonEmpty) {
 	<blockquote class="mb-5">
-		@team.comm
+		@person.comm
 	</blockquote>
 }
-@for(game <- models.Call(team.call).game) {
-	@table(game,team)
+@for(record <- Record.findAllByCall(person.call)) {
+	@table(record,person,chrono)
 }
 @if(admin) {
-<div class="modal" id="deleteModel">
+<div class="modal" id="remindModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">通知の再送</h4>
+			</div>
+			<div class="modal-body">
+				<p>@{person.call}に通知を再送します。</p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-danger" id="remindButton">再送する</button>
+				<button class="btn btn-primary" data-dismiss="modal">再送しない</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal" id="deleteModal">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title">書類の削除</h4>
 			</div>
 			<div class="modal-body">
-				<p>@{team.call}の書類を削除します。</p>
+				<p>@{person.call}の書類を削除します。</p>
 				<p class="text-danger">この操作は取り消せません。</p>
 			</div>
 			<div class="modal-footer">
@@ -68,8 +88,11 @@
 	</div>
 </div>
 <script type="text/javascript">
+$('#remindButton').click(function () {
+	$.ajax({type: "POST", url: "@helper.CSRF(routes.Admin.send(person.call))"}).done(() => $('#remindModal').modal('hide'));
+});
 $('#deleteButton').click(function () {
-	$.ajax({type: "DELETE", url: "@helper.CSRF(routes.Proof.elim(team.call))"}).done(() => window.location="@routes.Admin.view");
+	$.ajax({type: "DELETE", url: "@helper.CSRF(routes.Proof.elim(person.call))"}).done(() => window.location="@routes.Admin.view()");
 });
 </script>
 }

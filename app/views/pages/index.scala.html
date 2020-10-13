@@ -1,20 +1,20 @@
-@(status: Option[Int]=None)(implicit db: Database)
+@(status: Option[Int]=None)(implicit cfg: Configuration)
 
-@comm=@{Book.all.filter(_.comm.nonEmpty)}
+@comm=@{Person.toList.filter(_.comm.nonEmpty)}
 
 @comps.frame(nav="index") {
 <div class="jumbotron text-center">
-	<h1 class="display-2">@Contest.name</h1>
+	<h1 class="display-2">@HostData.name</h1>
 	<h2 class="display-4">書類受付システム</h2>
 	<p class="lead my-3">
 		@{Schedule.date}開催 @{Schedule.dead}締切
 	</p>
 	<div class="row d-flex justify-content-center py-2">
-		<a class="btn btn-lg btn-outline-dark mx-2" href="http://@Schedule.rule">参加規約を確認する</a>
+		<a class="btn btn-lg btn-outline-dark mx-2" href="http://@HostData.link">参加規約を確認する</a>
 	@if(Schedule.isOK) {
-		<a class="btn btn-lg btn-outline-primary mx-2" href="@routes.Entry.form">交信記録を提出する</a>
+		<a class="btn btn-lg btn-outline-primary mx-2" href="@routes.Entry.form()">交信記録を提出する</a>
 	} else {
-		<a class="btn btn-lg btn-outline-primary mx-2" href="@routes.Lists.view">暫定結果を確認する</a>
+		<a class="btn btn-lg btn-outline-primary mx-2" href="@routes.Lists.view()">暫定結果を確認する</a>
 	}
 	</div>
 </div>
@@ -24,16 +24,20 @@
 }
 </div>
 <div class="text-center">
-@if(Schedule.isOK) {
+@if(cfg.get[Boolean]("play.mailer.mock")) {
+<div class="alert alert-warning">
+	メール送信機能は試験モードに設定されています。実際には送信されません。
+</div>
+} else if(Schedule.isOK) {
 	<p>書類提出の簡略化のため、従来の仕様を改め、アナログ無線・デジタル無線の全部門の書類を同時に受理します。</p>
 } else {
 	<p>提出期間外につき、新規の提出書類は原則として受理できません。参加者の皆様は、暫定結果をご確認ください。</p>
 }
 </div>
 @if(comm.nonEmpty) {
-@defining(util.Random.shuffle(comm).head) {team =>
+@defining(util.Random.shuffle(comm).head) {person =>
 <blockquote>
-	<p>@team.comm<footer><a href="@routes.Forum.view#@team.call">@team.call</a></footer></p>
+	<p>@person.comm<footer><a href="@routes.Forum.view()#@person.call">@person.call</a></footer></p>
 </blockquote>
 }
 } else {

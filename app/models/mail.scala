@@ -1,25 +1,19 @@
 package models
 
 import play.api.Logger
-import play.api.db.Database
 import play.libs.mailer.{Email, MailerClient}
 
-class SendMail(implicit db: Database, smtp: MailerClient) {
-	def send(team: Team) = {
+class SendMail(implicit smtp: MailerClient) {
+	def send(person: Person) = {
 		val mail = new Email
-		val text = views.txt.pages.email(team).body.trim
-		mail.setFrom("%s <%s>".format(Contest.host, Contest.mail))
-		mail.addTo("%s <%s>".format(team.call, team.mail))
-		mail.addBcc(Contest.mail)
+		val text = views.txt.pages.email(person.call).body.trim
+		mail.setFrom("%s <%s>".format(HostData.host, HostData.mail))
+		mail.addTo("%s <%s>".format(person.call, person.mail))
+		mail.addBcc(HostData.mail)
 		mail.setSubject(text.linesIterator.toSeq.head.split(";").head.trim)
 		mail.setBodyText(text.linesWithSeparators.toSeq.tail.mkString.trim)
 		smtp.send(mail)
+		"OK"
 	}
-	def sendAll(teams: Seq[Team]) = new Thread {
-		val itvl = MailConf.itvl * 60 * 1000
-		override def run() = for(team <- teams) {
-			send(team)
-			Thread.sleep(itvl)
-		}
-	}.start()
+	def remind(call: String) = Person.findAllByCall(call).map(send).mkString
 }
