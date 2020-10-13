@@ -32,7 +32,7 @@ object PartForm extends Form[Option[Part]] (
 		Forms.mapping (
 			"sect" -> Forms.text,
 			"city" -> Forms.text
-		)(Part.apply)(Part.unapply)
+		)(Part.apply)(Part.unapply).verifying(p => p.sect.nonEmpty && p.city.nonEmpty)
 	), Map.empty, Nil, None
 )
 

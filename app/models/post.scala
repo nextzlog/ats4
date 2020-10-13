@@ -5,11 +5,13 @@ import play.api.Logger
 import play.api.libs.Files.TemporaryFile
 import play.libs.mailer.MailerClient
 import qxsl.sheet.SheetOrTable
+import scala.jdk.CollectionConverters._
 
 class Acceptor(implicit smtp: MailerClient) {
 	val sheets = new SheetOrTable()
-	def push(post: Post, temp: TemporaryFile): String = {
-		val items = sheets.unpack(Files.readAllBytes(temp.toFile.toPath))
+	def push(post: Post, temps: Seq[TemporaryFile]): String = {
+		val files = temps.map(_.toFile.toPath).map(Files.readAllBytes)
+		val items = files.map(sheets.unpack).map(_.asScala).flatten
 		Person.findAllByCall(post.call).foreach(_.delete())
 		Record.findAllByCall(post.call).foreach(_.delete())
 		Chrono.findAllByCall(post.call).foreach(_.delete())

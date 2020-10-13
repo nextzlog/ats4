@@ -30,7 +30,7 @@
 @for(((group, sects), idx) <- Subtests.groups.zipWithIndex) {
 <div class="card bg-light mb-5">
 	<h3 class="card-header">
-		<span>@group</span>
+		<span>@if(Subtests.groups.size > 1) {@group} else {部門}</span>
 	</h3>
 	<div class="card-body">
 		<fieldset>
@@ -48,7 +48,9 @@
 	</h3>
 	<div class="card-body">
 		<fieldset>
-			@upload(id="sheet1", text="交信記録1", hint="未選択 (*.ZLO, *.LG8, *.ADI, *.ADX)", required=true)
+			@upload(id="sheet1", text="ファイル1", hint="未選択 (*.ZLO, *.LG8, *.ADI, *.ADX)", required=true)
+			@upload(id="sheet2", text="ファイル2", hint="未選択 (省略可能)", required=false)
+			@upload(id="sheet3", text="ファイル3", hint="未選択 (省略可能)", required=false)
 		</fieldset>
 	</div>
 	<div class="card-footer d-flex align-items-center justify-content-between">
