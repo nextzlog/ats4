@@ -17,8 +17,11 @@ import views.html.warns.{chset,email,omiss,unsup}
 	def post = Action(implicit r=> util.Try {
 		val data = r.body.asMultipartFormData
 		val form = PostForm.bindFromRequest().get
-		val file = data.get.file("sheet1").get
-		Ok(proof(new Acceptor().push(form,file.ref)))
+		val file1 = data.get.file("sheet1")
+		val file2 = data.get.file("sheet2")
+		val file3 = data.get.file("sheet3")
+		val files = Seq(file1,file2,file3).flatten.map(_.ref)
+		Ok(proof(new Acceptor().push(post=form,temps=files)))
 	}.recover {
 		case ex: Chset => Ok(entry(PostForm.bindFromRequest(), Some(chset())))
 		case ex: Omiss => Ok(entry(PostForm.bindFromRequest(), Some(omiss())))

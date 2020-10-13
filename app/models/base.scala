@@ -1,9 +1,9 @@
 package models
 
 import java.nio.charset.StandardCharsets.UTF_8
-import java.util.{List=>JList}
 import qxsl.model.Item
 import qxsl.table.TableManager
+import scala.jdk.CollectionConverters._
 import com.github.aselab.activerecord._
 import com.github.aselab.activerecord.dsl._
 
@@ -43,8 +43,8 @@ object Person extends ActiveRecordCompanion[Person] {
 }
 
 object Record extends ActiveRecordCompanion[Record] {
-	def apply(part: Part, post: Post, list: JList[Item]): Record = {
-		val sum = Rule.rule.getSection(part.sect).summarize(list)
+	def apply(part: Part, post: Post, list: Seq[Item]): Record = {
+		val sum = Rule.rule.getSection(part.sect).summarize(list.asJava)
 		Record(
 			call = post.call,
 			sect = part.sect,
@@ -59,9 +59,9 @@ object Record extends ActiveRecordCompanion[Record] {
 
 object Chrono extends ActiveRecordCompanion[Chrono] {
 	val tables = new TableManager().getFactory("qxml")
-	def apply(post: Post, items: JList[Item]): Chrono = Chrono(
+	def apply(post: Post, items: Seq[Item]): Chrono = Chrono(
 		call = post.call,
-		data = new String(tables.encode(items), UTF_8)
+		data = new String(tables.encode(items.asJava), UTF_8)
 	)
 	def findAllByCall(call: String) = Chrono.findAllBy("call", call).toList
 }
