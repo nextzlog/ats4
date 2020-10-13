@@ -9,21 +9,21 @@ ATS-4: Web System for Amateur-Radio Contests
 ![image](https://img.shields.io/badge/license-GPL3-darkblue.svg)
 
 ATS-4 is an Automatic Acceptance & Tabulation System for Amateur-Radio Contests.
-ATS-4 consists of two components, namely, the web system (ATS-4) and [qxsl: Amateur-Radio Logging Library & LISP](https://github.com/nextzlog/qxsl).
+ATS-4 is based on [qxsl: Amateur-Radio Logging Library & LISP](https://github.com/nextzlog/qxsl).
 
 ## Features
 
 - ATS-4 provides a web interface for contest-log acceptance.
-- ATS-4 scans the log and verifies its contents according to the contest rule described in LISP forms.
+- ATS-4 scans the uploaded log and verifies its contents according to the contest rule described in Ruby or LISP forms.
 
 ## Demo
 
 ATS-4 was originally developed for [ALLJA1 contest](http://ja1zlo.u-tokyo.org/allja1/).
-Feel free to visit [ALLJA1 ATS-4](https://allja1.org), but **never submit a dummy log**.
+Feel free to visit [ALLJA1 ATS-4](https://allja1.org), but never submit a dummy log.
 
 ## Documents
 
-- [Javadoc of QxSL Library](https://nextzlog.github.io/qxsl/doc/index.html)
+- [Javadoc](https://nextzlog.github.io/qxsl/doc/index.html)
 - [コンテスト運営を支援する自動集計システム (PDF)](https://pafelog.net/ats4.pdf)
 
 ## Setup & Start
@@ -38,7 +38,6 @@ $ cd ats4
 Open the system configuration file as follows:
 
 ```sh
-$ alias emacs='vim'
 $ vim conf/application.conf
 ```
 
@@ -46,46 +45,30 @@ You will find the mail settings as below:
 
 ```ini
 # Typesafe Mailer Plugin
-play.mailer.host=smtp.gmail.com
+play.mailer.host=mail.allja1.org
 play.mailer.port=465
 play.mailer.ssl=true
 play.mailer.user="***********"
 play.mailer.password="*******"
+
+# Never forget to disable mock mode before the contest:
+play.mailer.mock=true
 ```
 
 Modify the mail settings properly.
 In addition, disable the `mock` mode of the mailer plugin.
-
-```ini
-# If you want to send mail actually:
-play.mailer.mock=false
-```
-
-Then, open the contest configuration file as follows:
+Then, open the contest configuration file as follows, and you will find the contest settings.
+Modify the contest settings properly.
 
 ```sh
 $ vim conf/rule.rb
 ```
 
-You will find the contest settings as below:
-
-```Ruby
-# contest settings
-NAME = 'ALLJA1'
-HOST = '東大無線部'
-MAIL = 'allja1@ja1zlo.u-tokyo.org'
-SITE = 'ja1zlo.u-tokyo.org'
-RULE = 'ja1zlo.u-tokyo.org/allja1/%02drule.html'
-
-# output directory
-OUTPUT = 'rcvd'
-REPORT = 'report.csv'
-```
-
-Modify the contest settings properly.
-**The time has come! Clear your mind and cast a spell!**
+The time has come.
+Clear your mind and cast a spell.
 
 ```sh
+$ sbt run # develop mode
 $ sbt "start -Dhttp.port=8000"
 ```
 
@@ -98,25 +81,13 @@ After a period of time, you will find the following message:
 
 Then, type Ctrl+D and exit.
 Browse the system on port 8000.
-If you would like to run it in the development mode:
-
-```
-$ sbt run
-```
-
-Good luck!
 
 ## Stop
 
-First, kill the process which is running the system:
+First, kill the process which is running the system, and delete the file.
 
 ```sh
 $ kill `cat target/universal/stage/RUNNING_PID`
-```
-
-Then, delete the file.
-
-```sh
 $ rm target/universal/stage/RUNNING_PID
 ```
 
@@ -126,21 +97,56 @@ To upgrade ATS-4 components, first stop the system, then clear the database, pul
 
 ```sh
 $ kill `cat target/universal/stage/RUNNING_PID`
-
-# CAUTION! clean.sh deletes all records from the database.
-$ ./clean.sh
-# ARE YOU SURE?
-
-$ git fetch origin master
-$ git reset --hard origin/master
-# modify conf/application.conf properly
-$ sbt "start -Dhttp.port=8000"
+$ ./destroy.sh
+$ git reset --hard
+$ git pull
 ```
 
 ## Reverse Proxy
 
 We expect that ATS-4 operates as a backend server, which is hidden behind a frontend server such as Apache and Nginx.
-Make sure that **unauthorized clients have no access to admin pages under `/admin`** before you start the system.
+Make sure that unauthorized clients have no access to admin pages under `/admin` before you start the system.
+
+## Contest Definition
+
+A [`Contest`](https://nextzlog.github.io/qxsl/doc/qxsl/ruler/Contest) object is the entity of the contest rules defined in [`rule.rb`](conf/rule.rb) in the `conf` directory.
+ATS-4 supports any contest once you rewrite `rule.rb`.
+
+```Ruby
+# extends Contest class to access global variables defined here
+class ExtendedALLJA1 < Contest
+  def initialize()
+    super(*ALLJA1.getSections().toArray())
+  end
+  def get(name)
+    eval name
+  end
+  def invoke(name, args)
+    method(name).call(*args)
+  end
+  def getStartDay(year)
+    date(year, 'JUNE', 'SATURDAY', 4)
+  end
+  def getDeadLine(year)
+    date(year, 'JULY', 'SATURDAY', 3)
+  end
+  def getName()
+    'ALLJA1'
+  end
+  def getHost()
+    'JA1ZLO'
+  end
+  def getMail()
+    'mail@example.com'
+  end
+  def getLink()
+    'ja1zlo.u-tokyo.org/allja1'
+  end
+end
+
+# returns redefined ALLJA1 contest
+ExtendedALLJA1.new
+```
 
 ## Contribution
 

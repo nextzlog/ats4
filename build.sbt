@@ -2,21 +2,21 @@ name := "ats4"
 
 version := "SNAPSHOT"
 
-scalaVersion := "2.13.1"
+scalaVersion := "2.13.3"
 
 resolvers += "qxsl" at "https://nextzlog.github.io/qxsl/mvn"
 
 libraryDependencies ++= Seq(
-	evolutions,
 	filters,
 	guice,
 	jdbc,
+	"qxsl" % "qxsl" % "0.1.175",
+	"org.jruby" % "jruby-core" % "9.+",
 	"com.h2database" % "h2" % "1.4.+",
-	"org.playframework.anorm" %% "anorm" % "2.6.+",
 	"com.typesafe.play" %% "play-mailer" % "7.0.+",
 	"com.typesafe.play" %% "play-mailer-guice" % "7.0.+",
-	"qxsl" % "qxsl" % "0.1.163",
-	"org.jruby" % "jruby-core" % "9.+"
+	"com.github.aselab" %% "scala-activerecord" % "0.+",
+	"com.github.aselab" %% "scala-activerecord-play2" % "0.+"
 )
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
@@ -24,6 +24,8 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 scalacOptions += "-feature"
 
 TwirlKeys.templateImports ++= Seq(
-	"play.api.db.Database",
-	"play.api.Configuration"
+	"play.api.Configuration",
+	"qxsl.ruler.Section",
+	"qxsl.sheet.SheetManager",
+	"qxsl.table.TableManager"
 )

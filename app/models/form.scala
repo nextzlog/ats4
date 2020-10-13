@@ -1,42 +1,54 @@
 package models
 
-import java.nio.file.{Files, Path, Paths}
-import play.api.data.{Form, Forms}
-import play.api.libs.Files.TemporaryFile
-import play.libs.mailer.{Email, MailerClient}
-import qxsl.extra.field.Call
-import qxsl.ruler.{Contest, RuleKit, Section}
 import scala.util.Try
+import play.api.data.{Form, Forms}
+import qxsl.draft.Call
 
-case class Part(sect: String, city: String) {
-	def code = rule.getCode
-	def rule = Sections.find(sect)
-	def game(call: String, file: String) = {
-		val score = new TableLoader(file, sect=sect).score
-		Game(call, sect, city, score=score.score, total=score.total, file=file)
+case class Part(sect: String, city: String)
+case class Info(call: String, name: String, addr: String, mail: String, comm: String)
+case class Post(info: Info, list: Seq[Option[Part]]) {
+	def call = new Call(info.call).value()
+	def take = list.filter(_.isDefined).map(_.get)
+}
+
+object Part {
+	def fill(call: String) = {
+		val recs = Record.findAllByCall(call)
+		Subtests.groups.map(g => recs.find(_.code == g._1).map(_.toPart))
 	}
 }
 
-case class Post(team: Team, parts: Seq[Option[Part]]) {
-	def games(file: String): Seq[Game] = {
-		val parts = this.parts.filter(_.nonEmpty).map(_.get)
-		val rules = parts.map(_.rule)
-		val place = parts.map(_.city).distinct.mkString(" ")
-		val joint = Part(Sections.joint(rules).getName, place)
-		return (parts :+ joint).map(_.game(team.call, file))
-	}
+object Info {
+	def fill(call: String) = Person.findAllByCall(call).head.toInfo
 }
 
-object PostForm extends Form[Post](Forms.mapping(
-	"team" -> Forms.mapping(
-		"call" -> Forms.nonEmptyText.verifying(s => Try(new Call(s)).isSuccess),
+object Post {
+	def fill(call: String) = Post(info = Info.fill(call), list = Part.fill(call))
+	def form(call: String) = Try(PostForm.fill(Post.fill(call))).getOrElse(PostForm)
+}
+
+object PartForm extends Form[Option[Part]] (
+	Forms.optional(
+		Forms.mapping (
+			"sect" -> Forms.text,
+			"city" -> Forms.text
+		)(Part.apply)(Part.unapply)
+	), Map.empty, Nil, None
+)
+
+object InfoForm extends Form[Info] (
+	Forms.mapping (
+		"call" -> Forms.nonEmptyText.verifying(Call.isValid(_)),
 		"name" -> Forms.nonEmptyText,
 		"addr" -> Forms.nonEmptyText,
 		"mail" -> Forms.email,
-		"comm" -> Forms.text,
-	)(Team.apply)(Team.unapply),
-	"parts" -> Forms.seq(Forms.optional(Forms.mapping(
-		"sect" -> Forms.text,
-		"city" -> Forms.text
-	)(Part.apply)(Part.unapply).verifying(Sections.valid _)))
-)(Post.apply)(Post.unapply), Map.empty, Nil, None)
+		"comm" -> Forms.text
+	)(Info.apply)(Info.unapply), Map.empty, Nil, None
+)
+
+object PostForm extends Form[Post] (
+	Forms.mapping (
+		"info" -> InfoForm.mapping,
+		"list" -> Forms.seq(PartForm.mapping)
+	)(Post.apply)(Post.unapply), Map.empty, Nil, None
+)

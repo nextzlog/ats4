@@ -1,25 +1,23 @@
-@()(implicit db: Database)
+@warn(call: String)=@{Record.findAllByCall(call).toList.exists(_.score == 0)}
 
-@warn(team: Team)=@{models.Call(team.call).game.exists(_.score == 0)}
-
-@comps.frame(title="全参加局", nav="teams") {
+@comps.frame(title="全参加局", nav="calls") {
 <table class="table table-hover text-monospace">
 	<thead>
 		<tr>
 			<th>呼出符号</th>
-			<th>警告</th>
+			<th>再提出の警告</th>
 		</tr>
 	</thead>
 	<tbody>
-		@for(team <- Book.all) {
-		@if(warn(team)) {
+		@for(person <- Person.toList) {
+		@if(warn(person.call)) {
 		<tr class="table-warning">
-			<td>@team.call</td>
+			<td>@person.call</td>
 			<td>0点です。再提出をお勧めします。</td>
 		</tr>
 		} else {
 		<tr>
-			<td>@team.call</td>
+			<td>@person.call</td>
 			<td>-</td>
 		</tr>
 		}

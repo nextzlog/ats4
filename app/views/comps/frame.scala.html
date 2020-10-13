@@ -2,7 +2,7 @@
 
 <html>
 	<head>
-		<title>@Contest.name ATS-4 - @Contest.host</title>
+		<title>@HostData.name ATS-4 - @HostData.host</title>
 		<link rel="stylesheet" href="@routes.Assets.versioned("css/bootstrap.css")" media="print,screen">
 		<link rel="stylesheet" href="@routes.Assets.versioned("css/bootstrap-select.css")">
 		<link rel="stylesheet" href="@routes.Assets.versioned("css/fontawesome.css")">
@@ -15,29 +15,28 @@
 	</head>
 	<body>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-			<a class="navbar-brand" href="@routes.Index.view">ATS-4</a>
+			<a class="navbar-brand" href="@routes.Index.view()">ATS-4</a>
 			<button class="navbar-toggler" data-toggle="collapse" data-target="#nav">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="nav">
 				<div class="navbar-nav mr-auto">
-					<a class="nav-item nav-link @("active".when(nav == "entry"))" href="@routes.Entry.form">書類提出</a>
-					<a class="nav-item nav-link @("active".when(nav == "lists"))" href="@routes.Lists.view">暫定結果</a>
-					<a class="nav-item nav-link @("active".when(nav == "teams"))" href="@routes.Teams.view">全参加局</a>
-					<a class="nav-item nav-link @("active".when(nav == "forum"))" href="@routes.Forum.view">皆様の声</a>
-					<a class="nav-item nav-link @("active".when(nav == "admin"))" href="@routes.Admin.view">管理画面</a>
+					<a class="nav-item nav-link @("active".when(nav == "entry"))" href="@routes.Entry.form()">書類提出</a>
+					<a class="nav-item nav-link @("active".when(nav == "lists"))" href="@routes.Lists.view()">暫定結果</a>
+					<a class="nav-item nav-link @("active".when(nav == "calls"))" href="@routes.Calls.view()">全参加局</a>
+					<a class="nav-item nav-link @("active".when(nav == "forum"))" href="@routes.Forum.view()">皆様の声</a>
+					<a class="nav-item nav-link @("active".when(nav == "admin"))" href="@routes.Admin.view()">管理画面</a>
 					@if(admin) {
 					<a class="nav-item nav-link @("active".when(nav == "agent"))" href="@routes.Admin.edit("")">代理提出</a>
-					<a class="nav-item nav-link @("active".when(nav == "salvo"))" href="@routes.Salvo.view">一斉送信</a>
 					}
-					<a class="nav-item nav-link @("active".when(nav == "guide"))" href="@routes.Guide.view">FAQ</a>
+					<a class="nav-item nav-link @("active".when(nav == "guide"))" href="@routes.Guide.view()">FAQ</a>
 				</div>
 				<div class="navbar-nav">
-					<a class="nav-item nav-link" href="http://@Contest.site">@Contest.host</a>
+					<a class="nav-item nav-link" href="http://@HostData.link">@HostData.host</a>
 					<a class="nav-item nav-link" href="https://pafelog.net">無線部開発班</a>
 					<a class="nav-item nav-link" href="https://pafelog.net/ats4.pdf">解説</a>
 					<a class="nav-item nav-link" href="https://github.com/nextzlog/ats4">実装</a>
-					<a class="nav-item nav-link" href="mailto:@Contest.mail">不具合を報告</a>
+					<a class="nav-item nav-link" href="mailto:@HostData.mail">不具合を報告</a>
 				</div>
 			</div>
 		</nav>
