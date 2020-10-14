@@ -1,6 +1,5 @@
 package models
 
-import play.api.Logger
 import play.libs.mailer.{Email, MailerClient}
 
 class SendMail(implicit smtp: MailerClient) {

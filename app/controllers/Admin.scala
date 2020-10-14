@@ -1,12 +1,14 @@
 package controllers
 
-import java.nio.file.Paths
-import javax.inject.{Inject,Singleton}
-import models.{Chrono,Post,SendMail}
-import play.api.mvc.{Action,InjectedController}
-import play.libs.mailer.MailerClient
+import javax.inject.{Inject, Singleton}
+
 import scala.concurrent.ExecutionContext
-import views.html.pages.{entry,lists}
+
+import play.api.mvc.InjectedController
+import play.libs.mailer.MailerClient
+
+import models.{Chrono, Post, SendMail}
+import views.html.pages.{entry, lists}
 import views.txt.pages.excel
 
 @Singleton class Admin @Inject()(implicit smtp: MailerClient, ec: ExecutionContext) extends InjectedController {

@@ -115,7 +115,7 @@ ATS-4 supports any contest once you rewrite [`application.rb`](conf/application.
 # extends Contest class to access global variables defined here
 class ExtendedALLJA1 < Contest
   def initialize()
-    super(*ALLJA1.getSections().toArray())
+    super(*ALLJA1.getSections)
   end
   def get(name)
     eval name
@@ -133,16 +133,16 @@ class ExtendedALLJA1 < Contest
     date(year, 'JULY', 'SATURDAY', 3)
   end
   def getName()
-    ALLJA1.getName()
+    ALLJA1.getName
   end
   def getHost()
-    ALLJA1.getHost()
+    ALLJA1.getHost
   end
   def getMail()
-    ALLJA1.getMail()
+    ALLJA1.getMail
   end
   def getLink()
-    ALLJA1.getLink()
+    ALLJA1.getLink
   end
 end
 

@@ -1,9 +1,12 @@
 package models
 
 import java.nio.charset.StandardCharsets.UTF_8
+
 import qxsl.model.Item
 import qxsl.table.TableManager
+
 import scala.jdk.CollectionConverters._
+
 import com.github.aselab.activerecord._
 import com.github.aselab.activerecord.dsl._
 

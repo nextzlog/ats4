@@ -1,7 +1,8 @@
-rcvd
-logs
-target
-RUNNING_PID
-*.db
 .*
+target
+/logs
+/*.db
+/gradle
+/gradlew
+/gradlew.bat
 !.gitignore
