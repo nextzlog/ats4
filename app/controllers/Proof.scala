@@ -1,11 +1,14 @@
 package controllers
 
-import javax.inject.{Inject,Singleton}
-import models.{Person,Record}
-import play.api.Logger
-import play.api.mvc.{Action,InjectedController}
+import javax.inject.Singleton
+
 import scala.util.Try
-import views.html.pages.{lists,proof}
+
+import play.api.Logger
+import play.api.mvc.InjectedController
+
+import models.{Person, Record}
+import views.html.pages.{lists, proof}
 
 @Singleton
 class Proof extends InjectedController {

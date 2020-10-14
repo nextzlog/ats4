@@ -2,12 +2,15 @@ package models
 
 import java.io.InputStreamReader
 import java.time.LocalDate
-import java.util.{List=>JList}
-import play.api.Logger
-import qxsl.ruler.{RuleKit, Section}
+import java.util.{List => JList}
+
+import qxsl.ruler.RuleKit
+
 import scala.jdk.CollectionConverters._
 import scala.util.Try
 import scala.util.chaining._
+
+import play.api.Logger
 
 object Rule {
 	def path = "/application.rb"

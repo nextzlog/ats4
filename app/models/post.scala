@@ -1,11 +1,14 @@
 package models
 
 import java.nio.file.Files
+
+import qxsl.sheet.SheetOrTable
+
+import scala.jdk.CollectionConverters._
+
 import play.api.Logger
 import play.api.libs.Files.TemporaryFile
 import play.libs.mailer.MailerClient
-import qxsl.sheet.SheetOrTable
-import scala.jdk.CollectionConverters._
 
 class Acceptor(implicit smtp: MailerClient) {
 	val sheets = new SheetOrTable()

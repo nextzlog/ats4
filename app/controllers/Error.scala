@@ -1,11 +1,14 @@
 package controllers
 
-import javax.inject.{Inject,Singleton}
-import play.api.{Configuration,Logger}
+import javax.inject.{Inject, Singleton}
+
+import scala.concurrent.Future
+
 import play.api.http.HttpErrorHandler
 import play.api.mvc.RequestHeader
-import play.api.mvc.Results.{InternalServerError,Status}
-import scala.concurrent.Future
+import play.api.mvc.Results.{InternalServerError, Status}
+import play.api.{Configuration, Logger}
+
 import views.html.pages.index
 
 @Singleton class Error @Inject()(implicit cfg: Configuration) extends HttpErrorHandler {

@@ -1,16 +1,19 @@
 package controllers
 
-import java.io.{IOException=>Unsup}
-import java.nio.charset.{CharacterCodingException=>Chset}
-import java.util.{NoSuchElementException=>Omiss}
-import javax.inject.{Inject,Singleton}
-import models.{Acceptor,Schedule,PostForm}
-import org.apache.commons.mail.{EmailException=>Email}
+import java.io.{IOException => Unsup}
+import java.nio.charset.{CharacterCodingException => Chset}
+import java.util.{NoSuchElementException => Omiss}
+import javax.inject.{Inject, Singleton}
+
 import play.api.Configuration
-import play.api.mvc.{Action,InjectedController}
+import play.api.mvc.InjectedController
 import play.libs.mailer.MailerClient
-import views.html.pages.{entry,index,proof}
-import views.html.warns.{chset,email,omiss,unsup}
+
+import models.{Acceptor, PostForm, Schedule}
+import views.html.pages.{entry, index, proof}
+import views.html.warns.{chset, email, omiss, unsup}
+
+import org.apache.commons.mail.{EmailException => Email}
 
 @Singleton class Entry @Inject()(implicit smtp: MailerClient, cfg: Configuration) extends InjectedController {
 	def form = Action(implicit r=>if(Schedule.isOK) Ok(entry(PostForm)) else Gone(index()))

@@ -1,8 +1,10 @@
 package models
 
-import scala.util.Try
-import play.api.data.{Form, Forms}
 import qxsl.draft.Call
+
+import scala.util.Try
+
+import play.api.data.{Form, Forms}
 
 case class Part(sect: String, city: String)
 case class Info(call: String, name: String, addr: String, mail: String, comm: String)

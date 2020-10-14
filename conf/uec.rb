@@ -8,7 +8,6 @@ import 'java.time.ZoneId'
 import 'java.time.temporal.TemporalAdjusters'
 import 'java.util.stream.Collectors'
 import 'qxsl.draft.Band'
-import 'qxsl.local.LocalCityBase'
 import 'qxsl.ruler.Contest'
 import 'qxsl.ruler.Failure'
 import 'qxsl.ruler.RuleKit'
@@ -19,7 +18,7 @@ import 'qxsl.ruler.Success'
 stream = RuleKit.java_class.resource_as_stream('jautil.lisp')
 reader = InputStreamReader.new(stream, 'UTF-8')
 JAUTIL = RuleKit.load('elva').library(reader)
-reader.close()
+reader.close
 
 ZONE = ZoneId.of('Asia/Tokyo')
 
@@ -44,8 +43,8 @@ module BandEnum
 	end
 end
 
-CITYDB = LocalCityBase.load('city.ja').toList
-stream = CITYDB.stream().filter(->(c) {c.getCode.length <= 3})
+CITYDB = JAUTIL.get("CITYDB").toList
+stream = CITYDB.stream.filter(->(c) {c.getCode.length <= 3})
 CITIES = stream.collect(Collectors.toList)
 
 SCORES = {'UEC' => 5, 'L' => 4, 'I' => 3, 'H' => 2}
@@ -55,7 +54,7 @@ def verify_time(time)
 end
 
 def verify_city(city)
-	CITIES.stream().map(->(c) {c.getCode == city}).findAny
+	CITIES.stream.map(->(c) {c.getCode == city}).findAny
 end
 
 def verify_item(item, bandDB)
@@ -116,7 +115,7 @@ class SectionUEC < Section
 		@name
 	end
 	def score(items)
-		score,calls,mults = items.toScoreAndKeys()
+		score,calls,mults = items.toScoreAndKeys
 		score > 0? score * mults.size: 0
 	end
 	def verify(item)
