@@ -10,7 +10,7 @@ libraryDependencies ++= Seq(
 	filters,
 	guice,
 	jdbc,
-	"qxsl" % "qxsl" % "0.1.176",
+	"qxsl" % "qxsl" % "0.1.183",
 	"org.jruby" % "jruby-core" % "9.+",
 	"com.h2database" % "h2" % "1.4.+",
 	"com.typesafe.play" %% "play-mailer" % "7.0.+",
@@ -27,5 +27,6 @@ TwirlKeys.templateImports ++= Seq(
 	"play.api.Configuration",
 	"qxsl.ruler.Section",
 	"qxsl.sheet.SheetManager",
-	"qxsl.table.TableManager"
+	"qxsl.table.TableManager",
+	"scala.jdk.CollectionConverters._"
 )

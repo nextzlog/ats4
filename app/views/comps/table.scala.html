@@ -30,7 +30,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			@for(msg <- summ.accepted().toSeq) {
+			@for(msg <- summ.accepted().iterator().asScala) {
 			<tr>
 				<td>@{time(msg.item.get(Qxsl.TIME).asInstanceOf[Time])}</td>
 				<td>@link(String.valueOf(msg.item.get(Qxsl.CALL)))</td>
@@ -42,7 +42,7 @@
 				<td>-</td>
 			</tr>
 			}
-			@for(msg <- summ.rejected().toSeq) {
+			@for(msg <- summ.rejected().iterator().asScala) {
 			<tr class="table-warning">
 				<td>@{time(msg.item.get(Qxsl.TIME).asInstanceOf[Time])}</td>
 				<td>@link(String.valueOf(msg.item.get(Qxsl.CALL)))</td>
@@ -51,7 +51,7 @@
 				<td>@{msg.item.getRcvd.get(Qxsl.CODE)}</td>
 				<td>@{msg.item.get(Qxsl.NAME)}</td>
 				<td>@{msg.score()}</td>
-				<td>@{msg.text}</td>
+				<td>@if(msg.text.nonEmpty){@msg.text}else{dupe}</td>
 			</tr>
 			}
 		</tbody>

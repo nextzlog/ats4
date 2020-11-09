@@ -7,9 +7,9 @@
 	<p>以下のバイナリフォーマットもしくはテキストフォーマットでの提出が可能です。</p>
 	@for(fmt <- new TableManager()) {
 		<div class="my-2">
-			<h5>@{fmt}</h5>
-		@if(fmt.getDescription.nonEmpty) {
-			<pre class="text-white bg-dark rounded p-2">@{fmt.getDescription}</pre>
+			<h5>@fmt.name</h5>
+		@if(fmt.help.nonEmpty) {
+			<pre class="text-white bg-dark rounded p-2">@{fmt.help}</pre>
 		}
 		</div>
 	}
@@ -20,9 +20,9 @@
 	<p>以下のサマリーシートでも提出できます。交信記録の部分は、別記の対応済み書式に従います。</p>
 	@for(fmt <- new SheetManager()) {
 		<div class="my-2">
-			<h5>@{fmt}</h5>
-		@if(fmt.getDescription.nonEmpty) {
-			<pre class="text-white bg-dark rounded p-2">@{fmt.getDescription}</pre>
+			<h5>@fmt.name</h5>
+		@if(fmt.help.nonEmpty) {
+			<pre class="text-white bg-dark rounded p-2">@{fmt.help}</pre>
 		}
 		</div>
 	}

@@ -15,4 +15,4 @@
 }
 
 呼出符号,運用場所,参加部門,順位,入賞,得点,名前,住所,アドレス,コメント
-@for(sect <- Rule.rule.getSections; record <- Record.findAllBySect(sect.getName()).toList.sortBy(-_.total)) {@line(record)}
+@for(sect <- Rule.rule.asScala; record <- Record.findAllBySect(sect.name()).toList.sortBy(-_.total)) {@line(record)}

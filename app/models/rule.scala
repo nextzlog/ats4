@@ -16,7 +16,7 @@ object Rule {
 	def path = "/application.rb"
 	def stream = getClass.getResourceAsStream(path)
 	def reader = new InputStreamReader(this.stream)
-	def load = RuleKit.load("ruby").contest(reader)
+	def load = RuleKit.forName("ruby").eval(reader).contest()
 	def warn(ex: Throwable) = Logger("rule").error("bad rule", ex)
 	lazy val rule = Try(this.load).tap(_.failed.foreach(warn)).get
 }
@@ -28,10 +28,10 @@ object Rank {
 }
 
 object HostData {
-	def host = Rule.rule.getHost()
-	def link = Rule.rule.getLink()
-	def mail = Rule.rule.getMail()
-	def name = Rule.rule.getName()
+	def host = Rule.rule.host()
+	def link = Rule.rule.link()
+	def mail = Rule.rule.mail()
+	def name = Rule.rule.name()
 }
 
 object Schedule {
@@ -42,9 +42,9 @@ object Schedule {
 }
 
 object Subtests {
-	def groups = Rule.rule.getSections.asScala.groupBy(_.getCode).toSeq.sortBy(_._1)
+	def groups = Rule.rule.asScala.groupBy(_.code).toSeq.sortBy(_._1)
 }
 
 object CityBase {
-	def all = Rule.rule.get("CITIES").asInstanceOf[JList[_]].asScala.map(_.toString)
+	def all = Rule.rule.get("CITYDB").asInstanceOf[JList[_]].asScala.map(_.toString)
 }

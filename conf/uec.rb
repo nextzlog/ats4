@@ -1,13 +1,12 @@
 # UEC CONTEST DEFINED by ATS-4
 
-import 'java.io.InputStreamReader'
 import 'java.time.DayOfWeek'
 import 'java.time.LocalDate'
 import 'java.time.Month'
 import 'java.time.ZoneId'
 import 'java.time.temporal.TemporalAdjusters'
-import 'java.util.stream.Collectors'
 import 'qxsl.draft.Band'
+import 'qxsl.draft.Qxsl'
 import 'qxsl.ruler.Contest'
 import 'qxsl.ruler.Failure'
 import 'qxsl.ruler.RuleKit'
@@ -15,11 +14,7 @@ import 'qxsl.ruler.Section'
 import 'qxsl.ruler.Success'
 
 # JAUTIL library
-stream = RuleKit.java_class.resource_as_stream('jautil.lisp')
-reader = InputStreamReader.new(stream, 'UTF-8')
-JAUTIL = RuleKit.load('elva').library(reader)
-reader.close
-
+UTIL = RuleKit.load('jautil.lisp').pattern
 ZONE = ZoneId.of('Asia/Tokyo')
 
 def date(year, month, dayOfWeek, nth)
@@ -30,6 +25,7 @@ end
 
 HOURDB = [17, 18, 19, 20]
 MODEDB = ['CW', 'cw']
+CITYDB = UTIL.get("CITYDB").toList.select{|c| c.code.length <= 3}
 
 module BandEnum
 	B3_5 =  3500
@@ -43,10 +39,6 @@ module BandEnum
 	end
 end
 
-CITYDB = JAUTIL.get("CITYDB").toList
-stream = CITYDB.stream.filter(->(c) {c.getCode.length <= 3})
-CITIES = stream.collect(Collectors.toList)
-
 SCORES = {'UEC' => 5, 'L' => 4, 'I' => 3, 'H' => 2}
 
 def verify_time(time)
@@ -54,30 +46,39 @@ def verify_time(time)
 end
 
 def verify_city(city)
-	CITIES.stream.map(->(c) {c.getCode == city}).findAny
+	CITYDB.any?{|c| c.code == city}
 end
 
 def verify_item(item, bandDB)
-	time = JAUTIL.invoke('qxsl-time', item)
-	call = JAUTIL.invoke('qxsl-call', item)
-	band = JAUTIL.invoke('qxsl-band', item)
-	mode = JAUTIL.invoke('qxsl-mode', item)
-	code = JAUTIL.invoke('qxsl-code', item)
-	city,suf = vals = code.split(/([HIL]|UEC)$/)
-	return Failure.new(item, 'bad code') if not vals.length == 2
+	time = item.value(Qxsl::TIME)
+	call = item.value(Qxsl::CALL)
+	band = item.value(Qxsl::BAND).intValue
+	mode = item.value(Qxsl::MODE)
+	code = item.getRcvd.value(Qxsl::CODE)
+	city,suf = code.split(/([HIL]|UEC)$/)
 	return Failure.new(item, 'bad time') if not verify_time(time)
 	return Failure.new(item, 'bad city') if not verify_city(city)
 	return Failure.new(item, 'bad band') if not bandDB.include?(band)
 	return Failure.new(item, 'bad mode') if not MODEDB.include?(mode)
-	return Success.new(item, SCORES[suf], [call, band], [band, city])
+	return Success.new(item, SCORES[suf])
+end
+
+def unique_item(item)
+	call = item.value(Qxsl::CALL)
+	band = item.value(Qxsl::BAND).intValue
+	return [call, band]
+end
+
+def entity_item(item)
+	band = item.value(Qxsl::BAND).intValue
+	code = item.getRcvd.value(Qxsl::CODE)
+	city,suf = code.split(/([HIL]|UEC)$/)
+	return [band, city]
 end
 
 class ContestUEC < Contest
 	def get(name)
 		eval name
-	end
-	def invoke(name, args)
-		method(name).call(*args)
 	end
 	def getStartDay(year)
 		date(year, 'JULY', 'SATURDAY', 3)
@@ -88,16 +89,16 @@ class ContestUEC < Contest
 	def getDeadLine(year)
 		LocalDate.of(year, 8, 31)
 	end
-	def getName()
+	def name()
 		'電通大コンテスト'
 	end
-	def getHost()
+	def host()
 		'JA1ZGP'
 	end
-	def getMail()
+	def mail()
 		'uectest-info@ja1zgp.com'
 	end
-	def getLink()
+	def link()
 		'www.ja1zgp.com/uectest_public_info'
 	end
 end
@@ -108,18 +109,24 @@ class SectionUEC < Section
 		@name = name
 		@band = band
 	end
-	def getCode()
+	def code()
 		'UEC'
 	end
-	def getName()
+	def name()
 		@name
 	end
-	def score(items)
-		score,calls,mults = items.toScoreAndKeys
-		score > 0? score * mults.size: 0
-	end
 	def verify(item)
-		verify_item(JAUTIL.decode(item), @band)
+		verify_item(UTIL.normalize(item, nil), @band)
+	end
+	def unique(item)
+		unique_item(item)
+	end
+	def entity(item)
+		entity_item(item)
+	end
+	def result(list)
+		score,mults = list.toScoreAndEntitySets
+		score > 0? score * mults.size: 0
 	end
 end
 

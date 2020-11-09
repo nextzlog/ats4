@@ -21,7 +21,7 @@ case class Person(call: String, name: String, addr: String, mail: String, comm: 
 }
 
 case class Record(call: String, sect: String, city: String, score: Int, total: Int) extends ActiveRecord {
-	def code = Rule.rule.getSection(sect).getCode()
+	def code = Rule.rule.section(sect).code()
 	def toPart = Part(
 		sect = sect,
 		city = city
@@ -29,8 +29,8 @@ case class Record(call: String, sect: String, city: String, score: Int, total: I
 }
 
 case class Chrono(call: String, data: String) extends ActiveRecord {
-	def list = new TableManager().getFactory("qxml").decode(data)
-	def calc(s: String) = Rule.rule.getSection(s).summarize(list)
+	def list = new TableManager().factory("qxml").decode(data)
+	def calc(s: String) = Rule.rule.section(s).summarize(list)
 }
 
 object Person extends ActiveRecordCompanion[Person] {
@@ -47,7 +47,7 @@ object Person extends ActiveRecordCompanion[Person] {
 
 object Record extends ActiveRecordCompanion[Record] {
 	def apply(part: Part, post: Post, list: Seq[Item]): Record = {
-		val sum = Rule.rule.getSection(part.sect).summarize(list.asJava)
+		val sum = Rule.rule.section(part.sect).summarize(list.asJava)
 		Record(
 			call = post.call,
 			sect = part.sect,
@@ -61,7 +61,7 @@ object Record extends ActiveRecordCompanion[Record] {
 }
 
 object Chrono extends ActiveRecordCompanion[Chrono] {
-	val tables = new TableManager().getFactory("qxml")
+	val tables = new TableManager().factory("qxml")
 	def apply(post: Post, items: Seq[Item]): Chrono = Chrono(
 		call = post.call,
 		data = new String(tables.encode(items.asJava), UTF_8)
