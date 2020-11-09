@@ -1,19 +1,14 @@
 # ALLJA1 CONTEST DEFINED by ATS-4
 
-import 'java.io.InputStreamReader'
 import 'java.time.DayOfWeek'
 import 'java.time.LocalDate'
 import 'java.time.Month'
 import 'java.time.temporal.TemporalAdjusters'
-import 'java.util.stream.Collectors'
 import 'qxsl.ruler.Contest'
 import 'qxsl.ruler.RuleKit'
 
 # ALLJA1 rules
-stream = RuleKit.java_class.resource_as_stream('allja1.lisp')
-reader = InputStreamReader.new(stream, 'UTF-8')
-ALLJA1 = RuleKit.load('elva').contest(reader)
-reader.close
+ALLJA1 = RuleKit.load('allja1.lisp').contest
 
 def date(year, month, dayOfWeek, nth)
 	week = DayOfWeek.valueOf(dayOfWeek)
@@ -21,20 +16,15 @@ def date(year, month, dayOfWeek, nth)
 	date.with(TemporalAdjusters.dayOfWeekInMonth(nth, week))
 end
 
-CITYDB = ALLJA1.get("CITYDB").toList
-stream = CITYDB.stream.filter(->(c) {c.getCode.length > 2})
-CITIES = stream.collect(Collectors.toList)
+CITYDB = ALLJA1.get("CITYDB").toList.select{|c| c.code.length > 2}
 
 # extends Contest class to access global variables defined here
 class ExtendedALLJA1 < Contest
 	def initialize()
-		super(*ALLJA1.getSections)
+		super(*ALLJA1)
 	end
 	def get(name)
 		eval name
-	end
-	def invoke(name, args)
-		method(name).call(*args)
 	end
 	def getStartDay(year)
 		date(year, 'JUNE', 'SATURDAY', 4)
@@ -45,17 +35,17 @@ class ExtendedALLJA1 < Contest
 	def getDeadLine(year)
 		date(year, 'JULY', 'SATURDAY', 3)
 	end
-	def getName()
-		ALLJA1.getName
+	def name()
+		ALLJA1.name
 	end
-	def getHost()
-		ALLJA1.getHost
+	def host()
+		ALLJA1.host
 	end
-	def getMail()
-		ALLJA1.getMail
+	def mail()
+		ALLJA1.mail
 	end
-	def getLink()
-		ALLJA1.getLink
+	def link()
+		ALLJA1.link
 	end
 end
 
