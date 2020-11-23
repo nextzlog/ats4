@@ -2,30 +2,24 @@
 
 import 'java.time.DayOfWeek'
 import 'java.time.LocalDate'
-import 'java.time.Month'
 import 'java.time.ZoneId'
 import 'java.time.temporal.TemporalAdjusters'
 import 'qxsl.draft.Band'
 import 'qxsl.draft.Qxsl'
 import 'qxsl.ruler.Contest'
+import 'qxsl.ruler.Element'
 import 'qxsl.ruler.Failure'
 import 'qxsl.ruler.RuleKit'
 import 'qxsl.ruler.Section'
 import 'qxsl.ruler.Success'
 
 # JAUTIL library
-UTIL = RuleKit.load('jautil.lisp').pattern
-ZONE = ZoneId.of('Asia/Tokyo')
-
-def date(year, month, dayOfWeek, nth)
-	week = DayOfWeek.valueOf(dayOfWeek)
-	date = LocalDate.of(year, Month.valueOf(month), 1)
-	date.with(TemporalAdjusters.dayOfWeekInMonth(nth, week))
-end
+JAUTIL = RuleKit.load('jautil.lisp').pattern
+ZONEID = ZoneId.of('Asia/Tokyo')
 
 HOURDB = [17, 18, 19, 20]
 MODEDB = ['CW', 'cw']
-CITYDB = UTIL.get("CITYDB").toList.select{|c| c.code.length <= 3}
+CITYDB = JAUTIL.get('CITYDB').toList.select{|c| c.code.length <= 3 and not ['01', '48'].include?(c.code)}
 
 module BandEnum
 	B3_5 =  3500
@@ -42,7 +36,7 @@ end
 SCORES = {'UEC' => 5, 'L' => 4, 'I' => 3, 'H' => 2}
 
 def verify_time(time)
-	HOURDB.include?(time.withZoneSameInstant(ZONE).getHour)
+	HOURDB.include?(time.withZoneSameInstant(ZONEID).getHour)
 end
 
 def verify_city(city)
@@ -66,14 +60,20 @@ end
 def unique_item(item)
 	call = item.value(Qxsl::CALL)
 	band = item.value(Qxsl::BAND).intValue
-	return [call, band]
+	return Element.new([call, band])
 end
 
 def entity_item(item)
 	band = item.value(Qxsl::BAND).intValue
 	code = item.getRcvd.value(Qxsl::CODE)
 	city,suf = code.split(/([HIL]|UEC)$/)
-	return [band, city]
+	return Element.new([band, city])
+end
+
+def schedule(year, month, nth, dayOfWeek)
+	week = DayOfWeek.valueOf(dayOfWeek)
+	date = LocalDate.of(year, month, 1)
+	date.with(TemporalAdjusters.dayOfWeekInMonth(nth, week))
 end
 
 class ContestUEC < Contest
@@ -81,7 +81,7 @@ class ContestUEC < Contest
 		eval name
 	end
 	def getStartDay(year)
-		date(year, 'JULY', 'SATURDAY', 3)
+		schedule(year, 7, 3, 'SATURDAY')
 	end
 	def getFinalDay(year)
 		getStartDay(year)
@@ -109,14 +109,14 @@ class SectionUEC < Section
 		@name = name
 		@band = band
 	end
-	def code()
-		'UEC'
-	end
 	def name()
 		@name
 	end
+	def code()
+		'UEC'
+	end
 	def verify(item)
-		verify_item(UTIL.normalize(item, nil), @band)
+		verify_item(JAUTIL.normalize(item, nil), @band)
 	end
 	def unique(item)
 		unique_item(item)
@@ -125,7 +125,7 @@ class SectionUEC < Section
 		entity_item(item)
 	end
 	def result(list)
-		score,mults = list.toScoreAndEntitySets
+		score,mults = list.toArray
 		score > 0? score * mults.size: 0
 	end
 end
@@ -151,5 +151,5 @@ S28_ = SinBandUEC.new(BandEnum::B28_)
 S50_ = SinBandUEC.new(BandEnum::B50_)
 ASWL = AllBandUEC.new('SWL')
 
-# returns redefined ALLJA1 contest
+# returns UEC contest definition
 TEST = ContestUEC.new(AQSO, S3_5, S7_0, S14_, S21_, S28_, S50_, ASWL)

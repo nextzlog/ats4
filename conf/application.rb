@@ -1,2 +1,2 @@
-require 'uec'
+require 'ja1'
 TEST

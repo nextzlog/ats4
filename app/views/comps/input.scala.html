@@ -1,7 +1,10 @@
-@(field: Field, text: String = "", hint: String = "", multiline: Boolean = false)
+@(field: Field, text: String = "", hint: String = "", multiline: Boolean = false, hidden: Boolean = false)
 
 @style = {form-control @if(field.hasErrors){is-invalid}}
 
+@if(hidden) {
+	<input type="hidden" name="@field.name" value="@field.value">
+} else {
 <div class="form-group row">
 	<label for="@field.name" class="col-md-1 col-form-label">@text</label>
 	<div class="col">
@@ -12,3 +15,4 @@
 	}
 	</div>
 </div>
+}

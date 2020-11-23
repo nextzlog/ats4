@@ -15,84 +15,33 @@ ATS-4 is an Automatic Acceptance & Tabulation System for Amateur-Radio Contests,
 - provides a web interface for contest-log acceptance.
 - scans the uploaded log and verifies its contents according to the contest rule described in Ruby or LISP forms.
 
-## Demo
+## Supports
 
-ATS-4 supports multiple contests including [UEC contest](https://www.ja1zgp.com/uectest_public_info/) although it was originally developed for [ALLJA1 contest](http://ja1zlo.u-tokyo.org/allja1/).
-Feel free to visit [ALLJA1 ATS-4](https://allja1.org).
+ATS-4 supports many contests including:
+
+- [UEC](https://www.ja1zgp.com/uectest_public_info/),
+- [ALLJA1](http://ja1zlo.u-tokyo.org/allja1/),
+- [REALTIME](http://ja1zlo.u-tokyo.org/rt/rt1.html).
 
 ## Documents
 
 - [Javadoc](https://nextzlog.github.io/qxsl/doc/index.html)
 - [コンテスト運営を支援する自動集計システム (PDF)](https://pafelog.net/ats4.pdf)
 
-## Setup & Start
+## Demo
 
-First, clone this repository:
+Feel free to visit [ALLJA1 ATS-4](https://allja1.org).
+
+## Usage
+
+First, clone this repository.
 
 ```sh
 $ git clone https://github.com/nextzlog/ats4
 $ cd ats4
 ```
 
-Open the system configuration file as follows:
-
-```sh
-$ vim conf/application.conf
-```
-
-You will find the mail settings as below:
-
-```ini
-# Typesafe Mailer Plugin
-play.mailer.host=mail.allja1.org
-play.mailer.port=465
-play.mailer.ssl=true
-play.mailer.user="***********"
-play.mailer.password="*******"
-
-# Never forget to disable mock mode before the contest:
-play.mailer.mock=true
-```
-
-Modify the mail settings properly.
-In addition, disable the `mock` mode of the mailer plugin.
-Then, open the contest configuration file as follows, and you will find the contest settings.
-Modify the contest settings properly.
-
-```sh
-$ vim conf/application.rb
-```
-
-The time has come.
-Clear your mind and cast a spell.
-
-```sh
-$ sbt run # develop mode
-$ sbt "start -Dhttp.port=8000"
-```
-
-Just wait and relax.
-After a period of time, you will find the following message:
-
-```
-(Starting server. Type Ctrl+D to exit logs, the server will remain in background)
-```
-
-Then, type Ctrl+D and exit.
-Browse the system on port 8000.
-
-## Stop
-
-First, kill the process which is running the system, and delete the file.
-
-```sh
-$ kill `cat target/universal/stage/RUNNING_PID`
-$ rm target/universal/stage/RUNNING_PID
-```
-
-## Upgrade
-
-To upgrade ATS-4 components, first stop the system, then clear the database, pull the latest version, and finally restart the system:
+To update ATS-4, first stop the system, then clear the database, and finally pull the latest version.
 
 ```sh
 $ kill `cat target/universal/stage/RUNNING_PID`
@@ -101,54 +50,41 @@ $ git reset --hard
 $ git pull
 ```
 
-## Reverse Proxy
+### Start
 
-We expect that ATS-4 operates as a backend server, which is hidden behind a frontend server such as Apache and Nginx.
-Make sure that unauthorized clients have no access to admin pages under `/admin` before you start the system.
+Clear your mind and cast a spell.
 
-## Contest Definition
-
-A [`Contest`](https://nextzlog.github.io/qxsl/doc/qxsl/ruler/Contest) object is the entity of the contest rules defined in Ruby files, e.g., [`ja1.rb`](conf/ja1.rb) and [`uec.rb`](conf/uec.rb) in the `conf` directory.
-ATS-4 supports any contest once you rewrite [`application.rb`](conf/application.rb).
-
-```Ruby
-# extends Contest class to access global variables defined here
-class ExtendedALLJA1 < Contest
-  def initialize()
-    super(*ALLJA1.getSections)
-  end
-  def get(name)
-    eval name
-  end
-  def invoke(name, args)
-    method(name).call(*args)
-  end
-  def getStartDay(year)
-    date(year, 'JUNE', 'SATURDAY', 4)
-  end
-  def getFinalDay(year)
-    getStartDay(year)
-  end
-  def getDeadLine(year)
-    date(year, 'JULY', 'SATURDAY', 3)
-  end
-  def getName()
-    ALLJA1.getName
-  end
-  def getHost()
-    ALLJA1.getHost
-  end
-  def getMail()
-    ALLJA1.getMail
-  end
-  def getLink()
-    ALLJA1.getLink
-  end
-end
-
-# returns redefined ALLJA1 contest
-TEST = ExtendedALLJA1.new
+```sh
+$ sbt run # develop mode
+$ sbt "start -Dhttp.port=8000"
 ```
+
+Just wait and relax.
+You will find the following message.
+
+```
+(Starting server. Type Ctrl+D to exit logs, the server will remain in background)
+```
+
+Then, type `Ctrl+D` and exit.
+Browse the web page on port 8000.
+
+### Stop
+
+First, kill the server process, and delete the file as follows.
+
+```sh
+$ kill `cat target/universal/stage/RUNNING_PID`
+$ rm target/universal/stage/RUNNING_PID
+```
+
+## Settings
+
+[READ ME](CONFIG.md).
+
+## Streaming
+
+[READ ME](STREAM.md).
 
 ## Contribution
 

@@ -1,56 +1,32 @@
 package models
 
 import qxsl.draft.Call
-
+import java.util.UUID
 import scala.util.Try
 
-import play.api.data.{Form, Forms}
+import play.api.data.{Form, Forms, OptionalMapping}
 
-case class Part(sect: String, city: String)
-case class Info(call: String, name: String, addr: String, mail: String, comm: String)
-case class Post(info: Info, list: Seq[Option[Part]]) {
-	def call = new Call(info.call).value()
-	def take = list.filter(_.isDefined).map(_.get)
-}
-
-object Part {
-	def fill(call: String) = {
-		val recs = Record.findAllByCall(call)
-		Subtests.groups.map(g => recs.find(_.code == g._1).map(_.toPart))
-	}
-}
-
-object Info {
-	def fill(call: String) = Person.findAllByCall(call).head.toInfo
-}
-
-object Post {
-	def fill(call: String) = Post(info = Info.fill(call), list = Part.fill(call))
-	def form(call: String) = Try(PostForm.fill(Post.fill(call))).getOrElse(PostForm)
-}
-
-object PartForm extends Form[Option[Part]] (
-	Forms.optional(
-		Forms.mapping (
-			"sect" -> Forms.text,
-			"city" -> Forms.text
-		)(Part.apply)(Part.unapply).verifying(p => p.sect.nonEmpty && p.city.nonEmpty)
-	), Map.empty, Nil, None
+object TicketForm extends Form[Ticket] (
+	Forms.mapping (
+		"sect" -> Forms.text,
+		"city" -> Forms.text
+	)(Ticket.apply)(Ticket.unapply).verifying(p => Rule.absent(p.sect) || p.city.nonEmpty), Map.empty, Nil, None
 )
 
-object InfoForm extends Form[Info] (
+object PersonForm extends Form[Person] (
 	Forms.mapping (
-		"call" -> Forms.nonEmptyText.verifying(Call.isValid(_)),
+		"call" -> Forms.nonEmptyText.verifying(Call.isValid(_)).transform(new Call(_).value(), identity[String]),
 		"name" -> Forms.nonEmptyText,
-		"addr" -> Forms.nonEmptyText,
+		"post" -> Forms.nonEmptyText,
 		"mail" -> Forms.email,
-		"comm" -> Forms.text
-	)(Info.apply)(Info.unapply), Map.empty, Nil, None
+		"note" -> Forms.text,
+		"uuid" -> OptionalMapping(Forms.uuid).transform(_.getOrElse(UUID.randomUUID), Some[UUID](_))
+	)(Person.apply)(Person.unapply), Map.empty, Nil, None
 )
 
-object PostForm extends Form[Post] (
+object ClientForm extends Form[Client] (
 	Forms.mapping (
-		"info" -> InfoForm.mapping,
-		"list" -> Forms.seq(PartForm.mapping)
-	)(Post.apply)(Post.unapply), Map.empty, Nil, None
+		"person" -> PersonForm.mapping,
+		"ticket" -> Forms.seq(TicketForm.mapping)
+	)(Client.apply)(Client.unapply), Map.empty, Nil, None
 )

@@ -1,77 +1,75 @@
 package models
 
+import java.lang.{String => S}
 import java.nio.charset.StandardCharsets.UTF_8
+import java.util.{UUID => U}
 
 import qxsl.model.Item
 import qxsl.table.TableManager
+import qxsl.draft.Call
 
 import scala.jdk.CollectionConverters._
+import scala.{Int => I}
+import scala.util.Try
 
 import com.github.aselab.activerecord._
 import com.github.aselab.activerecord.dsl._
 
-case class Person(call: String, name: String, addr: String, mail: String, comm: String) extends ActiveRecord {
-	def toInfo = Info(
-		call = call,
-		name = name,
-		addr = addr,
-		mail = mail,
-		comm = comm
-	)
+case class Ticket(sect: S, city: S)
+case class Client(person: Person, record: Seq[Ticket]) {
+	def apply(tick: Ticket) = {
+		val sum = Report.findAllByCall(person.call).head.rate(tick.sect)
+		Record(
+			call = person.call,
+			sect = tick.sect,
+			city = tick.city,
+			mark = sum.score(),
+			rate = sum.total(),
+			code = Rule.rule.section(tick.sect).code()
+		)
+	}
 }
 
-case class Record(call: String, sect: String, city: String, score: Int, total: Int) extends ActiveRecord {
-	def code = Rule.rule.section(sect).code()
-	def toPart = Part(
-		sect = sect,
-		city = city
-	)
+case class Record(call: S, sect: S, city: S, mark: I, rate: I, code: S) extends ActiveRecord {
+	def zero = !Rule.absent(sect) && mark == 0
+}
+case class Person(call: S, name: S, post: S, mail: S, note: S, uuid: U) extends ActiveRecord {
+	def apply(seq: Seq[Item]) = Report(call = call, data = new TableManager().encode(seq.asJava))
 }
 
-case class Chrono(call: String, data: String) extends ActiveRecord {
-	def list = new TableManager().factory("qxml").decode(data)
-	def calc(s: String) = Rule.rule.section(s).summarize(list)
+case class Report(call: S, data: Array[Byte]) extends ActiveRecord {
+	def list = new TableManager().decode(data).asScala
+	def rate(s: String) = Rule.rule.section(s).summarize(list.asJava)
+}
+
+object Ticket {
+	def from(post: Record) = Ticket(sect = post.sect, city = post.city)
+	def fill(call: String) = Subtests.groups.map(g => Record.fill(call, g._1).map(from)).flatten
+}
+
+object Client {
+	def fill(call: String) = Client(person = Person.fill(call), record = Ticket.fill(call))
+	def form(call: String) = Try(ClientForm.fill(fill(call))).getOrElse(ClientForm)
 }
 
 object Person extends ActiveRecordCompanion[Person] {
-	def apply(post: Post): Person = Person(
-		call = post.call,
-		name = post.info.name,
-		addr = post.info.addr,
-		mail = post.info.mail,
-		comm = post.info.comm
-	)
-	def toList = all.toList
+	def fill(call: String) = findAllByCall(call).head
 	def findAllByCall(call: String) = this.findAllBy("call", call).toList
 }
 
 object Record extends ActiveRecordCompanion[Record] {
-	def apply(part: Part, post: Post, list: Seq[Item]): Record = {
-		val sum = Rule.rule.section(part.sect).summarize(list.asJava)
-		Record(
-			call = post.call,
-			sect = part.sect,
-			city = part.city,
-			score = sum.score(),
-			total = sum.total()
-		)
-	}
+	def fill(call: String, code: String) = findAllByCall(call).find(_.code == code)
 	def findAllByCall(call: String) = this.findAllBy("call", call).toList
 	def findAllBySect(sect: String) = this.findAllBy("sect", sect).toList
 }
 
-object Chrono extends ActiveRecordCompanion[Chrono] {
-	val tables = new TableManager().factory("qxml")
-	def apply(post: Post, items: Seq[Item]): Chrono = Chrono(
-		call = post.call,
-		data = new String(tables.encode(items.asJava), UTF_8)
-	)
+object Report extends ActiveRecordCompanion[Report] {
 	def findAllByCall(call: String) = this.findAllBy("call", call).toList
 }
 
 object Tables extends ActiveRecordTables with PlaySupport {
 	val persons = table[Person]
 	val records = table[Record]
-	val chronos = table[Chrono]
-	on(chronos)(c => declare(c.data is(dbType("text"))))
+	val reports = table[Report]
+	on(reports)(c => declare(c.data is(dbType("blob"))))
 }
