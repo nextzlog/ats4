@@ -1,7 +1,7 @@
 @comps.frame(title = "皆様の声", nav = "forum") {
-@for(person <- Person.toList.filter(_.comm.nonEmpty)) {
+@for(person <- Person.toList.filter(_.note.nonEmpty)) {
 <blockquote id="@person.call">
-	<p>@person.comm <footer>@person.call</footer></p>
+	<p>@person.note <footer>@person.call</footer></p>
 </blockquote>
 }
 }

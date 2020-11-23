@@ -2,15 +2,8 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Home page
+# Home
 GET     /                   controllers.Index.view
-
-# Entry
-GET     /entry              controllers.Entry.form
-POST    /entry              controllers.Entry.post
-
-# Lists
-GET     /lists              controllers.Lists.view
 
 # Admin (Private)
 GET     /admin              controllers.Admin.view
@@ -21,14 +14,24 @@ POST    /admin/email/:call  controllers.Admin.send(call: String)
 GET     /admin/proof/:call  controllers.Proof.view(call: String)
 DELETE  /admin/proof/:call  controllers.Proof.elim(call: String)
 
+# Agent
+GET     /agent/:call/:uuid  controllers.Agent.socket(call: String, uuid: String)
+
 # Calls
 GET     /calls              controllers.Calls.view
+
+# Entry
+GET     /entry              controllers.Entry.form
+POST    /entry              controllers.Entry.post
 
 # Forum
 GET     /forum              controllers.Forum.view
 
 # FAQ
 GET     /guide              controllers.Guide.view
+
+# Lists
+GET     /lists              controllers.Lists.view
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file       controllers.Assets.versioned(path="/public", file: Asset)

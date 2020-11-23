@@ -1,10 +1,10 @@
 @(call: String)
 
-@{HostData.name}書類提出の完了 ; 空白を除く先頭行はメールの件名
+@{Rule.rule.name}書類提出の完了 ; 空白を除く先頭行はメールの件名
 
 @{call}様
 
-この度は@{HostData.name}コンテストに参加いただきありがとうございます。
+この度は@{Rule.rule.name}コンテストに参加いただきありがとうございます。
 @for(record <- Record.findAllByCall(call)) {
 @{record.sect} (運用地@{record.city})}
 にて受理いたしました。
@@ -15,7 +15,7 @@
 このメールに心当たりがない場合はお手数ですが下記の連絡先までご連絡ください。
 
 ---
-@{HostData.host}
-@{HostData.name}受付担当係
-@{HostData.link}
-@{HostData.mail}
+@{Rule.rule.host}
+@{Rule.rule.name}受付担当係
+@{Rule.rule.link}
+@{Rule.rule.mail}

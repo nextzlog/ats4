@@ -6,9 +6,9 @@ class SendMail(implicit smtp: MailerClient) {
 	def send(person: Person) = {
 		val mail = new Email
 		val text = views.txt.pages.email(person.call).body.trim
-		mail.setFrom("%s <%s>".format(HostData.host, HostData.mail))
+		mail.setFrom("%s <%s>".format(Rule.rule.host, Rule.rule.mail))
 		mail.addTo("%s <%s>".format(person.call, person.mail))
-		mail.addBcc(HostData.mail)
+		mail.addBcc(Rule.rule.mail)
 		mail.setSubject(text.linesIterator.toSeq.head.split(";").head.trim)
 		mail.setBodyText(text.linesWithSeparators.toSeq.tail.mkString.trim)
 		smtp.send(mail)

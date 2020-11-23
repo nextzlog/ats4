@@ -6,13 +6,13 @@
 		record.sect,
 		if(Rank.rank(record) == 0) "優勝" else "%d位".format(1+Rank.rank(record)),
 		if(Rank.glad(record)) "入賞局" else "",
-		record.total,
+		record.rate,
 		person.name,
-		person.addr,
+		person.post,
 		person.mail,
-		person.comm
+		person.note
 	).mkString(",").concat("\n")
 }
 
 呼出符号,運用場所,参加部門,順位,入賞,得点,名前,住所,アドレス,コメント
-@for(sect <- Rule.rule.asScala; record <- Record.findAllBySect(sect.name()).toList.sortBy(-_.total)) {@line(record)}
+@for(sect <- Rule.rule.asScala; record <- Record.findAllBySect(sect.name()).toList.sortBy(-_.rate)) {@line(record)}

@@ -1,14 +1,18 @@
-@(record: Record, person: Person, chrono: Chrono)(implicit admin: Boolean = false)
+@(record: Record, person: Person, report: Report)(implicit admin: Boolean = false)
 
 @import java.time.format.DateTimeFormatter
 @import qxsl.draft.{Qxsl,Time}
+@import qxsl.ruler.{Message,RuleKit}
 
 @dfmt = @{DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss OOOO")}
 @time(t: Time) = @{t.value.format(dfmt)}
 
-@summ = @{chrono.calc(record.sect)}
+@rate = @{report.rate(record.sect)}
 @link(call: String) = {@if(admin && Person.findAllByCall(call).nonEmpty) {<a href="@routes.Proof.view(call)">@call</a>} else {@call}}
 
+@normalize(list: Seq[Message]) = @{list.zip(RuleKit.load("jautil.lisp").pattern().normalize(list.map(_.item).toSeq.asJava, null))}
+
+@if(!Rule.absent(record.sect)) {
 <div class="card mb-5">
 	<h3 class="card-header border-bottom-0 d-flex align-items-center justify-content-between">
 		<span>@record.sect</span>
@@ -26,23 +30,23 @@
 				<th>運用地</th>
 				<th>担当者</th>
 				<th>素点</th>
-				<th>備考</th>
+				<th>無効判定</th>
 			</tr>
 		</thead>
 		<tbody>
-			@for(msg <- summ.accepted().iterator().asScala) {
+			@for((msg, item) <- normalize(rate.accepted().toSeq)) {
 			<tr>
-				<td>@{time(msg.item.get(Qxsl.TIME).asInstanceOf[Time])}</td>
-				<td>@link(String.valueOf(msg.item.get(Qxsl.CALL)))</td>
-				<td>@{msg.item.get(Qxsl.BAND)}</td>
-				<td>@{msg.item.get(Qxsl.MODE)}</td>
-				<td>@{msg.item.getRcvd.get(Qxsl.CODE)}</td>
-				<td>@{msg.item.get(Qxsl.NAME)}</td>
+				<td>@{time(item.get(Qxsl.TIME).asInstanceOf[Time])}</td>
+				<td>@link(String.valueOf(item.get(Qxsl.CALL)))</td>
+				<td>@{item.get(Qxsl.BAND)}</td>
+				<td>@{item.get(Qxsl.MODE)}</td>
+				<td>@{item.getRcvd.get(Qxsl.CODE)}</td>
+				<td>@{item.get(Qxsl.NAME)}</td>
 				<td>@{msg.score()}</td>
 				<td>-</td>
 			</tr>
 			}
-			@for(msg <- summ.rejected().iterator().asScala) {
+			@for((msg, item) <- normalize(rate.rejected().toSeq)) {
 			<tr class="table-warning">
 				<td>@{time(msg.item.get(Qxsl.TIME).asInstanceOf[Time])}</td>
 				<td>@link(String.valueOf(msg.item.get(Qxsl.CALL)))</td>
@@ -58,6 +62,7 @@
 	</table>
 	<div class="card-footer">
 		@if(record.city.nonEmpty){運用地は@{record.city}です。}
-		暫定の得点は<strong>@{record.total}点</strong>(素点@{record.score})です。
+		暫定の得点は<strong>@{record.rate}点</strong>(素点@{record.mark})です。
 	</div>
 </div>
+}

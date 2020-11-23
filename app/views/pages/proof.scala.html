@@ -3,7 +3,7 @@
 @import comps._
 
 @person = @{Person.findAllByCall(call).head}
-@chrono = @{Chrono.findAllByCall(call).head}
+@report = @{Report.findAllByCall(call).head}
 
 @comps.frame(title = "提出書類の確認", nav = if(admin) "admin" else "proof") {
 @if(!admin) {
@@ -36,7 +36,7 @@
 			</tr>
 			<tr>
 				<td>ご住所</td>
-				<td>@person.addr</td>
+				<td>@person.post</td>
 			</tr>
 			<tr>
 				<td>連絡先</td>
@@ -44,14 +44,15 @@
 			</tr>
 		</tbody>
 	</table>
+	<input type="hidden" id="UUID" value="@routes.Agent.socket(call = person.call, uuid = person.uuid.toString())">
 </div>
-@if(person.comm.nonEmpty) {
-	<blockquote class="mb-5">
-		@person.comm
-	</blockquote>
+@if(person.note.nonEmpty) {
+<blockquote class="mb-5">
+	@person.note
+</blockquote>
 }
 @for(record <- Record.findAllByCall(person.call)) {
-	@table(record,person,chrono)
+	@table(record,person,report)
 }
 @if(admin) {
 <div class="modal" id="remindModal">

@@ -1,14 +1,12 @@
 @()(implicit admin: Boolean = false)
 
 @comps.frame(title = if(admin) "管理画面" else "暫定結果", nav = if(admin) "admin" else "lists") {
-@if(admin || !Schedule.isOK) {
-@if(!admin) {
+@if(admin || Schedule.open) {
 <div class="alert alert-warning">
 	掲載内容に誤りがある場合は、直ちに主催者に連絡してください。
 	赤太字は暫定表彰局ですが、審査により失格することがあります。
 </div>
-}
-@for(sect <- Rule.rule.asScala) {
+@for(sect <- Rule.rule.asScala if !sect.isAbsence()) {
 @if(Record.findAllBySect(sect.name()).nonEmpty) {
 <div class="card mb-5">
 	<h3 class="card-header d-flex justify-content-between border-bottom-0">
@@ -28,12 +26,12 @@
 			</tr>
 		</thead>
 		<tbody>
-			@for(record <- Record.findAllBySect(sect.name()).toSeq.sortBy(-_.total)) {
+			@for(record <- Record.findAllBySect(sect.name()).toSeq.sortBy(-_.rate)) {
 			<tr class="link @if(Rank.glad(record)) {award}" onclick="window.location='@routes.Proof.view(record.call)';">
 				<td>@{1 + Rank.rank(record)}</td>
 				<td>@{record.call}</td>
-				<td>@{record.score}</td>
-				<td>@{record.total}</td>
+				<td>@{record.mark}</td>
+				<td>@{record.rate}</td>
 				<td>@{record.city}</td>
 			</tr>
 			}

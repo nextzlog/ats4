@@ -8,7 +8,7 @@
 	</thead>
 	<tbody>
 		@for(person <- Person.toList) {
-		@if(Record.findAllByCall(person.call).exists(_.score == 0)) {
+		@if(Record.findAllByCall(person.call).exists(_.zero)) {
 		<tr class="table-warning">
 			<td>@person.call</td>
 			<td>0点です。再提出をお勧めします。</td>

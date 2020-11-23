@@ -1,10 +1,10 @@
 package models
 
 import java.io.InputStreamReader
-import java.time.LocalDate
+import java.time.{LocalDate, ZoneId}
 import java.util.{List => JList}
 
-import qxsl.ruler.RuleKit
+import qxsl.ruler.{Absence,RuleKit}
 
 import scala.jdk.CollectionConverters._
 import scala.util.Try
@@ -19,26 +19,21 @@ object Rule {
 	def load = RuleKit.forName("ruby").eval(reader).contest()
 	def warn(ex: Throwable) = Logger("rule").error("bad rule", ex)
 	lazy val rule = Try(this.load).tap(_.failed.foreach(warn)).get
+	def absent(sect: String) = rule.section(sect).isInstanceOf[Absence]
 }
 
 object Rank {
-	def sort(r: Record) = Record.findAllBySect(r.sect).toSeq.sortBy(-_.total)
+	def sort(r: Record) = Record.findAllBySect(r.sect).toSeq.sortBy(-_.rate)
 	def glad(r: Record) = rank(r) < math.min(7, math.ceil(sort(r).size * .1))
-	def rank(r: Record) = sort(r).indexWhere(_.total == r.total)
-}
-
-object HostData {
-	def host = Rule.rule.host()
-	def link = Rule.rule.link()
-	def mail = Rule.rule.mail()
-	def name = Rule.rule.name()
+	def rank(r: Record) = sort(r).indexWhere(_.rate == r.rate)
 }
 
 object Schedule {
 	lazy val year = LocalDate.now.getYear
 	lazy val date = Rule.rule.getStartDay(year)
 	lazy val dead = Rule.rule.getDeadLine(year)
-	def isOK = LocalDate.now.isBefore(dead.plusDays(1))
+	def open = Rule.rule.openResults(year, ZoneId.systemDefault())
+	def isOK = Rule.rule.openEntries(year, ZoneId.systemDefault())
 }
 
 object Subtests {
