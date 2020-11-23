@@ -1,15 +1,13 @@
 package models
 
 import java.lang.{String => S}
-import java.nio.charset.StandardCharsets.UTF_8
 import java.util.{UUID => U}
 
 import qxsl.model.Item
 import qxsl.table.TableManager
-import qxsl.draft.Call
 
-import scala.jdk.CollectionConverters._
 import scala.{Int => I}
+import scala.jdk.CollectionConverters._
 import scala.util.Try
 
 import com.github.aselab.activerecord._

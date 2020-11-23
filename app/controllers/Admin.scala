@@ -7,7 +7,7 @@ import scala.concurrent.ExecutionContext
 import play.api.mvc.InjectedController
 import play.libs.mailer.MailerClient
 
-import models.{Report, Client, SendMail}
+import models.{Client, Report, SendMail}
 import views.html.pages.{entry, lists}
 import views.txt.pages.excel
 

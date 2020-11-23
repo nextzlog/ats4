@@ -25,8 +25,10 @@ scalacOptions += "-feature"
 
 TwirlKeys.templateImports ++= Seq(
 	"play.api.Configuration",
-	"qxsl.ruler.Section",
-	"qxsl.sheet.SheetManager",
-	"qxsl.table.TableManager",
-	"scala.jdk.CollectionConverters._"
+	"qxsl.draft._",
+	"qxsl.ruler._",
+	"qxsl.sheet._",
+	"qxsl.table._",
+	"scala.jdk.CollectionConverters._",
+	"views.html.comps._"
 )

@@ -4,10 +4,10 @@ import javax.inject.{Inject, Singleton}
 
 import scala.concurrent.Future
 
+import play.api.{Configuration, Logger}
 import play.api.http.HttpErrorHandler
 import play.api.mvc.RequestHeader
 import play.api.mvc.Results.{InternalServerError, Status}
-import play.api.{Configuration, Logger}
 
 import views.html.pages.index
 
