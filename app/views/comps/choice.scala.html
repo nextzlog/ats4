@@ -25,9 +25,10 @@
 	</div>
 </li>
 <script type="text/javascript">
-$('select.city').change(function() {
-	console.log(this.value);
-	if(!$('#@{city.id}').val()) $('#@{city.id}').val(this.value);
-	$('#@{city.id}').selectpicker('refresh');
+$(function() {
+	$('select.city').change(function() {
+		if(!$('#@{city.id}').val()) $('#@{city.id}').val(this.value);
+		$('#@{city.id}').selectpicker('refresh');
+	});
 });
 </script>

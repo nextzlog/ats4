@@ -1,8 +1,8 @@
 package models
 
-import qxsl.draft.Call
 import java.util.UUID
-import scala.util.Try
+
+import qxsl.draft.Call
 
 import play.api.data.{Form, Forms, OptionalMapping}
 

@@ -1,8 +1,6 @@
 @(record: Record, person: Person, report: Report)(implicit admin: Boolean = false)
 
 @import java.time.format.DateTimeFormatter
-@import qxsl.draft.{Qxsl,Time}
-@import qxsl.ruler.{Message,RuleKit}
 
 @dfmt = @{DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss OOOO")}
 @time(t: Time) = @{t.value.format(dfmt)}

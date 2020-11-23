@@ -1,7 +1,5 @@
 @(call: String)(implicit req: RequestHeader, admin: Boolean = false)
 
-@import comps._
-
 @person = @{Person.findAllByCall(call).head}
 @report = @{Report.findAllByCall(call).head}
 

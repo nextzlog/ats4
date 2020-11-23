@@ -1,6 +1,5 @@
 @(form: Form[Client], warn: Option[Html] = None)(implicit req: RequestHeader, admin: Boolean = false)
 
-@import comps._
 @import java.util.UUID
 
 @comps.frame(title = "書類提出", nav = if(admin) "agent" else "entry") {

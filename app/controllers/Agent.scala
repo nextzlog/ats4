@@ -3,12 +3,13 @@ package controllers
 import java.nio.charset.StandardCharsets.UTF_8
 import javax.inject.{Inject, Singleton}
 
-import play.api.Configuration
-import play.api.mvc.Results.Forbidden
-import play.api.libs.streams.ActorFlow
-import play.api.mvc.WebSocket
 import scala.concurrent.Future
 import scala.concurrent.duration._
+
+import play.api.Configuration
+import play.api.libs.streams.ActorFlow
+import play.api.mvc.Results.Forbidden
+import play.api.mvc.WebSocket
 
 import models.{Person, Receiver}
 

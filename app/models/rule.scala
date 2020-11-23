@@ -4,7 +4,7 @@ import java.io.InputStreamReader
 import java.time.{LocalDate, ZoneId}
 import java.util.{List => JList}
 
-import qxsl.ruler.{Absence,RuleKit}
+import qxsl.ruler.{Absence, RuleKit}
 
 import scala.jdk.CollectionConverters._
 import scala.util.Try

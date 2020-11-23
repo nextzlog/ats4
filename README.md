@@ -1,7 +1,7 @@
 ATS-4: Amateur-Radio Contest Administration System
 ====
 
-![image](https://img.shields.io/badge/sbt-1.2.8-red.svg)
+![image](https://img.shields.io/badge/sbt-1.3.8-red.svg)
 ![image](https://img.shields.io/badge/Java-JDK11-red.svg)
 ![image](https://img.shields.io/badge/Scala-2.13-orange.svg)
 ![image](https://img.shields.io/badge/JRuby-9.2-orange.svg)
