@@ -29,6 +29,7 @@ TwirlKeys.templateImports ++= Seq(
 	"qxsl.ruler._",
 	"qxsl.sheet._",
 	"qxsl.table._",
+	"scala.io.Source",
 	"scala.jdk.CollectionConverters._",
 	"views.html.comps._"
 )

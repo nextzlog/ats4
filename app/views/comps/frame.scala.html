@@ -1,4 +1,4 @@
-@(title: String = "", nav: String = "")(content: Html)(implicit admin: Boolean=false)
+@(title: String = "", nav: String = "")(content: Html)(implicit admin: Boolean = false)
 
 <html>
 	<head>
@@ -34,7 +34,6 @@
 				<div class="navbar-nav">
 					<a class="nav-item nav-link" href="http://@Rule.rule.link">@Rule.rule.host</a>
 					<a class="nav-item nav-link" href="https://pafelog.net">無線部開発班</a>
-					<a class="nav-item nav-link" href="https://pafelog.net/ats4.pdf">解説</a>
 					<a class="nav-item nav-link" href="https://github.com/nextzlog/ats4">実装</a>
 					<a class="nav-item nav-link" href="mailto:@Rule.rule.mail">不具合を報告</a>
 				</div>
@@ -53,5 +52,8 @@
 			}
 			@content
 		</div>
+		<footer class="text-center text-muted bg-light fixed-bottom">
+			Contributed by @Source.fromResource("contributors").getLines().mkString(", ").
+		</footer>
 	</body>
 </html>

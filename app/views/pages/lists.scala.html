@@ -1,5 +1,9 @@
 @()(implicit admin: Boolean = false)
 
+@link(record: Record) = {
+	@if(admin) {window.location='@routes.Proof.view(record.call)';}
+}
+
 @comps.frame(title = if(admin) "管理画面" else "暫定結果", nav = if(admin) "admin" else "lists") {
 @if(admin || Schedule.open) {
 <div class="alert alert-warning">
@@ -27,7 +31,7 @@
 		</thead>
 		<tbody>
 			@for(record <- Record.findAllBySect(sect.name()).toSeq.sortBy(-_.rate)) {
-			<tr class="link @if(Rank.glad(record)) {award}" onclick="window.location='@routes.Proof.view(record.call)';">
+			<tr class="link @if(Rank.glad(record)) {award}" onclick="@link(record)">
 				<td>@{1 + Rank.rank(record)}</td>
 				<td>@{record.call}</td>
 				<td>@{record.mark}</td>
