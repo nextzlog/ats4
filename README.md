@@ -96,6 +96,14 @@ Feel free to contact [@nextzlog](https://twitter.com/nextzlog) on Twitter.
 
 [無線部開発班](https://pafelog.net)
 
+- JG1VPP
+- JJ2ULU
+- JH1GEB
+- JE6MDL
+- JO4EFC
+- JJ1IBY
+- JS2FVO
+
 ### Clauses
 
 - This program is free software; you can redistribute it and / or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.

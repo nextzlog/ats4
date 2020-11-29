@@ -4,6 +4,7 @@
 
 @comps.frame(nav = "index") {
 <div class="jumbotron text-center">
+	@if(status.isEmpty) {
 	<h1 class="display-2">@Rule.rule.name</h1>
 	<h2 class="display-4">書類受付システム</h2>
 	<p class="lead my-3">
@@ -17,11 +18,10 @@
 		<a class="btn btn-lg btn-outline-primary mx-2" href="@routes.Lists.view()">暫定結果を確認する</a>
 		}
 	</div>
-</div>
-<div class="page-header text-center">
-@if(status.nonEmpty) {
-	<h3 class="text-warning">@status</h3>
-}
+	} else {
+	<h1 class="display-2">@status</h1>
+	<h1 class="display-4">ERROR</h1>
+	}
 </div>
 <div class="text-center">
 @if(cfg.get[Boolean]("play.mailer.mock")) {
