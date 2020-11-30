@@ -16,7 +16,7 @@ import views.html.warns.{chset, email, omiss, unsup}
 import org.apache.commons.mail.{EmailException => Email}
 
 @Singleton class Entry @Inject()(implicit smtp: MailerClient, cfg: Configuration) extends InjectedController {
-	def form = Action(implicit r=>if(Schedule.isOK) Ok(entry(ClientForm)) else Gone(index()))
+	def form = Action(implicit r=>if(Schedule.openEntries) Ok(entry(ClientForm)) else Gone(index()))
 	def post = Action(implicit r=> util.Try {
 		val data = r.body.asMultipartFormData
 		val form = ClientForm.bindFromRequest().get

@@ -3,6 +3,8 @@
 import 'qxsl.ruler.Contest'
 import 'qxsl.ruler.RuleKit'
 
+require 'rules/util'
+
 ALLJA1 = RuleKit.load('allja1.lisp').contest
 CITYDB = ALLJA1.get('CITYDB').toList.select{|c| c.code.length > 3}
 
@@ -14,13 +16,13 @@ class ContestJA1 < Contest
 		eval name
 	end
 	def getStartDay(year)
-		ALLJA1.getStartDay(year)
+		opt_start_day(ALLJA1.method(:getStartDay), year)
 	end
 	def getFinalDay(year)
-		ALLJA1.getFinalDay(year)
+		opt_final_day(ALLJA1.method(:getFinalDay), year)
 	end
 	def getDeadLine(year)
-		ALLJA1.getDeadLine(year)
+		opt_dead_line(ALLJA1.method(:getDeadLine), year)
 	end
 	def name()
 		ALLJA1.name

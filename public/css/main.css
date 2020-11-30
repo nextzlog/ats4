@@ -1,6 +1,6 @@
-body {
+div.content {
 	padding-top: 5rem;
-	margin-bottom: 2rem;
+	padding-bottom: 5rem;
 }
 
 blockquote {

@@ -65,7 +65,7 @@ Modify the contest settings properly.
 ## Regulation
 
 The [`Contest`](https://nextzlog.github.io/qxsl/doc/qxsl/ruler/Contest) object is the entity of the contest rules.
-See [`ja1.rb`](conf/ja1.rb) and [`rtc.rb`](conf/rtc.rb) and [`uec.rb`](conf/uec.rb) for example.
+See [`ja1.rb`](conf/rules/ja1.rb) and [`rtc.rb`](conf/rules/rtc.rb) and [`uec.rb`](conf/rules/uec.rb) for example.
 
 ```Ruby
 TEST = ContestJA1.new(ALLJA1)

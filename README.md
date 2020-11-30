@@ -13,7 +13,7 @@ ATS-4 is an Automatic Acceptance & Tabulation System for Amateur-Radio Contests,
 ## Features
 
 - provides a web interface for contest-log acceptance.
-- scans the uploaded log and verifies its contents according to the contest rule described in Ruby or LISP forms.
+- verifies the uploaded logs according to the contest rules described in Ruby or LISP forms.
 
 ## Supports
 
@@ -21,7 +21,8 @@ ATS-4 supports many contests including:
 
 - [UEC](https://www.ja1zgp.com/uectest_public_info/),
 - [ALLJA1](http://ja1zlo.u-tokyo.org/allja1/),
-- [REALTIME](http://ja1zlo.u-tokyo.org/rt/rt1.html).
+- [REALTIME](http://ja1zlo.u-tokyo.org/rt/rt1.html),
+- [TAMAGAWA](http://apollo.c.ooco.jp/).
 
 ## Documents
 
@@ -106,10 +107,10 @@ Feel free to contact [@nextzlog](https://twitter.com/nextzlog) on Twitter.
 
 ### Clauses
 
-- This program is free software; you can redistribute it and / or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
+- This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-- This program is distributed in the hope that it will be useful, but **without any warranty**; without even the implied warranty of **merchant ability or fitness for a particular purpose**.
+- This program is distributed in the hope that it will be useful, but **without any warranty**; without even the implied warranty of **merchantability or fitness for a particular purpose**.
 See the GNU General Public License for more details.
 
-- You should have received a copy of the GNU General Public License, along with this program.
+- You should have received a copy of the GNU General Public License along with this program.
 If not, see <http://www.gnu.org/licenses/>.
