@@ -1,9 +1,5 @@
 # UEC CONTEST DEFINED by ATS-4
 
-import 'java.time.DayOfWeek'
-import 'java.time.LocalDate'
-import 'java.time.ZoneId'
-import 'java.time.temporal.TemporalAdjusters'
 import 'qxsl.draft.Band'
 import 'qxsl.draft.Qxsl'
 import 'qxsl.ruler.Contest'
@@ -13,12 +9,14 @@ import 'qxsl.ruler.RuleKit'
 import 'qxsl.ruler.Section'
 import 'qxsl.ruler.Success'
 
+require 'rules/util'
+
 # JAUTIL library
 JAUTIL = RuleKit.load('jautil.lisp').pattern
 ZONEID = ZoneId.of('Asia/Tokyo')
 
 HOURDB = [17, 18, 19, 20]
-MODEDB = ['CW', 'cw']
+MODEDB = ['CW']
 CITYDB = JAUTIL.get('CITYDB').toList.select{|c| c.code.length <= 3 and not ['01', '48'].include?(c.code)}
 
 module BandEnum
@@ -60,20 +58,22 @@ end
 def unique_item(item)
 	call = item.value(Qxsl::CALL)
 	band = item.value(Qxsl::BAND).intValue
-	return Element.new([call, band])
+	Element.new([call, band])
 end
 
 def entity_item(item)
 	band = item.value(Qxsl::BAND).intValue
 	code = item.getRcvd.value(Qxsl::CODE)
 	city,suf = code.split(/([HIL]|UEC)$/)
-	return Element.new([band, city])
+	Element.new([band, city])
 end
 
-def schedule(year, month, nth, dayOfWeek)
-	week = DayOfWeek.valueOf(dayOfWeek)
-	date = LocalDate.of(year, month, 1)
-	date.with(TemporalAdjusters.dayOfWeekInMonth(nth, week))
+def start_day(year)
+	schedule(year, 7, 3, 'SATURDAY')
+end
+
+def dead_line(year)
+	LocalDate.of(year, 8, 31)
 end
 
 class ContestUEC < Contest
@@ -81,22 +81,22 @@ class ContestUEC < Contest
 		eval name
 	end
 	def getStartDay(year)
-		schedule(year, 7, 3, 'SATURDAY')
+		opt_start_day(method(:start_day), year)
 	end
 	def getFinalDay(year)
-		getStartDay(year)
+		opt_start_day(method(:start_day), year)
 	end
 	def getDeadLine(year)
-		LocalDate.of(year, 8, 31)
+		opt_dead_line(method(:dead_line), year)
 	end
 	def name()
-		'電通大コンテスト'
+		'電通大コンテスト(仮)'
 	end
 	def host()
 		'JA1ZGP'
 	end
 	def mail()
-		'uectest-info@ja1zgp.com'
+		'uectest-info@example.com'
 	end
 	def link()
 		'www.ja1zgp.com/uectest_public_info'

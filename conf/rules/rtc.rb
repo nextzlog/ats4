@@ -1,8 +1,9 @@
 # REAL-TIME CONONLINE DEFINED by ATS-4
 
-import 'java.time.LocalDate'
 import 'qxsl.ruler.Contest'
 import 'qxsl.ruler.RuleKit'
+
+require 'rules/util'
 
 ONLINE = RuleKit.load('online.lisp').contest
 CITYDB = ONLINE.get('CITYDB').toList.select{|c| c.code.length <= 3 and not ['01', '48'].include?(c.code)}
@@ -15,22 +16,13 @@ class ContestRTC < Contest
 		eval name
 	end
 	def getStartDay(year)
-		date = LocalDate.now
-		past = ONLINE.getStartDay(year + 0)
-		come = ONLINE.getStartDay(year + 1)
-		past.until(date).getMonths >= 6? come : past
+		opt_start_day(ONLINE.method(:getStartDay), year)
 	end
 	def getFinalDay(year)
-		date = LocalDate.now
-		past = ONLINE.getFinalDay(year + 0)
-		come = ONLINE.getFinalDay(year + 1)
-		past.until(date).getMonths >= 6? come : past
+		opt_final_day(ONLINE.method(:getFinalDay), year)
 	end
 	def getDeadLine(year)
-		date = LocalDate.now
-		past = ONLINE.getDeadLine(year + 0)
-		come = ONLINE.getDeadLine(year + 1)
-		past.until(date).getMonths >= 6? come : past
+		opt_dead_line(ONLINE.method(:getStartDay), year)
 	end
 	def openResults(year, zone)
 		true

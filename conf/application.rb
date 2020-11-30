@@ -1,2 +1,2 @@
-require 'ja1'
+require 'rules/ja1'
 TEST

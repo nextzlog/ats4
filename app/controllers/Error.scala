@@ -16,7 +16,7 @@ import views.html.pages.index
 		Future.successful(Status(st)(index(Some(st))))
 	}
 	override def onServerError(r: RequestHeader, throwable: Throwable) = {
-		Logger(getClass).error("500 ERROR!", throwable)
-		Future.successful(InternalServerError(index()))
+		Logger(classOf[Error]).error("SERVER ERROR!", throwable)
+		Future.successful(InternalServerError(index(Some(500))))
 	}
 }

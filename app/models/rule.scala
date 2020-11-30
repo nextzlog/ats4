@@ -32,8 +32,8 @@ object Schedule {
 	lazy val year = LocalDate.now.getYear
 	lazy val date = Rule.rule.getStartDay(year)
 	lazy val dead = Rule.rule.getDeadLine(year)
-	def open = Rule.rule.openResults(year, ZoneId.systemDefault())
-	def isOK = Rule.rule.openEntries(year, ZoneId.systemDefault())
+	def openResults = Rule.rule.openResults(year, ZoneId.systemDefault())
+	def openEntries = Rule.rule.openEntries(year, ZoneId.systemDefault())
 }
 
 object Subtests {

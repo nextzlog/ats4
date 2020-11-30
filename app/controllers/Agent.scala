@@ -11,7 +11,7 @@ import play.api.libs.streams.ActorFlow
 import play.api.mvc.Results.Forbidden
 import play.api.mvc.WebSocket
 
-import models.{Person, Receiver}
+import models.{Person, Receiver, Schedule}
 
 import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import akka.stream.Materializer
@@ -25,10 +25,12 @@ import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, MergeHub}
 			case msg: Array[Byte] => out! new Receiver().push(call, msg).getBytes(UTF_8)
 		}
 	}
+	def accept(call: String, uuid: String) = Person.findAllByCall(call).find(_.uuid.toString == uuid).isDefined
 	def socket(call: String, uuid: String) = WebSocket.acceptOrResult[Array[Byte], Array[Byte]] {
-		req => Future.successful(Person.findAllByCall(call).find(_.uuid.toString == uuid) match {
-			case None => Left(Forbidden)
-			case _ => Right(ActorFlow.actorRef(out => Props(Agency(out, call))).viaMat(bus)(Keep.right))
+		req => Future.successful(if(Schedule.openEntries && accept(call, uuid)) {
+			Right(ActorFlow.actorRef(out => Props(Agency(out, call))).viaMat(bus)(Keep.right))
+		} else {
+			Left(Forbidden)
 		})
 	}
 }
