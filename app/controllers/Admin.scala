@@ -5,17 +5,21 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 import play.api.mvc.InjectedController
-import play.libs.mailer.MailerClient
 
-import models.{Client, Report, SendMail}
-import views.html.pages.{entry, lists}
-import views.txt.pages.excel
+import models.{Client, ClientForm, Person, Record, Report}
+import views.html.{pages => html}
+import views.txt.{pages => text}
 
-@Singleton class Admin @Inject()(implicit smtp: MailerClient, ec: ExecutionContext) extends InjectedController {
+@Singleton class Admin @Inject()(implicit ec: ExecutionContext) extends InjectedController {
 	private implicit val admin = true
-	def view = Action(Ok(lists()))
-	def data = Action(Ok(excel().body.trim))
-	def edit(call: String) = Action(implicit r=> Ok(entry(Client.form(call))))
-	def file(call: String) = Action(Ok(Report.findAllByCall(call).head.data))
-	def send(call: String) = Action(implicit r=> Ok(new SendMail().remind(call)))
+	def index = Action(implicit r=> Ok(html.lists()))
+	def excel = Action(Ok(text.excel().body.trim))
+	def entry = Action(implicit r=> Ok(html.entry(ClientForm)))
+	def force(call: String) = Action(implicit r=> Ok(html.entry(ClientForm.fill(Client.fill(call)))))
+	def clean = Action(implicit r => {
+		Person.forceDeleteAll()
+		Record.forceDeleteAll()
+		Report.forceDeleteAll()
+		Ok(html.lists())
+	})
 }

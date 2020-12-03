@@ -2,13 +2,13 @@
 
 @import java.util.UUID
 
-@comps.frame(title = "書類提出", nav = if(admin) "agent" else "entry") {
+@comps.frame(title = "書類提出", nav = if(admin) "force" else "entry") {
 @if(warn.nonEmpty) {
 <div class="alert alert-danger">
 	<i class="fas fa-exclamation-triangle"></i> @warn
 </div>
 }
-@helper.form(action = routes.Entry.post(), Symbol("class")->"form-horizontal", Symbol("enctype")->"multipart/form-data") {
+@helper.form(action = routes.Entry.entry(), Symbol("class")->"form-horizontal", Symbol("enctype")->"multipart/form-data") {
 @helper.CSRF.formField
 <div class="card bg-light mb-5">
 	<h3 class="card-header">
@@ -43,17 +43,16 @@
 	</h3>
 	<div class="card-body">
 		<fieldset>
-			@upload(id="sheet1", text="ファイル1", hint="未選択 (*.ZLO, *.LG8, *.ADI, *.ADX)")
-			@upload(id="sheet2", text="ファイル2", hint="未選択 (分割せず提出する場合は不要)")
-			@upload(id="sheet3", text="ファイル3", hint="未選択 (分割せず提出する場合は不要)")
+			@upload(id="sheet", text="交信記録", hint="未選択 (*.ZLO, *.LG8, *.ADI, *.ADX)")
 		</fieldset>
 	</div>
 	<div class="card-footer d-flex align-items-center justify-content-between">
-		団体部門の場合は、全ての交信について、運用者を識別する番号もしくは運用者の名前を記入した交信記録のみを受理します。
+		交信記録は、複数のファイルを選択することで、分割して提出できます。
+		団体部門の場合は、各交信の運用者を識別できる交信記録を受理します。
 	</div>
 </div>
 <a class="btn btn-lg btn-primary" href="#submitModel" data-toggle="modal"><i class="fas fa-thumbs-up"></i> この内容で提出する</a>
-<a class="btn btn-lg btn-outline-secondary" href="@routes.Guide.view()"><i class="fas fa-question"></i> 対応済みの書式</a>
+<a class="btn btn-lg btn-outline-secondary" href="@routes.Index.guide()"><i class="fas fa-question"></i> 対応済みの書式</a>
 <div class="modal" id="submitModel">
 	<div class="modal-dialog">
 		<div class="modal-content">

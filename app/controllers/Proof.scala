@@ -1,25 +1,27 @@
 package controllers
 
-import javax.inject.Singleton
+import javax.inject.{Inject, Singleton}
 
 import scala.util.Try
 
 import play.api.Logger
 import play.api.mvc.InjectedController
+import play.libs.mailer.MailerClient
 
-import models.{Person, Record}
-import views.html.pages.{lists, proof}
+import models.{Person, Record, Report, SendMail}
+import views.html.{pages => html}
 
 @Singleton
-class Proof extends InjectedController {
+class Proof @Inject()(implicit smtp: MailerClient) extends InjectedController {
 	private implicit val admin = true
-	def view(call: String) = Action(implicit r=>Ok(proof(call)))
-	def elim(call: String) = Action(Try {
-		val persons = Person.findAllByCall(call)
-		val records = Record.findAllByCall(call)
-		persons.foreach(_.delete())
-		records.foreach(_.delete())
-		Logger(getClass).info(s"deleted: $records")
-		Ok(lists())
-	}.getOrElse(NotFound(lists())))
+	def proof(call: String) = Action(implicit r=> Ok(html.proof(call)))
+	def table(call: String) = Action(Ok(Report.findAllByCall(call).head.data))
+	def email(call: String) = Action(Ok(new SendMail().remind(call)))
+	def clean(call: String) = Action(implicit r=> Try {
+		Person.findAllByCall(call).foreach(_.delete())
+		Record.findAllByCall(call).foreach(_.delete())
+		Report.findAllByCall(call).foreach(_.delete())
+		Logger(getClass).info(s"deleted: $call")
+		Ok(html.lists())
+	}.getOrElse(NotFound(html.lists())))
 }
