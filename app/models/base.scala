@@ -47,7 +47,6 @@ object Ticket {
 
 object Client {
 	def fill(call: String) = Client(person = Person.fill(call), record = Ticket.fill(call))
-	def form(call: String) = Try(ClientForm.fill(fill(call))).getOrElse(ClientForm)
 }
 
 object Person extends ActiveRecordCompanion[Person] {

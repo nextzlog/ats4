@@ -2,36 +2,28 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Home
-GET     /                   controllers.Index.view
+# Public pages
+GET     /                   controllers.Index.index
+GET     /calls              controllers.Index.calls
+GET     /entry              controllers.Index.entry
+POST    /entry              controllers.Entry.entry
+GET     /forum              controllers.Index.forum
+GET     /guide              controllers.Index.guide
+GET     /lists              controllers.Index.lists
 
-# Admin (Private)
-GET     /admin              controllers.Admin.view
-GET     /admin/data         controllers.Admin.data
-GET     /admin/edit         controllers.Admin.edit(call: String)
-GET     /admin/file         controllers.Admin.file(call: String)
-POST    /admin/email/:call  controllers.Admin.send(call: String)
-GET     /admin/proof/:call  controllers.Proof.view(call: String)
-DELETE  /admin/proof/:call  controllers.Proof.elim(call: String)
+# Secret pages
+GET     /admin              controllers.Admin.index
+DELETE  /admin              controllers.Admin.clean
+GET     /admin/excel        controllers.Admin.excel
+GET     /admin/entry        controllers.Admin.entry
+GET     /admin/force/:call  controllers.Admin.force(call: String)
+GET     /admin/table/:call  controllers.Proof.table(call: String)
+POST    /admin/email/:call  controllers.Proof.email(call: String)
+GET     /admin/proof/:call  controllers.Proof.proof(call: String)
+DELETE  /admin/proof/:call  controllers.Proof.clean(call: String)
 
-# Agent
+# WebSocket
 GET     /agent/:call/:uuid  controllers.Agent.socket(call: String, uuid: String)
-
-# Calls
-GET     /calls              controllers.Calls.view
-
-# Entry
-GET     /entry              controllers.Entry.form
-POST    /entry              controllers.Entry.post
-
-# Forum
-GET     /forum              controllers.Forum.view
-
-# FAQ
-GET     /guide              controllers.Guide.view
-
-# Lists
-GET     /lists              controllers.Lists.view
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file       controllers.Assets.versioned(path="/public", file: Asset)

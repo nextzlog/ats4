@@ -1,10 +1,10 @@
-@()(implicit admin: Boolean = false)
+@()(implicit req: RequestHeader, admin: Boolean = false)
 
 @link(record: Record) = {
-	@if(admin) {window.location='@routes.Proof.view(record.call)';}
+	@if(admin) {window.location='@routes.Proof.proof(record.call)';}
 }
 
-@comps.frame(title = if(admin) "管理画面" else "暫定結果", nav = if(admin) "admin" else "lists") {
+@comps.frame(title = "暫定結果", nav = "lists") {
 @if(admin || Schedule.openResults) {
 <div class="alert alert-warning">
 	掲載内容に誤りがある場合は、直ちに主催者に連絡してください。
@@ -15,9 +15,6 @@
 <div class="card mb-5">
 	<h3 class="card-header d-flex justify-content-between border-bottom-0">
 		<span>@sect.name()</span>
-		@if(admin) {
-		<a class="btn btn-outline-success" href="@routes.Admin.data()"><i class="fas fa-download"></i></a>
-		}
 	</h3>
 	<table class="table table-hover text-monospace">
 		<thead>
@@ -41,9 +38,6 @@
 			}
 		</tbody>
 	</table>
-	<div class="card-footer">
-		当該部門の登録者数の10%(小数点以下切り上げ)の順位 (最大7位) までを表彰する。
-	</div>
 </div>
 }
 }
@@ -51,5 +45,30 @@
 <div class="alert alert-info">
 	受付期間の終了と同時に暫定結果を公表します。
 </div>
+}
+@if(admin) {
+<a class="btn btn-outline-danger" href="#deleteModal" data-toggle="modal"><i class="fas fa-trash"></i> 全書類を消去する</a>
+<div class="modal" id="deleteModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">書類の削除</h4>
+			</div>
+			<div class="modal-body">
+				<p>全参加局の書類を消去します。</p>
+				<p class="text-danger">この操作は取り消せません。</p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-danger" id="deleteButton">消去する</button>
+				<button class="btn btn-primary" data-dismiss="modal">消去しない</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+$('#deleteButton').click(function () {
+	$.ajax({type: "DELETE", url: "@helper.CSRF(routes.Admin.clean())"}).done(() => location.reload());
+});
+</script>
 }
 }

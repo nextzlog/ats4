@@ -17,8 +17,8 @@
 		@if(admin) {
 		<div class="btn-group">
 			<a class="btn btn-outline-success" href="#remindModal" data-toggle="modal"><i class="fas fa-paper-plane"></i></a>
-			<a class="btn btn-outline-primary" href="@routes.Admin.edit(person.call)"><i class="fas fa-edit"></i></a>
-			<a class="btn btn-outline-danger" href="#deleteModal" data-toggle="modal"><i class="fas fa-trash"></i></a>
+			<a class="btn btn-outline-primary" href="@routes.Admin.force(person.call)"><i class="fas fa-edit"></i></a>
+			<a class="btn btn-outline-warning" href="#deleteModal" data-toggle="modal"><i class="fas fa-trash"></i></a>
 		</div>
 		}
 	</h3>
@@ -88,10 +88,10 @@
 </div>
 <script type="text/javascript">
 $('#remindButton').click(function () {
-	$.ajax({type: "POST", url: "@helper.CSRF(routes.Admin.send(person.call))"}).done(() => $('#remindModal').modal('hide'));
+	$.ajax({type: "POST", url: "@helper.CSRF(routes.Proof.email(person.call))"}).done(() => $('#remindModal').modal('hide'));
 });
 $('#deleteButton').click(function () {
-	$.ajax({type: "DELETE", url: "@helper.CSRF(routes.Proof.elim(person.call))"}).done(() => window.location="@routes.Admin.view()");
+	$.ajax({type: "DELETE", url: "@helper.CSRF(routes.Proof.clean(person.call))"}).done(() => window.location="@routes.Admin.index()");
 });
 </script>
 }

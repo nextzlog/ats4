@@ -5,30 +5,23 @@ import java.nio.charset.{CharacterCodingException => Chset}
 import java.util.{NoSuchElementException => Omiss}
 import javax.inject.{Inject, Singleton}
 
-import play.api.Configuration
 import play.api.mvc.InjectedController
 import play.libs.mailer.MailerClient
 
 import models.{Acceptor, ClientForm, Schedule}
-import views.html.pages.{entry, index, proof}
-import views.html.warns.{chset, email, omiss, unsup}
+import views.html.{pages, warns}
 
 import org.apache.commons.mail.{EmailException => Email}
 
-@Singleton class Entry @Inject()(implicit smtp: MailerClient, cfg: Configuration) extends InjectedController {
-	def form = Action(implicit r=>if(Schedule.openEntries) Ok(entry(ClientForm)) else Gone(index()))
-	def post = Action(implicit r=> util.Try {
-		val data = r.body.asMultipartFormData
-		val form = ClientForm.bindFromRequest().get
-		val file1 = data.get.file("sheet1")
-		val file2 = data.get.file("sheet2")
-		val file3 = data.get.file("sheet3")
-		val files = Seq(file1,file2,file3).flatten.map(_.ref)
-		Ok(proof(new Acceptor().push(post=form,files=files)))
+@Singleton class Entry @Inject()(implicit smtp: MailerClient) extends InjectedController {
+	def entry = Action(implicit r=> util.Try {
+		val data = r.body.asMultipartFormData.get
+		val form = ClientForm.bindFromRequest.get
+		Ok(pages.proof(new Acceptor().push(post=form,files=data.files.map(_.ref))))
 	}.recover {
-		case ex: Chset => Ok(entry(ClientForm.bindFromRequest(), Some(chset())))
-		case ex: Omiss => Ok(entry(ClientForm.bindFromRequest(), Some(omiss())))
-		case ex: Unsup => Ok(entry(ClientForm.bindFromRequest(), Some(unsup())))
-		case ex: Email => Ok(entry(ClientForm.bindFromRequest(), Some(email())))
+		case ex: Chset => Ok(pages.entry(ClientForm.bindFromRequest(), Some(warns.chset())))
+		case ex: Omiss => Ok(pages.entry(ClientForm.bindFromRequest(), Some(warns.omiss())))
+		case ex: Unsup => Ok(pages.entry(ClientForm.bindFromRequest(), Some(warns.unsup())))
+		case ex: Email => Ok(pages.entry(ClientForm.bindFromRequest(), Some(warns.email())))
 	}.get)
 }
