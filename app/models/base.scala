@@ -29,6 +29,7 @@ case class Client(person: Person, record: Seq[Ticket]) {
 }
 
 case class Record(call: S, sect: S, city: S, mark: I, rate: I, code: S) extends ActiveRecord {
+	def rule = Rule.rule.section(sect)
 	def zero = !Rule.absent(sect) && mark == 0
 }
 case class Person(call: S, name: S, post: S, mail: S, note: S, uuid: U) extends ActiveRecord {

@@ -14,5 +14,5 @@ import views.html.{pages => html}
 	def forum = Action(Ok(html.forum()))
 	def guide = Action(Ok(html.guide()))
 	def lists = Action(implicit r=>Ok(html.lists()))
-	def entry = if(Schedule.openEntries) Action(implicit r=>Ok(html.entry(ClientForm))) else index
+	def entry = if(Schedule.accept) Action(implicit r=>Ok(html.entry(ClientForm))) else index
 }

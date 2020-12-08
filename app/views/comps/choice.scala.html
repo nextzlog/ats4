@@ -3,27 +3,21 @@
 @sect = @{field("sect")}
 @city = @{field("city")}
 
-@style = {form-control selectpicker custom-select @if(field.hasErrors){is-invalid}}
+@style = {form-control selectpicker custom-select my-2 @if(field.hasErrors){is-invalid}}
 
-<li class="list-group-item list-group-item-light">
-	<div class="my-2">
-		<select class="@style sect" id="@sect.id" name="@sect.name" data-size="10">
-			@for(opt <- sectOpts.map(_.toString)) {
-			<option value="@opt" @if(sect.value.contains(opt)){selected="selected"}>@opt</option>
-			}
-		</select>
-	</div>
-	<div class="my-2">
-		<select class="@style city" id="@city.id" name="@city.name" data-size="10" data-live-search="true">
-			<option class="blank" value="">
-				運用地が未選択です。
-			</option>
-			@for(opt <- cityOpts.map(_.toString)) {
-			<option value="@opt" @if(city.value.contains(opt)){selected="selected"}>@opt</option>
-			}
-		</select>
-	</div>
-</li>
+<select class="@style sect" id="@sect.id" name="@sect.name" data-size="10">
+	@for(opt <- sectOpts.map(_.toString)) {
+	<option value="@opt" @if(sect.value.contains(opt)){selected="selected"}>@opt</option>
+	}
+</select>
+<select class="@style city" id="@city.id" name="@city.name" data-size="10" data-live-search="true">
+	<option class="blank" value="">
+		運用地が未選択です。
+	</option>
+	@for(opt <- cityOpts.map(_.toString)) {
+	<option value="@opt" @if(city.value.contains(opt)){selected="selected"}>@opt</option>
+	}
+</select>
 <script type="text/javascript">
 $(function() {
 	$('select.city').change(function() {

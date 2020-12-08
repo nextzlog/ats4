@@ -12,7 +12,7 @@
 	</p>
 	<div class="row d-flex justify-content-center py-2">
 		<a class="btn btn-lg btn-outline-dark mx-2" href="http://@Rule.rule.link">規約を閲覧する</a>
-		@if(Schedule.openEntries) {
+		@if(Schedule.accept) {
 		<a class="btn btn-lg btn-outline-primary mx-2" href="@routes.Index.entry()">書類を提出する</a>
 		} else {
 		<a class="btn btn-lg btn-outline-primary mx-2" href="@routes.Index.lists()">結果を閲覧する</a>
@@ -28,7 +28,7 @@
 <div class="alert alert-warning">
 	メール送信機能は試験モードに設定されています。実際には送信されません。
 </div>
-} else if(!Schedule.openEntries) {
+} else if(!Schedule.accept) {
 <div class="alert alert-info">
 	提出期間外につき、新規の提出は受理できません。暫定結果を閲覧できます。
 </div>

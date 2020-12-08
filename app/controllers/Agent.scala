@@ -27,7 +27,7 @@ import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, MergeHub}
 	}
 	def accept(call: String, uuid: String) = Person.findAllByCall(call).find(_.uuid.toString == uuid).isDefined
 	def socket(call: String, uuid: String) = WebSocket.acceptOrResult[Array[Byte], Array[Byte]] {
-		req => Future.successful(if(Schedule.openEntries && accept(call, uuid)) {
+		req => Future.successful(if(Schedule.accept && accept(call, uuid)) {
 			Right(ActorFlow.actorRef(out => Props(Agency(out, call))).viaMat(bus)(Keep.right))
 		} else {
 			Left(Forbidden)

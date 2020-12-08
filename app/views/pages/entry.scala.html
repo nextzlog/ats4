@@ -18,32 +18,35 @@
 		<fieldset>
 			@input(form("person.call"), text="呼出符号", hint="移動運用の例: JA1ZLO/1")
 			@input(form("person.name"), text="お名前", hint="この宛名で賞を発送します。")
-			@input(form("person.post"), text="ご住所", hint="この宛先に賞を発送します。")
+			@input(form("person.post"), text="ご住所", hint="この宛先に賞を発送します。", multiline=true)
 			@input(form("person.mail"), text="メール", hint="受理通知メールが届きます。")
 			@input(form("person.note"), text="ご感想", hint="呼出符号付きで公表します。", multiline=true)
 			@input(form("person.uuid"), hidden=true)
 		</fieldset>
 	</div>
+	<div class="card-footer d-flex align-items-center justify-content-between">
+		書類提出で問題が発生した場合には、状況確認のご連絡を差し上げる場合があります。
+	</div>
 </div>
+@for(((code, sects), idx) <- Subtests.groups.zipWithIndex) {
 <div class="card bg-light mb-5">
 	<h3 class="card-header">
-		<span>部門</span>
+		<span>@code</span>
 	</h3>
-	<ul class="list-group list-group-flush">
+	<div class="card-body">
 		<fieldset>
-		@for(((code, sects), idx) <- Subtests.groups.zipWithIndex) {
 			@choice(form(s"ticket[$idx]"), sectOpts=sects, cityOpts=CityBase.all)
-		}
 		</fieldset>
-	</ul>
+	</div>
 </div>
+}
 <div class="card bg-light mb-5">
 	<h3 class="card-header">
 		<span>交信記録</span>
 	</h3>
 	<div class="card-body">
 		<fieldset>
-			@upload(id="sheet", text="交信記録", hint="未選択 (*.ZLO, *.LG8, *.ADI, *.ADX)")
+			@upload(id="sheet", hint="未選択 (*.ZLO, *.LG8, *.ADI, *.ADX)")
 		</fieldset>
 	</div>
 	<div class="card-footer d-flex align-items-center justify-content-between">
@@ -51,9 +54,9 @@
 		団体部門の場合は、各交信の運用者を識別できる交信記録を受理します。
 	</div>
 </div>
-<a class="btn btn-lg btn-primary" href="#submitModel" data-toggle="modal"><i class="fas fa-thumbs-up"></i> この内容で提出する</a>
-<a class="btn btn-lg btn-outline-secondary" href="@routes.Index.guide()"><i class="fas fa-question"></i> 対応済みの書式</a>
-<div class="modal" id="submitModel">
+<a class="btn btn-lg btn-primary" href="#submitModal" data-toggle="modal"><i class="fas fa-thumbs-up"></i> この内容で提出する</a>
+<a class="btn btn-lg btn-outline-secondary" href="@routes.Index.guide()"><i class="fas fa-question"></i> ヘルプ画面に移動する</a>
+<div class="modal" id="submitModal">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">

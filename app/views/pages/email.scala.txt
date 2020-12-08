@@ -4,7 +4,7 @@
 
 @{call}様
 
-この度は@{Rule.rule.name}コンテストに参加いただきありがとうございます。
+この度は@{Rule.rule.name}に参加いただきありがとうございます。
 @for(record <- Record.findAllByCall(call)) {
 @{record.sect} (運用地@{record.city})}
 にて受理いたしました。

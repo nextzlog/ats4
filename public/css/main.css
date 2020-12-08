@@ -47,3 +47,7 @@ tr.award > td {
 	color: red;
 	font-weight: bold;
 }
+
+pre {
+	tab-size: 2;
+}
