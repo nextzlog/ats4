@@ -24,7 +24,7 @@ object Rule {
 
 object Rank {
 	def sort(r: Record) = Record.findAllBySect(r.sect).toSeq.sortBy(-_.rate)
-	def glad(r: Record) = rank(r) < math.min(7, math.ceil(sort(r).size * .1))
+	def glad(r: Record) = r.rule.win(r.rate, sort(r).map(_.rate).toArray)
 	def rank(r: Record) = sort(r).indexWhere(_.rate == r.rate)
 }
 
@@ -32,8 +32,8 @@ object Schedule {
 	lazy val year = LocalDate.now.getYear
 	lazy val date = Rule.rule.getStartDay(year)
 	lazy val dead = Rule.rule.getDeadLine(year)
-	def openResults = Rule.rule.openResults(year, ZoneId.systemDefault())
-	def openEntries = Rule.rule.openEntries(year, ZoneId.systemDefault())
+	def finish = Rule.rule.finish(year, ZoneId.systemDefault())
+	def accept = Rule.rule.accept(year, ZoneId.systemDefault())
 }
 
 object Subtests {

@@ -24,7 +24,7 @@ class ContestRTC < Contest
 	def getDeadLine(year)
 		opt_dead_line(ONLINE.method(:getStartDay), year)
 	end
-	def openResults(year, zone)
+	def finish(year, zone)
 		true
 	end
 	def name()

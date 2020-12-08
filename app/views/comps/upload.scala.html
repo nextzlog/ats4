@@ -1,13 +1,8 @@
-@(id: String = "", text: String = "", hint: String = "", multiple: Boolean = true)
+@(id: String = "", hint: String = "", multiple: Boolean = true)
 
-<div class="form-group row">
-	<label for="@id" class="col-md-1 col-form-label">@text</label>
-	<div class="col">
-		<div class="custom-file">
-			<input type="file" name="@id" id="@id" class="custom-file-input" @if(multiple) {multiple}>
-			<label class="custom-file-label" id="@id-label" for="@id" data-browse="参照">@hint</label>
-		</div>
-	</div>
+<div class="form-group custom-file">
+	<input type="file" name="@id" id="@id" class="custom-file-input" @if(multiple) {multiple}>
+	<label class="custom-file-label" id="@id-label" for="@id" data-browse="参照">@hint</label>
 </div>
 <script type="text/javascript">
 $('#@id').on('change', function() {
