@@ -8,7 +8,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.InjectedController
 import play.libs.mailer.MailerClient
 
-import models.{Acceptor, ClientForm, Schedule}
+import models.{Acceptor, ClientForm}
 import views.html.{pages, warns}
 
 import org.apache.commons.mail.{EmailException => Email}

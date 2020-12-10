@@ -6,10 +6,6 @@
 
 @comps.frame(title = "暫定結果", nav = "lists") {
 @if(admin || Schedule.finish) {
-<div class="alert alert-warning">
-	掲載内容に誤りがある場合は、直ちに主催者に連絡してください。
-	赤太字は暫定表彰局ですが、審査により失格することがあります。
-</div>
 @for(sect <- Rule.rule.asScala if !sect.isAbsence()) {
 @if(Record.findAllBySect(sect.name()).nonEmpty) {
 <div class="card mb-5">
@@ -38,6 +34,9 @@
 			}
 		</tbody>
 	</table>
+	<div class="card-footer">
+		現時点での表彰局を赤文字で掲示します。
+	</div>
 </div>
 }
 }

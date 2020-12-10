@@ -1,6 +1,7 @@
 package models
 
 import java.nio.file.Files
+import java.util.UUID
 
 import qxsl.sheet.SheetOrTable
 
@@ -27,9 +28,10 @@ class Acceptor(implicit smtp: MailerClient) {
 	}
 }
 
-class Receiver(implicit cfg: Configuration) {
+class Receiver(uuid: UUID)(implicit cfg: Configuration) {
 	val decoder = new SheetOrTable()
-	def push(call: String, data: Array[Byte]): String = {
+	def push(data: Array[Byte]): String = {
+		val call = Person.findAllByUUID(uuid).head.call
 		val post = Client.fill(call)
 		val list = Report.findAllByCall(call).head.list
 		val diff = decoder.unpack(data.tail).asScala

@@ -42,7 +42,7 @@
 			</tr>
 		</tbody>
 	</table>
-	<input type="hidden" id="UUID" value="@routes.Agent.socket(call = person.call, uuid = person.uuid.toString())">
+	<input type="hidden" id="UUID" value="@routes.Agent.agent(person.uuid)">
 </div>
 @if(person.note.nonEmpty) {
 <blockquote class="mb-5">

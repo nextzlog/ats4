@@ -9,7 +9,7 @@ Contest participants will register their account information with ATS-4 in advan
 ATS-4 returns a transmission security key containing a UUID in a hidden form.
 
 ```html
-<input type="hidden" id="UUID" value="/agent/JA1ZLO/e6dc32fb-6c3b-44e7-88b1-0f5cfdaf2494">
+<input type="hidden" id="UUID" value="/agent/e6dc32fb-6c3b-44e7-88b1-0f5cfdaf2494">
 ```
 
 Clients should retrieve this security key by some means such as HTML scraping.
@@ -50,8 +50,8 @@ A simple WebSocket client for ATS-4 may be written as follows.
     <h1>Streaming Demo</h1>
     <textarea cols='160' rows='30' id='QSOs'></textarea>
     <p>
-      <label>Truncate <input type='number' id='trim' min='0' max='255' value='0'> QSOs,</label>
-      <label>Security Key: <input type='text' id='UUID' placeholder='/agent/CALL/UUID'></label>
+      <label>Delete <input type='number' id='trim' min='0' max='255' value='0'>QSOs,</label>
+      <label>Submission Key: <input type='text' id='UUID' placeholder='/agent/UUID'></label>
       <button type='button' onclick='access();'>Access</button>
       <button type='button' onclick='submit();'>Submit</button>
     </p>

@@ -23,7 +23,7 @@ GET     /admin/proof/:call  controllers.Proof.proof(call: String)
 DELETE  /admin/proof/:call  controllers.Proof.clean(call: String)
 
 # WebSocket
-GET     /agent/:call/:uuid  controllers.Agent.socket(call: String, uuid: String)
+GET     /agent/:uuid        controllers.Agent.agent(uuid: UUID)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file       controllers.Assets.versioned(path="/public", file: Asset)
