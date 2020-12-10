@@ -8,7 +8,6 @@ import qxsl.table.TableManager
 
 import scala.{Int => I}
 import scala.jdk.CollectionConverters._
-import scala.util.Try
 
 import com.github.aselab.activerecord._
 import com.github.aselab.activerecord.dsl._
@@ -51,18 +50,23 @@ object Client {
 }
 
 object Person extends ActiveRecordCompanion[Person] {
+	def uuid: U = U.randomUUID() match {
+		case id if findAllByUUID(id).isEmpty => id
+		case id => this.uuid
+	}
 	def fill(call: String) = findAllByCall(call).head
-	def findAllByCall(call: String) = this.findAllBy("call", call).toList
+	def findAllByCall(call: S) = this.findAllBy("call", call).toList
+	def findAllByUUID(uuid: U) = this.findAllBy("uuid", uuid).toList
 }
 
 object Record extends ActiveRecordCompanion[Record] {
 	def fill(call: String, code: String) = findAllByCall(call).find(_.code == code)
-	def findAllByCall(call: String) = this.findAllBy("call", call).toList
-	def findAllBySect(sect: String) = this.findAllBy("sect", sect).toList
+	def findAllByCall(call: S) = this.findAllBy("call", call).toList
+	def findAllBySect(sect: S) = this.findAllBy("sect", sect).toList
 }
 
 object Report extends ActiveRecordCompanion[Report] {
-	def findAllByCall(call: String) = this.findAllBy("call", call).toList
+	def findAllByCall(call: S) = this.findAllBy("call", call).toList
 }
 
 object Tables extends ActiveRecordTables with PlaySupport {

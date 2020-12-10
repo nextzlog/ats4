@@ -5,7 +5,7 @@ ATS-4: Amateur-Radio Contest Administration System
 ![image](https://img.shields.io/badge/Java-JDK11-red.svg)
 ![image](https://img.shields.io/badge/Scala-2.13-orange.svg)
 ![image](https://img.shields.io/badge/JRuby-9.2-orange.svg)
-![image](https://img.shields.io/badge/PlayFramework-2.7-blueviolet.svg)
+![image](https://img.shields.io/badge/PlayFramework-2.8-blueviolet.svg)
 ![image](https://img.shields.io/badge/license-GPL3-darkblue.svg)
 
 ATS-4 is an Automatic Acceptance & Tabulation System for Amateur-Radio Contests, based on [qxsl: Amateur-Radio Logging Library & LISP](https://github.com/nextzlog/qxsl).

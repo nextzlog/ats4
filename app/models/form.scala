@@ -20,7 +20,7 @@ object PersonForm extends Form[Person] (
 		"post" -> Forms.nonEmptyText,
 		"mail" -> Forms.email,
 		"note" -> Forms.text,
-		"uuid" -> OptionalMapping(Forms.uuid).transform(_.getOrElse(UUID.randomUUID), Some[UUID](_))
+		"uuid" -> OptionalMapping(Forms.uuid).transform(_.getOrElse(Person.uuid), Some[UUID](_))
 	)(Person.apply)(Person.unapply), Map.empty, Nil, None
 )
 

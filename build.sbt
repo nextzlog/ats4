@@ -1,11 +1,7 @@
 name := "ats4"
-
 version := "SNAPSHOT"
-
 scalaVersion := "2.13.3"
-
-resolvers += "qxsl" at "https://nextzlog.github.io/qxsl/mvn"
-
+scalacOptions += "-feature"
 libraryDependencies ++= Seq(
 	filters,
 	guice,
@@ -18,11 +14,9 @@ libraryDependencies ++= Seq(
 	"com.github.aselab" %% "scala-activerecord" % "0.+",
 	"com.github.aselab" %% "scala-activerecord-play2" % "0.+"
 )
-
+resolvers += "qxsl" at "https://nextzlog.github.io/qxsl/mvn"
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
-
-scalacOptions += "-feature"
-
+routesImport += "java.util.UUID"
 TwirlKeys.templateImports ++= Seq(
 	"play.api.Configuration",
 	"qxsl.draft._",
