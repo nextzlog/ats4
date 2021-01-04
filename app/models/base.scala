@@ -30,6 +30,7 @@ case class Client(person: Person, record: Seq[Ticket]) {
 case class Record(call: S, sect: S, city: S, mark: I, rate: I, code: S) extends ActiveRecord {
 	def rule = Rule.rule.section(sect)
 	def zero = !Rule.absent(sect) && mark == 0
+	def json = RecordJson(call=call, score=mark, total=rate)
 }
 case class Person(call: S, name: S, post: S, mail: S, note: S, uuid: U) extends ActiveRecord {
 	def apply(seq: Seq[Item]) = Report(call = call, data = new TableManager().encode(seq.asJava))
