@@ -42,6 +42,6 @@ class Receiver(uuid: UUID)(implicit cfg: Configuration) {
 		post.person(list.toSeq).save()
 		for(t <- post.record) post(t).save()
 		Logger(this.getClass).info(s"accept: $post")
-		call
+		RecordJson.latest
 	}
 }

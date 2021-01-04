@@ -12,7 +12,9 @@ libraryDependencies ++= Seq(
 	"com.typesafe.play" %% "play-mailer" % "7.0.+",
 	"com.typesafe.play" %% "play-mailer-guice" % "7.0.+",
 	"com.github.aselab" %% "scala-activerecord" % "0.+",
-	"com.github.aselab" %% "scala-activerecord-play2" % "0.+"
+	"com.github.aselab" %% "scala-activerecord-play2" % "0.+",
+	"io.circe" %% "circe-core" % "0.13.+",
+	"io.circe" %% "circe-generic" % "0.13.+"
 )
 resolvers += "qxsl" at "https://nextzlog.github.io/qxsl/mvn"
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
