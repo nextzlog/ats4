@@ -18,7 +18,7 @@ Clients should retrieve this security key by some means such as HTML scraping.
 
 When the contest starts, the client always connects to the server via WebSocket.
 Each time a participant contacts another participant on air, the client sends the difference in the QSO records to the server.
-Messages from the client to the server must follow the format below.
+Messages from the clients to the server must follow the format below.
 
 |position|field                 |
 |--------|----------------------|
@@ -33,7 +33,15 @@ The format must be officially supported by the [QXSL](https://github.com/nextzlo
 ## Downstream
 
 The server receives the QSO records, scores it, wait a few seconds, and then notifies all clients of the score update.
-Messages from the server to the client only contain the call sign of the participant who updates the QSO data.
+JSON messages from the server to the clients are formatted as follows:
+
+```JSON
+{
+  SECTION-NAME: [
+    {"call": CALL-SIGN, "score": SCORE, "total": TOTAL-SCORE},
+  ]
+}
+```
 
 ## Demonstration
 
