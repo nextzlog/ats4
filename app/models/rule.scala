@@ -13,18 +13,18 @@ import scala.util.chaining._
 import play.api.Logger
 
 object Rule {
-	def path = "/application.rb"
-	def stream = getClass.getResourceAsStream(path)
-	def reader = new InputStreamReader(this.stream)
-	def load = RuleKit.forName("ruby").eval(reader).contest()
-	def warn(ex: Throwable) = Logger("rule").error("bad rule", ex)
 	lazy val rule = Try(this.load).tap(_.failed.foreach(warn)).get
+	def file = "/application.rb"
+	def load = RuleKit.forName("ruby").eval(reader).contest()
+	def reader = new InputStreamReader(this.stream)
+	def stream = getClass.getResourceAsStream(file)
+	def warn(ex: Throwable) = Logger("rule").error("bad rule", ex)
 	def absent(sect: String) = rule.section(sect).isInstanceOf[Absence]
 }
 
 object Rank {
-	def sort(r: Record) = Record.findAllBySect(r.sect).toSeq.sortBy(-_.rate)
 	def glad(r: Record) = r.rule.win(r.rate, sort(r).map(_.rate).toArray)
+	def sort(r: Record) = Record.findAllBySect(r.sect).toSeq.sortBy(-_.rate)
 	def rank(r: Record) = sort(r).indexWhere(_.rate == r.rate)
 }
 

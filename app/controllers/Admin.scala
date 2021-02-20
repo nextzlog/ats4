@@ -12,10 +12,10 @@ import views.txt.{pages => text}
 
 @Singleton class Admin @Inject()(implicit ec: ExecutionContext) extends InjectedController {
 	private implicit val admin = true
-	def index = Action(implicit r=> Ok(html.lists()))
+	def index = Action(implicit r => Ok(html.lists()))
 	def excel = Action(Ok(text.excel().body.trim))
-	def entry = Action(implicit r=> Ok(html.entry(ClientForm)))
-	def force(call: String) = Action(implicit r=> Ok(html.entry(ClientForm.fill(Client.fill(call)))))
+	def entry = Action(implicit r => Ok(html.entry(ClientForm)))
+	def force(call: String) = Action(implicit r => Ok(html.entry(ClientForm.fill(Client.fill(call)))))
 	def clean = Action(implicit r => {
 		Person.forceDeleteAll()
 		Record.forceDeleteAll()

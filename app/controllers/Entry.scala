@@ -14,10 +14,10 @@ import views.html.{pages, warns}
 import org.apache.commons.mail.{EmailException => Email}
 
 @Singleton class Entry @Inject()(implicit smtp: MailerClient) extends InjectedController {
-	def entry = Action(implicit r=> util.Try {
+	def entry = Action(implicit r => util.Try {
 		val data = r.body.asMultipartFormData
 		val form = ClientForm.bindFromRequest()
-		Ok(pages.proof(new Acceptor().push(post=form.get, files=data.get.files.map(_.ref))))
+		Ok(pages.proof(new Acceptor().push(post = form.get, files = data.get.files.map(_.ref))))
 	}.recover {
 		case ex: Chset => Ok(pages.entry(ClientForm.bindFromRequest(), Some(warns.chset())))
 		case ex: Omiss => Ok(pages.entry(ClientForm.bindFromRequest(), Some(warns.omiss())))
