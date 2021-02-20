@@ -3,27 +3,27 @@
 # ~~~~
 
 # Public pages
-GET     /                   controllers.Index.index
-GET     /calls              controllers.Index.calls
-GET     /entry              controllers.Index.entry
-POST    /entry              controllers.Entry.entry
-GET     /forum              controllers.Index.forum
-GET     /guide              controllers.Index.guide
-GET     /lists              controllers.Index.lists
+GET     /:test/                   controllers.Index.index(test: String)
+GET     /:test/calls              controllers.Index.calls(test: String)
+GET     /:test/entry              controllers.Index.entry(test: String)
+POST    /:test/entry              controllers.Entry.entry(test: String)
+GET     /:test/forum              controllers.Index.forum(test: String)
+GET     /:test/guide              controllers.Index.guide(test: String)
+GET     /:test/lists              controllers.Index.lists(test: String)
 
 # Secret pages
-GET     /admin              controllers.Admin.index
-DELETE  /admin              controllers.Admin.clean
-GET     /admin/excel        controllers.Admin.excel
-GET     /admin/entry        controllers.Admin.entry
-GET     /admin/force/:call  controllers.Admin.force(call: String)
-GET     /admin/table/:call  controllers.Proof.table(call: String)
-POST    /admin/email/:call  controllers.Proof.email(call: String)
-GET     /admin/proof/:call  controllers.Proof.proof(call: String)
-DELETE  /admin/proof/:call  controllers.Proof.clean(call: String)
+GET     /:test/admin              controllers.Admin.index(test: String)
+DELETE  /:test/admin              controllers.Admin.clean(test: String)
+GET     /:test/admin/excel        controllers.Admin.excel(test: String)
+GET     /:test/admin/entry        controllers.Admin.entry(test: String)
+GET     /:test/admin/force/:call  controllers.Admin.force(test: String, call: String)
+GET     /:test/admin/table/:call  controllers.Proof.table(test: String, call: String)
+POST    /:test/admin/email/:call  controllers.Proof.email(test: String, call: String)
+GET     /:test/admin/proof/:call  controllers.Proof.proof(test: String, call: String)
+DELETE  /:test/admin/proof/:call  controllers.Proof.clean(test: String, call: String)
 
 # WebSocket
-GET     /agent/:uuid        controllers.Agent.agent(uuid: UUID)
+GET     /:test/agent/:uuid        controllers.Agent.agent(test: String, uuid: UUID)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file       controllers.Assets.versioned(path="/public", file: Asset)

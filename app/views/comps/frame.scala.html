@@ -1,8 +1,8 @@
-@(title: String = "", nav: String = "")(content: Html)(implicit admin: Boolean = false)
+@(test: String, title: String = "", nav: String = "")(content: Html)(implicit admin: Boolean = false)
 
 <html>
 	<head>
-		<title>@Rule.rule.name ATS-4 - @Rule.rule.host</title>
+		<title>@Rule.rule.name ATS-5 - @Rule.rule.host</title>
 		<link rel="stylesheet" href="@routes.Assets.versioned("css/bootstrap.css")" media="print,screen">
 		<link rel="stylesheet" href="@routes.Assets.versioned("css/bootstrap-select.css")">
 		<link rel="stylesheet" href="@routes.Assets.versioned("css/fontawesome.css")">
@@ -15,23 +15,23 @@
 	</head>
 	<body>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-			<a class="navbar-brand" href="@routes.Index.index()">ATS-4</a>
+			<a class="navbar-brand" href="@routes.Index.index(test)">ATS-5</a>
 			<button class="navbar-toggler" data-toggle="collapse" data-target="#nav">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="nav">
 				<div class="navbar-nav mr-auto">
 					@if(admin) {
-					<a class="nav-item nav-link @("active".when(nav == "lists"))" href="@routes.Admin.index()">暫定結果</a>
-					<a class="nav-item nav-link @("active".when(nav == "force"))" href="@routes.Admin.entry()">書類提出</a>
-					<a class="nav-item nav-link @("active".when(nav == "excel"))" href="@routes.Admin.excel()">集計結果</a>
+					<a class="nav-item nav-link @("active".when(nav == "lists"))" href="@routes.Admin.index(test)">暫定結果</a>
+					<a class="nav-item nav-link @("active".when(nav == "force"))" href="@routes.Admin.entry(test)">書類提出</a>
+					<a class="nav-item nav-link @("active".when(nav == "excel"))" href="@routes.Admin.excel(test)">集計結果</a>
 					} else {
-					<a class="nav-item nav-link @("active".when(nav == "entry"))" href="@routes.Index.entry()">書類提出</a>
-					<a class="nav-item nav-link @("active".when(nav == "lists"))" href="@routes.Index.lists()">暫定結果</a>
-					<a class="nav-item nav-link @("active".when(nav == "calls"))" href="@routes.Index.calls()">全参加局</a>
-					<a class="nav-item nav-link @("active".when(nav == "forum"))" href="@routes.Index.forum()">皆様の声</a>
-					<a class="nav-item nav-link @("active".when(nav == "admin"))" href="@routes.Admin.index()">管理画面</a>
-					<a class="nav-item nav-link @("active".when(nav == "guide"))" href="@routes.Index.guide()">ヘルプ</a>
+					<a class="nav-item nav-link @("active".when(nav == "entry"))" href="@routes.Index.entry(test)">書類提出</a>
+					<a class="nav-item nav-link @("active".when(nav == "lists"))" href="@routes.Index.lists(test)">暫定結果</a>
+					<a class="nav-item nav-link @("active".when(nav == "calls"))" href="@routes.Index.calls(test)">全参加局</a>
+					<a class="nav-item nav-link @("active".when(nav == "forum"))" href="@routes.Index.forum(test)">皆様の声</a>
+					<a class="nav-item nav-link @("active".when(nav == "admin"))" href="@routes.Admin.index(test)">管理画面</a>
+					<a class="nav-item nav-link @("active".when(nav == "guide"))" href="@routes.Index.guide(test)">ヘルプ</a>
 					}
 				</div>
 				<div class="navbar-nav">

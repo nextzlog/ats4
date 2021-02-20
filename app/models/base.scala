@@ -18,6 +18,7 @@ case class Client(person: Person, record: Seq[Ticket]) {
 	def apply(tick: Ticket) = {
 		val sum = Report.findAllByCall(person.call).head.rate(tick.sect)
 		Record(
+			test = person.test,
 			call = person.call,
 			sect = tick.sect,
 			city = tick.city,
@@ -28,17 +29,17 @@ case class Client(person: Person, record: Seq[Ticket]) {
 	}
 }
 
-case class Record(call: S, sect: S, city: S, mark: I, rate: I, code: S) extends ActiveRecord {
+case class Record(test: S, call: S, sect: S, city: S, mark: I, rate: I, code: S) extends ActiveRecord {
 	def rule = Rule.rule.section(sect)
 	def zero = !Rule.absent(sect) && mark == 0
 	def json = RecordJson(call = call, score = mark, total = rate)
 }
 
-case class Person(call: S, name: S, post: S, mail: S, note: S, uuid: U) extends ActiveRecord {
-	def apply(seq: Seq[Item]) = Report(call = call, data = new TableManager().encode(seq.asJava))
+case class Person(test: S, call: S, name: S, post: S, mail: S, note: S, uuid: U) extends ActiveRecord {
+	def apply(seq: Seq[Item]) = Report(test = test, call = call, data = new TableManager().encode(seq.asJava))
 }
 
-case class Report(call: S, data: Array[Byte]) extends ActiveRecord {
+case class Report(test: S, call: S, data: Array[Byte]) extends ActiveRecord {
 	def rate(s: String) = Rule.rule.section(s).summarize(list.asJava)
 	def list = new TableManager().decode(data).asScala
 }

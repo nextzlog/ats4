@@ -13,10 +13,10 @@ import views.html.pages.index
 
 @Singleton class Error @Inject()(implicit cfg: Configuration) extends HttpErrorHandler {
 	override def onClientError(r: RequestHeader, st: Int, msg: String) = {
-		Future.successful(Status(st)(index(Some(st))))
+		Future.successful(Status(st)(index("ALLJA1", Some(st))))
 	}
 	override def onServerError(r: RequestHeader, throwable: Throwable) = {
 		Logger(classOf[Error]).error("SERVER ERROR!", throwable)
-		Future.successful(InternalServerError(index(Some(500))))
+		Future.successful(InternalServerError(index("ALLJA1", Some(500))))
 	}
 }

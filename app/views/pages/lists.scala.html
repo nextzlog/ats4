@@ -1,10 +1,10 @@
-@()(implicit req: RequestHeader, admin: Boolean = false)
+@(test: String)(implicit req: RequestHeader, admin: Boolean = false)
 
 @link(record: Record) = {
-	@if(admin) {window.location='@routes.Proof.proof(record.call)';}
+	@if(admin) {window.location='@routes.Proof.proof(test, record.call)';}
 }
 
-@comps.frame(title = "暫定結果", nav = "lists") {
+@comps.frame(test = test, title = "暫定結果", nav = "lists") {
 @if(admin || Schedule.finish) {
 @for(sect <- Rule.rule.asScala if !sect.isAbsence()) {
 @if(Record.findAllBySect(sect.name()).nonEmpty) {
@@ -66,7 +66,7 @@
 </div>
 <script type="text/javascript">
 $('#deleteButton').click(function () {
-	$.ajax({type: "DELETE", url: "@helper.CSRF(routes.Admin.clean())"}).done(() => location.reload());
+	$.ajax({type: "DELETE", url: "@helper.CSRF(routes.Admin.clean(test))"}).done(() => location.reload());
 });
 </script>
 }

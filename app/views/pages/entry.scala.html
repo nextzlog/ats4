@@ -1,14 +1,14 @@
-@(form: Form[Client], warn: Option[Html] = None)(implicit req: RequestHeader, admin: Boolean = false)
+@(test: String, form: Form[Client], warn: Option[Html] = None)(implicit req: RequestHeader, admin: Boolean = false)
 
 @import java.util.UUID
 
-@comps.frame(title = "書類提出", nav = if(admin) "force" else "entry") {
+@comps.frame(test = test, title = "書類提出", nav = if(admin) "force" else "entry") {
 @if(warn.nonEmpty) {
 <div class="alert alert-danger">
 	<i class="fas fa-exclamation-triangle"></i> @warn
 </div>
 }
-@helper.form(action = routes.Entry.entry(), Symbol("class")->"form-horizontal", Symbol("enctype")->"multipart/form-data") {
+@helper.form(action = routes.Entry.entry(test), Symbol("class")->"form-horizontal", Symbol("enctype")->"multipart/form-data") {
 @helper.CSRF.formField
 <div class="card bg-light mb-5">
 	<h3 class="card-header">
@@ -55,7 +55,7 @@
 	</div>
 </div>
 <a class="btn btn-lg btn-primary" href="#submitModal" data-toggle="modal"><i class="fas fa-thumbs-up"></i> この内容で提出する</a>
-<a class="btn btn-lg btn-outline-secondary" href="@routes.Index.guide()"><i class="fas fa-question"></i> ヘルプ画面に移動する</a>
+<a class="btn btn-lg btn-outline-secondary" href="@routes.Index.guide(test)"><i class="fas fa-question"></i> ヘルプ画面に移動する</a>
 <div class="modal" id="submitModal">
 	<div class="modal-dialog">
 		<div class="modal-content">

@@ -21,7 +21,7 @@ import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, MergeHub}
 @Singleton class Agent @Inject()(implicit as: ActorSystem, mat: Materializer, cfg: Configuration) {
 	val (sink, src) = MergeHub.source[Array[Byte]].toMat(BroadcastHub.sink)(Keep.both).run()
 	val bus = Flow.fromSinkAndSource(sink, src).delay(cfg.get[Int]("rtc.delay").second)
-	def agent(uuid: UUID) = WebSocket.acceptOrResult[Array[Byte], Array[Byte]] {
+	def agent(test: String, uuid: UUID) = WebSocket.acceptOrResult[Array[Byte], Array[Byte]] {
 		req => Future.successful(if (valid(uuid)) {
 			Right(ActorFlow.actorRef(out => Props(Agency(out, uuid))).viaMat(bus)(Keep.right))
 		} else {

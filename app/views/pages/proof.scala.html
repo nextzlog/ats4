@@ -1,9 +1,9 @@
-@(call: String)(implicit req: RequestHeader, admin: Boolean = false)
+@(test: String, call: String)(implicit req: RequestHeader, admin: Boolean = false)
 
 @person = @{Person.findAllByCall(call).head}
 @report = @{Report.findAllByCall(call).head}
 
-@comps.frame(title = "提出書類の確認", nav = if(admin) "admin" else "proof") {
+@comps.frame(test = test, title = "提出書類の確認", nav = if(admin) "admin" else "proof") {
 @if(!admin) {
 <div class="alert alert-success">
 	下記の内容で受理しました。
@@ -17,7 +17,7 @@
 		@if(admin) {
 		<div class="btn-group">
 			<a class="btn btn-outline-success" href="#remindModal" data-toggle="modal"><i class="fas fa-paper-plane"></i></a>
-			<a class="btn btn-outline-primary" href="@routes.Admin.force(person.call)"><i class="fas fa-edit"></i></a>
+			<a class="btn btn-outline-primary" href="@routes.Admin.force(test, person.call)"><i class="fas fa-edit"></i></a>
 			<a class="btn btn-outline-warning" href="#deleteModal" data-toggle="modal"><i class="fas fa-trash"></i></a>
 		</div>
 		}
@@ -88,10 +88,10 @@
 </div>
 <script type="text/javascript">
 $('#remindButton').click(function () {
-	$.ajax({type: "POST", url: "@helper.CSRF(routes.Proof.email(person.call))"}).done(() => $('#remindModal').modal('hide'));
+	$.ajax({type: "POST", url: "@helper.CSRF(routes.Proof.email(test, person.call))"}).done(() => $('#remindModal').modal('hide'));
 });
 $('#deleteButton').click(function () {
-	$.ajax({type: "DELETE", url: "@helper.CSRF(routes.Proof.clean(person.call))"}).done(() => window.location="@routes.Admin.index()");
+	$.ajax({type: "DELETE", url: "@helper.CSRF(routes.Proof.clean(test, person.call))"}).done(() => window.location="@routes.Admin.index(test)");
 });
 </script>
 }

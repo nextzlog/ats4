@@ -1,3 +1,5 @@
+@(test: String)
+
 @line(record: Record) = @{
 	val person = Person.findAllByCall(record.call).head
 	Seq(

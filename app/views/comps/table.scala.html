@@ -6,17 +6,25 @@
 @time(t: Time) = @{t.value.format(dfmt)}
 
 @rate = @{report.rate(record.sect)}
-@link(call: String) = {@if(admin && Person.findAllByCall(call).nonEmpty) {<a href="@routes.Proof.proof(call)">@call</a>} else {@call}}
+@link(call: String) = {
+@if(admin && Person.findAllByCall(call).nonEmpty) {
+<a href="@routes.Proof.proof(record.test, call)">@call</a>
+} else {
+@call
+}
+}
 
-@normalize(list: Seq[Message]) = @{list.zip(RuleKit.load("jautil.lisp").pattern().normalize(list.map(_.item).toSeq.asJava, null))}
+@normalize(list: Seq[Message]) = @{
+list.zip(RuleKit.load("jautil.lisp").pattern().normalize(list.map(_.item).toSeq.asJava, null))
+}
 
 @if(!Rule.absent(record.sect)) {
 <div class="card mb-5">
 	<h3 class="card-header border-bottom-0 d-flex align-items-center justify-content-between">
 		<span>@record.sect</span>
-	@if(admin) {
-		<a class="btn btn-outline-success" href="@routes.Proof.table(person.call)"><i class="fas fa-download"></i></a>
-	}
+		@if(admin) {
+		<a class="btn btn-outline-success" href="@routes.Proof.table(record.test, person.call)"><i class="fas fa-download"></i></a>
+		}
 	</h3>
 	<table class="table table-sm table-hover text-monospace">
 		<thead>
