@@ -21,7 +21,7 @@ class Acceptor(implicit smtp: MailerClient) {
 		Report.findAllByCall(post.person.call).foreach(_.delete())
 		post.person.save()
 		post.person(items).save()
-		for(t <- post.record) post(t).save()
+		for (t <- post.record) post(t).save()
 		Logger(this.getClass).info(s"accept: $post")
 		Person.findAllByCall(post.person.call).foreach(new SendMail().send)
 		post.person.call
@@ -40,7 +40,7 @@ class Receiver(uuid: UUID)(implicit cfg: Configuration) {
 		Record.findAllByCall(call).foreach(_.delete())
 		Report.findAllByCall(call).foreach(_.delete())
 		post.person(list.toSeq).save()
-		for(t <- post.record) post(t).save()
+		for (t <- post.record) post(t).save()
 		Logger(this.getClass).info(s"accept: $post")
 		RecordJson.latest
 	}

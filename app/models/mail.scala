@@ -3,6 +3,7 @@ package models
 import play.libs.mailer.{Email, MailerClient}
 
 class SendMail(implicit smtp: MailerClient) {
+	def remind(call: String) = Person.findAllByCall(call).map(send).mkString
 	def send(person: Person) = {
 		val mail = new Email
 		val text = views.txt.pages.email(person.call).body.trim
@@ -14,5 +15,4 @@ class SendMail(implicit smtp: MailerClient) {
 		smtp.send(mail)
 		"OK"
 	}
-	def remind(call: String) = Person.findAllByCall(call).map(send).mkString
 }

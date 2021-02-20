@@ -1,10 +1,10 @@
 package models
 
+import scala.jdk.CollectionConverters._
+
 import io.circe.Encoder
 import io.circe.generic.semiauto.deriveEncoder
 import io.circe.syntax._
-
-import scala.jdk.CollectionConverters._
 
 case class RecordJson(call: String, score: Int, total: Int)
 
