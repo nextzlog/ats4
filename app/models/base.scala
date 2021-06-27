@@ -76,5 +76,6 @@ object Tables extends ActiveRecordTables with PlaySupport {
 	val persons = table[Person]
 	val records = table[Record]
 	val reports = table[Report]
+	on(persons)(c => declare(c.note is (dbType("clob"))))
 	on(reports)(c => declare(c.data is (dbType("blob"))))
 }
