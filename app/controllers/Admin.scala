@@ -14,6 +14,7 @@ import views.txt.{pages => text}
 	private implicit val admin = true
 	def index = Action(implicit r => Ok(html.lists()))
 	def excel = Action(Ok(text.excel().body.trim))
+	def trial = Action(implicit r => Ok(html.trial()))
 	def entry = Action(implicit r => Ok(html.entry(ClientForm)))
 	def force(call: String) = Action(implicit r => Ok(html.entry(ClientForm.fill(Client.fill(call)))))
 	def clean = Action(implicit r => {

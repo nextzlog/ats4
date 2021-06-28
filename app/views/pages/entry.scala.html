@@ -14,7 +14,7 @@
 	<a class="btn btn-primary" href="@routes.Index.trial()"> 交信記録の書式を検査する</a>
 </div>
 }
-@helper.form(action = routes.Entry.entry(), Symbol("class")->"form-horizontal", Symbol("enctype")->"multipart/form-data") {
+@helper.form(action = routes.Entry.entry(), Symbol("enctype")->"multipart/form-data") {
 @helper.CSRF.formField
 <div class="card bg-light mb-5">
 	<h3 class="card-header">
