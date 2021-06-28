@@ -13,6 +13,7 @@ import views.html.{pages => html}
 	def forum = Action(Ok(html.forum()))
 	def guide = Action(Ok(html.guide()))
 	def lists = Action(implicit r => Ok(html.lists()))
+	def trial = Action(implicit e => Ok(html.trial()))
 	def entry = if (Schedule.accept) Action(implicit r => Ok(html.entry(ClientForm))) else index
 	def index = Action(Ok(html.index()))
 }

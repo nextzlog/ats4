@@ -1,6 +1,6 @@
 package controllers
 
-import java.io.{IOException => Unsup}
+import java.io.{UncheckedIOException => Unsup}
 import java.nio.charset.{CharacterCodingException => Chset}
 import java.util.{NoSuchElementException => Omiss}
 import javax.inject.{Inject, Singleton}

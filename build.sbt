@@ -6,7 +6,7 @@ libraryDependencies ++= Seq(
 	filters,
 	guice,
 	jdbc,
-	"qxsl" % "qxsl" % "0.1.191",
+	"qxsl" % "qxsl" % "0.1.192",
 	"org.jruby" % "jruby-core" % "9.+",
 	"com.h2database" % "h2" % "1.4.+",
 	"com.typesafe.play" %% "play-mailer" % "7.0.+",
@@ -22,6 +22,7 @@ routesImport += "java.util.UUID"
 TwirlKeys.templateImports ++= Seq(
 	"play.api.Configuration",
 	"qxsl.draft._",
+	"qxsl.model._",
 	"qxsl.ruler._",
 	"qxsl.sheet._",
 	"qxsl.table._",

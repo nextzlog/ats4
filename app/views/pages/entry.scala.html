@@ -4,8 +4,14 @@
 
 @comps.frame(title = "書類提出", nav = if(admin) "force" else "entry") {
 @if(warn.nonEmpty) {
-<div class="alert alert-danger">
+<div class="alert alert-warning">
 	<i class="fas fa-exclamation-triangle"></i> @warn
+</div>
+} else {
+<div class="alert alert-info">
+	<h4 class="alert-heading">提出の前に</h4>
+	<p>お手持ちの交信記録がこのシステムで処理可能な書式であるか、事前に検査できます。</p>
+	<a class="btn btn-primary" href="@routes.Index.trial()"> 交信記録の書式を検査する</a>
 </div>
 }
 @helper.form(action = routes.Entry.entry(), Symbol("class")->"form-horizontal", Symbol("enctype")->"multipart/form-data") {
@@ -25,7 +31,7 @@
 		</fieldset>
 	</div>
 	<div class="card-footer">
-		書類提出で支障がある場合には、状況確認の連絡をする場合があります。
+		提出に何度か失敗した方には、サポートの申し出をする場合があります。
 	</div>
 </div>
 @for(((code, sects), idx) <- Subtests.groups.zipWithIndex) {
@@ -46,12 +52,13 @@
 	</h3>
 	<div class="card-body">
 		<fieldset>
-			@upload(id="sheet", hint="未選択 (*.ZLO, *.LG8, *.ADI, *.ADX)")
+			@upload(id="sheet", hint="未選択 (*.ZLO, *.LG8, *.ADI, *.ADX 推奨)")
 		</fieldset>
 	</div>
 	<div class="card-footer">
-		交信記録は、複数のファイルを選択することで、分割して提出できます。
-		団体部門の場合は、各交信の運用者を識別できる交信記録を受理します。
+		全ての参加部門の交信記録を提出してください。
+		複数のファイルを選ぶことで、複数の部門の交信記録を提出できます。
+		団体部門は、各交信の担当者が明記された交信記録に限り受理します。
 	</div>
 </div>
 <a class="btn btn-lg btn-primary" href="#submitModal" data-toggle="modal"><i class="fas fa-thumbs-up"></i> この内容で提出する</a>
