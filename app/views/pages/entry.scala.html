@@ -10,7 +10,10 @@
 } else {
 <div class="alert alert-info">
 	<h4 class="alert-heading">提出の前に</h4>
-	<p>お手持ちの交信記録がこのシステムで処理可能な書式であるか、事前に検査できます。</p>
+	<p>
+		お手持ちの交信記録がこのシステムで処理可能な書式であるか、事前に検査できます。
+		また、書類提出に何度か失敗した場合には、サポートの申し出をする場合があります。
+	</p>
 	<a class="btn btn-primary" href="@routes.Index.trial()"> 交信記録の書式を検査する</a>
 </div>
 }
@@ -29,9 +32,6 @@
 			@input(form("station.note"), text = "ご感想", hint = "呼出符号付きで公表します。", multiline = true)
 			@input(form("station.uuid"), hidden = true)
 		</fieldset>
-	</div>
-	<div class="card-footer">
-		提出に何度か失敗した方には、サポートの申し出をする場合があります。
 	</div>
 </div>
 @for(((code, sects), idx) <- Subtests.groups.zipWithIndex) {

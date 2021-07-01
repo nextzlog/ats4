@@ -2,9 +2,9 @@
 
 @warn = @{log.toWarn.getOrElse("")}
 
-<div class="card mb-5">
+<div class="card mb-5 @if(warn.nonEmpty){bg-warning}">
 	<h3 class="card-header border-bottom-0 d-flex align-items-center justify-content-between">
-		<span>交信記録 #@{idx+1}</span>
+		<span>交信記録 @{idx+1}ファイル目</span>
 		@if(admin) {
 		<a class="btn btn-outline-success" href="@routes.Proof.table(log.id)"><i class="fas fa-download"></i></a>
 		}
@@ -12,7 +12,10 @@
 	@if(warn.nonEmpty){
 	@if(admin){
 	<pre class="card-body">@{warn}</pre>
+	} else {
+	<div class="card-body">交信記録が読み取れないため、再提出またはメール対応が完了するまで仮登録とします。</div>
 	}
-	<div class="card-footer">交信記録が読み取れないため、再提出またはメール対応が完了するまで仮登録とします。</div>
+	} else {
+	<div class="card-body">読み取り完了</div>
 	}
 </div>
