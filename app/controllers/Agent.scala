@@ -12,7 +12,7 @@ import play.api.libs.streams.ActorFlow
 import play.api.mvc.Results.Forbidden
 import play.api.mvc.WebSocket
 
-import models.{Person, Receiver, Schedule}
+import models.{StationData, Receiver, Schedule}
 
 import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import akka.stream.Materializer
@@ -28,7 +28,7 @@ import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, MergeHub}
 			Left(Forbidden)
 		})
 	}
-	def valid(uuid: UUID) = Schedule.accept && Person.findAllByUUID(uuid).nonEmpty
+	def valid(uuid: UUID) = Schedule.accept && StationData.findAllByUUID(uuid).nonEmpty
 	case class Agency(out: ActorRef, uuid: UUID) extends Actor {
 		override def receive = {
 			case msg: Array[Byte] => out ! new Receiver(uuid).push(msg).getBytes(UTF_8)

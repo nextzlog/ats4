@@ -6,7 +6,7 @@ import scala.concurrent.ExecutionContext
 
 import play.api.mvc.InjectedController
 
-import models.{Client, ClientForm, Person, Record, Report}
+import models.{ContestData, ContestForm, StationData, RankingData, LogBookData}
 import views.html.{pages => html}
 import views.txt.{pages => text}
 
@@ -15,12 +15,12 @@ import views.txt.{pages => text}
 	def index = Action(implicit r => Ok(html.lists()))
 	def excel = Action(Ok(text.excel().body.trim))
 	def trial = Action(implicit r => Ok(html.trial()))
-	def entry = Action(implicit r => Ok(html.entry(ClientForm)))
-	def force(call: String) = Action(implicit r => Ok(html.entry(ClientForm.fill(Client.fill(call)))))
+	def entry = Action(implicit r => Ok(html.entry(ContestForm)))
+	def force(call: String) = Action(implicit r => Ok(html.entry(ContestForm.fill(ContestData.fill(call)))))
 	def clean = Action(implicit r => {
-		Person.forceDeleteAll()
-		Record.forceDeleteAll()
-		Report.forceDeleteAll()
+		StationData.forceDeleteAll()
+		RankingData.forceDeleteAll()
+		LogBookData.forceDeleteAll()
 		Ok(html.lists())
 	})
 }

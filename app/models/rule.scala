@@ -23,9 +23,9 @@ object Rule {
 }
 
 object Rank {
-	def glad(r: Record) = r.rule.win(r.rate, sort(r).map(_.rate).toArray)
-	def sort(r: Record) = Record.findAllBySect(r.sect).toSeq.sortBy(-_.rate)
-	def rank(r: Record) = sort(r).indexWhere(_.rate == r.rate)
+	def glad(r: RankingData) = r.rule.win(r.rate, sort(r).map(_.rate).toArray)
+	def sort(r: RankingData) = RankingData.findAllBySect(r.sect).toSeq.sortBy(-_.rate)
+	def rank(r: RankingData) = sort(r).indexWhere(_.rate == r.rate)
 }
 
 object Schedule {

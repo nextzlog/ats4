@@ -12,13 +12,13 @@ import scala.jdk.CollectionConverters._
 import com.github.aselab.activerecord._
 import com.github.aselab.activerecord.dsl._
 
-case class Ticket(sect: S, city: S)
+case class SectionData(sect: S, city: S)
 
-case class Client(person: Person, record: Seq[Ticket]) {
-	def apply(tick: Ticket) = {
-		val sum = Report.findAllByCall(person.call).head.rate(tick.sect)
-		Record(
-			call = person.call,
+case class ContestData(station: StationData, ranking: Seq[SectionData]) {
+	def apply(tick: SectionData) = {
+		val sum = LogBookData.findAllByCall(station.call).head.rate(tick.sect)
+		RankingData(
+			call = station.call,
 			sect = tick.sect,
 			city = tick.city,
 			mark = sum.score(),
@@ -28,31 +28,31 @@ case class Client(person: Person, record: Seq[Ticket]) {
 	}
 }
 
-case class Record(call: S, sect: S, city: S, mark: I, rate: I, code: S) extends ActiveRecord {
+case class RankingData(call: S, sect: S, city: S, mark: I, rate: I, code: S) extends ActiveRecord {
 	def rule = Rule.rule.section(sect)
 	def zero = !Rule.absent(sect) && mark == 0
-	def json = RecordJson(call = call, score = mark, total = rate)
+	def json = RankingJson(call = call, score = mark, total = rate)
 }
 
-case class Person(call: S, name: S, post: S, mail: S, note: S, uuid: U) extends ActiveRecord {
-	def apply(seq: Seq[Item]) = Report(call = call, data = new TableManager().encode(seq.asJava))
+case class StationData(call: S, name: S, post: S, mail: S, note: S, uuid: U) extends ActiveRecord {
+	def apply(seq: Seq[Item]) = LogBookData(call = call, data = new TableManager().encode(seq.asJava))
 }
 
-case class Report(call: S, data: Array[Byte]) extends ActiveRecord {
+case class LogBookData(call: S, data: Array[Byte]) extends ActiveRecord {
 	def rate(s: String) = Rule.rule.section(s).summarize(list.asJava)
 	def list = new TableManager().decode(data).asScala
 }
 
-object Ticket {
-	def fill(call: String) = Subtests.groups.map(g => Record.fill(call, g._1).map(from)).flatten
-	def from(post: Record) = Ticket(sect = post.sect, city = post.city)
+object SectionData {
+	def fill(call: String) = Subtests.groups.map(g => RankingData.fill(call, g._1).map(from)).flatten
+	def from(post: RankingData) = SectionData(sect = post.sect, city = post.city)
 }
 
-object Client {
-	def fill(call: String) = Client(person = Person.fill(call), record = Ticket.fill(call))
+object ContestData {
+	def fill(call: String) = ContestData(station = StationData.fill(call), ranking = SectionData.fill(call))
 }
 
-object Person extends ActiveRecordCompanion[Person] {
+object StationData extends ActiveRecordCompanion[StationData] {
 	def uuid: U = U.randomUUID() match {
 		case id if findAllByUUID(id).isEmpty => id
 		case id => this.uuid
@@ -62,20 +62,20 @@ object Person extends ActiveRecordCompanion[Person] {
 	def findAllByUUID(uuid: U) = this.findAllBy("uuid", uuid).toList
 }
 
-object Record extends ActiveRecordCompanion[Record] {
+object RankingData extends ActiveRecordCompanion[RankingData] {
 	def fill(call: String, code: String) = findAllByCall(call).find(_.code == code)
 	def findAllByCall(call: S) = this.findAllBy("call", call).toList
 	def findAllBySect(sect: S) = this.findAllBy("sect", sect).toList
 }
 
-object Report extends ActiveRecordCompanion[Report] {
+object LogBookData extends ActiveRecordCompanion[LogBookData] {
 	def findAllByCall(call: S) = this.findAllBy("call", call).toList
 }
 
 object Tables extends ActiveRecordTables with PlaySupport {
-	val persons = table[Person]
-	val records = table[Record]
-	val reports = table[Report]
-	on(persons)(c => declare(c.note is (dbType("clob"))))
-	on(reports)(c => declare(c.data is (dbType("blob"))))
+	val stations = table[StationData]
+	val rankings = table[RankingData]
+	val logbooks = table[LogBookData]
+	on(stations)(c => declare(c.note is (dbType("clob"))))
+	on(logbooks)(c => declare(c.data is (dbType("blob"))))
 }

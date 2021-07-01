@@ -1,13 +1,13 @@
 @()(implicit req: RequestHeader, admin: Boolean = false)
 
-@link(record: Record) = {
-	@if(admin) {window.location='@routes.Proof.proof(record.call)';}
+@link(ranking: RankingData) = {
+	@if(admin) {window.location='@routes.Proof.proof(ranking.call)';}
 }
 
 @comps.frame(title = "暫定結果", nav = "lists") {
 @if(admin || Schedule.finish) {
 @for(sect <- Rule.rule.asScala if !sect.isAbsence()) {
-@if(Record.findAllBySect(sect.name()).nonEmpty) {
+@if(RankingData.findAllBySect(sect.name()).nonEmpty) {
 <div class="card mb-5">
 	<h3 class="card-header d-flex justify-content-between border-bottom-0">
 		<span>@sect.name()</span>
@@ -23,13 +23,13 @@
 			</tr>
 		</thead>
 		<tbody>
-			@for(record <- Record.findAllBySect(sect.name()).toSeq.sortBy(-_.rate)) {
-			<tr class="link @if(Rank.glad(record)) {award}" onclick="@link(record)">
-				<td>@{1 + Rank.rank(record)}</td>
-				<td>@{record.call}</td>
-				<td>@{record.mark}</td>
-				<td>@{record.rate}</td>
-				<td>@{record.city}</td>
+			@for(ranking <- RankingData.findAllBySect(sect.name()).toSeq.sortBy(-_.rate)) {
+			<tr class="link @if(Rank.glad(ranking)) {award}" onclick="@link(ranking)">
+				<td>@{1 + Rank.rank(ranking)}</td>
+				<td>@{ranking.call}</td>
+				<td>@{ranking.mark}</td>
+				<td>@{ranking.rate}</td>
+				<td>@{ranking.city}</td>
 			</tr>
 			}
 		</tbody>

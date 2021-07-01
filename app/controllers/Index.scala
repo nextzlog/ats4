@@ -5,7 +5,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.Configuration
 import play.api.mvc.InjectedController
 
-import models.{ClientForm, Schedule}
+import models.{ContestForm, Schedule}
 import views.html.{pages => html}
 
 @Singleton class Index @Inject()(implicit cfg: Configuration) extends InjectedController {
@@ -14,6 +14,6 @@ import views.html.{pages => html}
 	def guide = Action(Ok(html.guide()))
 	def lists = Action(implicit r => Ok(html.lists()))
 	def trial = Action(implicit e => Ok(html.trial()))
-	def entry = if (Schedule.accept) Action(implicit r => Ok(html.entry(ClientForm))) else index
+	def entry = if (Schedule.accept) Action(implicit r => Ok(html.entry(ContestForm))) else index
 	def index = Action(Ok(html.index()))
 }

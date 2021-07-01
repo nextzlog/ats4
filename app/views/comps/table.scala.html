@@ -1,21 +1,21 @@
-@(record: Record, person: Person, report: Report)(implicit admin: Boolean = false)
+@(ranking: RankingData, station: StationData, logbook: LogBookData)(implicit admin: Boolean = false)
 
 @import java.time.format.DateTimeFormatter
 
 @dfmt = @{DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss OOOO")}
 @time(t: Time) = @{t.value.format(dfmt)}
 
-@rate = @{report.rate(record.sect)}
-@link(call: String) = {@if(admin && Person.findAllByCall(call).nonEmpty) {<a href="@routes.Proof.proof(call)">@call</a>} else {@call}}
+@rate = @{logbook.rate(ranking.sect)}
+@link(call: String) = {@if(admin && StationData.findAllByCall(call).nonEmpty) {<a href="@routes.Proof.proof(call)">@call</a>} else {@call}}
 
 @normalize(list: Seq[Message]) = @{list.zip(RuleKit.load("jautil.lisp").pattern().normalize(list.map(_.item).toSeq.asJava, null))}
 
-@if(!Rule.absent(record.sect)) {
+@if(!Rule.absent(ranking.sect)) {
 <div class="card mb-5">
 	<h3 class="card-header border-bottom-0 d-flex align-items-center justify-content-between">
-		<span>@record.sect</span>
+		<span>@ranking.sect</span>
 	@if(admin) {
-		<a class="btn btn-outline-success" href="@routes.Proof.table(person.call)"><i class="fas fa-download"></i></a>
+		<a class="btn btn-outline-success" href="@routes.Proof.table(station.call)"><i class="fas fa-download"></i></a>
 	}
 	</h3>
 	<table class="table table-sm table-hover text-monospace">
@@ -59,8 +59,8 @@
 		</tbody>
 	</table>
 	<div class="card-footer">
-		@if(record.city.nonEmpty){運用地は@{record.city}です。}
-		暫定の得点は<strong>@{record.rate}点</strong>(素点@{record.mark})です。
+		@if(ranking.city.nonEmpty){運用地は@{ranking.city}です。}
+		暫定の得点は<strong>@{ranking.rate}点</strong>(素点@{ranking.mark})です。
 	</div>
 </div>
 }

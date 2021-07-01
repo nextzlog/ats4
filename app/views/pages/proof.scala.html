@@ -1,7 +1,7 @@
 @(call: String)(implicit req: RequestHeader, admin: Boolean = false)
 
-@person = @{Person.findAllByCall(call).head}
-@report = @{Report.findAllByCall(call).head}
+@station = @{StationData.findAllByCall(call).head}
+@logbook = @{LogBookData.findAllByCall(call).head}
 
 @comps.frame(title = "提出書類の確認", nav = if(admin) "admin" else "proof") {
 @if(!admin) {
@@ -13,11 +13,11 @@
 }
 <div class="card mb-5">
 	<h3 class="card-header d-flex align-items-center justify-content-between border-bottom-0">
-		<span id="CALL">@person.call</span>
+		<span id="CALL">@station.call</span>
 		@if(admin) {
 		<div class="btn-group">
 			<a class="btn btn-outline-success" href="#remindModal" data-toggle="modal"><i class="fas fa-paper-plane"></i></a>
-			<a class="btn btn-outline-primary" href="@routes.Admin.force(person.call)"><i class="fas fa-edit"></i></a>
+			<a class="btn btn-outline-primary" href="@routes.Admin.force(station.call)"><i class="fas fa-edit"></i></a>
 			<a class="btn btn-outline-warning" href="#deleteModal" data-toggle="modal"><i class="fas fa-trash"></i></a>
 		</div>
 		}
@@ -30,27 +30,27 @@
 		<tbody>
 			<tr>
 				<td>お名前</td>
-				<td>@person.name</td>
+				<td>@station.name</td>
 			</tr>
 			<tr>
 				<td>ご住所</td>
-				<td>@person.post</td>
+				<td>@station.post</td>
 			</tr>
 			<tr>
 				<td>連絡先</td>
-				<td><a href="mailto:@person.mail">@person.mail</a></td>
+				<td><a href="mailto:@station.mail">@station.mail</a></td>
 			</tr>
 		</tbody>
 	</table>
-	<div class="card-footer" id="UUID">@person.uuid</div>
+	<div class="card-footer" id="UUID">@station.uuid</div>
 </div>
-@if(person.note.nonEmpty) {
+@if(station.note.nonEmpty) {
 <blockquote class="mb-5">
-	@person.note
+	@station.note
 </blockquote>
 }
-@for(record <- Record.findAllByCall(person.call)) {
-	@table(record,person,report)
+@for(ranking <- RankingData.findAllByCall(station.call)) {
+	@table(ranking,station,logbook)
 }
 @if(admin) {
 <div class="modal" id="remindModal">
@@ -60,7 +60,7 @@
 				<h4 class="modal-title">通知の再送</h4>
 			</div>
 			<div class="modal-body">
-				<p>@{person.call}に通知を再送します。</p>
+				<p>@{station.call}に通知を再送します。</p>
 			</div>
 			<div class="modal-footer">
 				<button class="btn btn-danger" id="remindButton">再送する</button>
@@ -76,7 +76,7 @@
 				<h4 class="modal-title">書類の削除</h4>
 			</div>
 			<div class="modal-body">
-				<p>@{person.call}の書類を削除します。</p>
+				<p>@{station.call}の書類を削除します。</p>
 				<p class="text-danger">この操作は取り消せません。</p>
 			</div>
 			<div class="modal-footer">
@@ -88,10 +88,10 @@
 </div>
 <script type="text/javascript">
 $('#remindButton').click(function () {
-	$.ajax({type: "POST", url: "@helper.CSRF(routes.Proof.email(person.call))"}).done(() => $('#remindModal').modal('hide'));
+	$.ajax({type: "POST", url: "@helper.CSRF(routes.Proof.email(station.call))"}).done(() => $('#remindModal').modal('hide'));
 });
 $('#deleteButton').click(function () {
-	$.ajax({type: "DELETE", url: "@helper.CSRF(routes.Proof.clean(person.call))"}).done(() => window.location="@routes.Admin.index()");
+	$.ajax({type: "DELETE", url: "@helper.CSRF(routes.Proof.clean(station.call))"}).done(() => window.location="@routes.Admin.index()");
 });
 </script>
 }

@@ -1,4 +1,4 @@
-@(form: Form[Client], warn: Option[Html] = None)(implicit req: RequestHeader, admin: Boolean = false)
+@(form: Form[ContestData], warn: Option[Html] = None)(implicit req: RequestHeader, admin: Boolean = false)
 
 @import java.util.UUID
 
@@ -22,12 +22,12 @@
 	</h3>
 	<div class="card-body">
 		<fieldset>
-			@input(form("person.call"), text = "呼出符号", hint = "移動運用の例: JA1ZLO/1")
-			@input(form("person.name"), text = "お名前", hint = "この宛名で賞を発送します。")
-			@input(form("person.post"), text = "ご住所", hint = "この宛先に賞を発送します。", multiline = true)
-			@input(form("person.mail"), text = "メール", hint = "受理通知メールが届きます。")
-			@input(form("person.note"), text = "ご感想", hint = "呼出符号付きで公表します。", multiline = true)
-			@input(form("person.uuid"), hidden = true)
+			@input(form("station.call"), text = "呼出符号", hint = "移動運用の例: JA1ZLO/1")
+			@input(form("station.name"), text = "お名前", hint = "この宛名で賞を発送します。")
+			@input(form("station.post"), text = "ご住所", hint = "この宛先に賞を発送します。", multiline = true)
+			@input(form("station.mail"), text = "メール", hint = "受理通知メールが届きます。")
+			@input(form("station.note"), text = "ご感想", hint = "呼出符号付きで公表します。", multiline = true)
+			@input(form("station.uuid"), hidden = true)
 		</fieldset>
 	</div>
 	<div class="card-footer">
@@ -41,7 +41,7 @@
 	</h3>
 	<div class="card-body">
 		<fieldset>
-			@choice(form(s"ticket[$idx]"), sectOpts=sects, cityOpts=CityBase.all)
+			@choice(form(s"section[$idx]"), sectOpts=sects, cityOpts=CityBase.all)
 		</fieldset>
 	</div>
 </div>
@@ -57,7 +57,7 @@
 	</div>
 	<div class="card-footer">
 		全ての参加部門の交信記録を提出してください。
-		複数のファイルを選ぶことで、複数の部門の交信記録を提出できます。
+		複数のファイルをまとめて選ぶことができます。
 		団体部門は、各交信の担当者が明記された交信記録に限り受理します。
 	</div>
 </div>

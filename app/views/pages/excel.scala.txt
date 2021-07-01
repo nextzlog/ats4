@@ -1,18 +1,18 @@
-@line(record: Record) = @{
-	val person = Person.findAllByCall(record.call).head
+@line(ranking: RankingData) = @{
+	val station = StationData.findAllByCall(ranking.call).head
 	Seq(
-		person.call,
-		record.city,
-		record.sect,
-		if(Rank.rank(record) == 0) "優勝" else "%d位".format(1+Rank.rank(record)),
-		if(Rank.glad(record)) "入賞局" else "",
-		record.rate,
-		person.name,
-		person.post,
-		person.mail,
-		person.note
+		station.call,
+		ranking.city,
+		ranking.sect,
+		if(Rank.rank(ranking) == 0) "優勝" else "%d位".format(1+Rank.rank(ranking)),
+		if(Rank.glad(ranking)) "入賞局" else "",
+		ranking.rate,
+		station.name,
+		station.post,
+		station.mail,
+		station.note
 	).mkString(",").concat("\n")
 }
 
 呼出符号,運用場所,参加部門,順位,入賞,得点,名前,住所,アドレス,コメント
-@for(sect <- Rule.rule.asScala; record <- Record.findAllBySect(sect.name()).toList.sortBy(-_.rate)) {@line(record)}
+@for(sect <- Rule.rule.asScala; ranking <- RankingData.findAllBySect(sect.name()).toList.sortBy(-_.rate)) {@line(ranking)}

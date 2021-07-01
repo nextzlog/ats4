@@ -6,27 +6,27 @@ import qxsl.draft.Call
 
 import play.api.data.{Form, Forms, OptionalMapping}
 
-object TicketForm extends Form[Ticket](
+object SectionForm extends Form[SectionData](
 	Forms.mapping(
 		"sect" -> Forms.text,
 		"city" -> Forms.text
-	)(Ticket.apply)(Ticket.unapply).verifying(p => Rule.absent(p.sect) || p.city.nonEmpty), Map.empty, Nil, None
+	)(SectionData.apply)(SectionData.unapply).verifying(p => Rule.absent(p.sect) || p.city.nonEmpty), Map.empty, Nil, None
 )
 
-object PersonForm extends Form[Person](
+object StationForm extends Form[StationData](
 	Forms.mapping(
 		"call" -> Forms.nonEmptyText.verifying(Call.isValid(_)).transform(new Call(_).value(), identity[String]),
 		"name" -> Forms.nonEmptyText,
 		"post" -> Forms.nonEmptyText,
 		"mail" -> Forms.email,
 		"note" -> Forms.text,
-		"uuid" -> OptionalMapping(Forms.uuid).transform(_.getOrElse(Person.uuid), Some[UUID](_))
-	)(Person.apply)(Person.unapply), Map.empty, Nil, None
+		"uuid" -> OptionalMapping(Forms.uuid).transform(_.getOrElse(StationData.uuid), Some[UUID](_))
+	)(StationData.apply)(StationData.unapply), Map.empty, Nil, None
 )
 
-object ClientForm extends Form[Client](
+object ContestForm extends Form[ContestData](
 	Forms.mapping(
-		"person" -> PersonForm.mapping,
-		"ticket" -> Forms.seq(TicketForm.mapping)
-	)(Client.apply)(Client.unapply), Map.empty, Nil, None
+		"station" -> StationForm.mapping,
+		"section" -> Forms.seq(SectionForm.mapping)
+	)(ContestData.apply)(ContestData.unapply), Map.empty, Nil, None
 )
