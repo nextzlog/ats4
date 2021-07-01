@@ -19,18 +19,14 @@ class Verifier {
 }
 
 class Acceptor(implicit smtp: MailerClient) {
-	val decoder = new SheetOrTable()
 	def push(post: ContestData, files: Seq[TemporaryFile]): String = {
-		val bytes = files.map(_.toFile.toPath).map(Files.readAllBytes)
-		val items = bytes.map(decoder.unpack).map(_.asScala).flatten
+		val logs = files.map(_.toFile.toPath).map(Files.readAllBytes)
 		StationData.findAllByCall(post.station.call).foreach(_.delete())
 		RankingData.findAllByCall(post.station.call).foreach(_.delete())
 		LogBookData.findAllByCall(post.station.call).foreach(_.delete())
-		RawBookData.findAllByCall(post.station.call).foreach(_.delete())
 		post.station.save()
-		post.station(items).save()
+		for (b <- logs) post.station(b).save()
 		for (t <- post.ranking) post(t).save()
-		for (d <- bytes) RawBookData(post.station.call, d).save()
 		StationData.findAllByCall(post.station.call).foreach(new SendMail().send)
 		Logger(this.getClass).info(s"accept: $post")
 		post.station.call
@@ -42,7 +38,7 @@ class Receiver(uuid: UUID)(implicit cfg: Configuration) {
 	def push(data: Array[Byte]): String = {
 		val call = StationData.findAllByUUID(uuid).head.call
 		val post = ContestData.fill(call)
-		val list = LogBookData.findAllByCall(call).head.list
+		val list = LogBookData.findAllByCall(call).head.toList.toBuffer
 		val diff = decoder.unpack(data.tail).asScala
 		list --= diff.take(data.head.toInt & 0xFF)
 		list ++= diff.drop(data.head.toInt & 0xFF)

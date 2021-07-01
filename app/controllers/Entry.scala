@@ -1,7 +1,5 @@
 package controllers
 
-import java.io.{UncheckedIOException => Unsup}
-import java.nio.charset.{CharacterCodingException => Chset}
 import java.util.{NoSuchElementException => Omiss}
 import javax.inject.{Inject, Singleton}
 
@@ -19,9 +17,7 @@ import org.apache.commons.mail.{EmailException => Email}
 		val form = ContestForm.bindFromRequest()
 		Ok(pages.proof(new Acceptor().push(post = form.get, files = data.get.files.map(_.ref))))
 	}.recover {
-		case ex: Chset => Ok(pages.entry(ContestForm.bindFromRequest(), Some(warns.chset())))
 		case ex: Omiss => Ok(pages.entry(ContestForm.bindFromRequest(), Some(warns.omiss())))
-		case ex: Unsup => Ok(pages.entry(ContestForm.bindFromRequest(), Some(warns.unsup())))
 		case ex: Email => Ok(pages.entry(ContestForm.bindFromRequest(), Some(warns.email())))
 	}.get)
 }

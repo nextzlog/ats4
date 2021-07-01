@@ -1,7 +1,7 @@
 @(call: String)(implicit req: RequestHeader, admin: Boolean = false)
 
 @station = @{StationData.findAllByCall(call).head}
-@logbook = @{LogBookData.findAllByCall(call).head}
+@logdata = @{LogBookData.findAllByCall(call)}
 
 @comps.frame(title = "提出書類の確認", nav = if(admin) "admin" else "proof") {
 @if(!admin) {
@@ -49,8 +49,11 @@
 	@station.note
 </blockquote>
 }
+@for((log,idx) <- logdata.zipWithIndex) {
+	@error(log, idx)
+}
 @for(ranking <- RankingData.findAllByCall(station.call)) {
-	@table(ranking,station,logbook)
+	@table(ranking,station,logdata)
 }
 @if(admin) {
 <div class="modal" id="remindModal">

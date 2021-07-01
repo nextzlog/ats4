@@ -4,6 +4,7 @@ import java.lang.{String => S}
 import java.util.{UUID => U}
 
 import qxsl.model.Item
+import qxsl.sheet.SheetOrTable
 import qxsl.table.TableManager
 
 import scala.{Int => I}
@@ -16,15 +17,16 @@ case class SectionData(sect: S, city: S)
 
 case class ContestData(station: StationData, ranking: Seq[SectionData]) {
 	def apply(tick: SectionData) = {
-		val sum = LogBookData.findAllByCall(station.call).head.test(tick.sect)
-		RankingData(
+		val rank = RankingData(
 			call = station.call,
 			sect = tick.sect,
 			city = tick.city,
-			mark = sum.score(),
-			rate = sum.total(),
+			mark = 0,
+			rate = 0,
 			code = Rule.rule.section(tick.sect).code()
 		)
+		val sum = rank.test(LogBookData.findAllByCall(station.call))
+		rank.copy(mark = sum.score(), rate = sum.total())
 	}
 }
 
@@ -32,18 +34,19 @@ case class RankingData(call: S, sect: S, city: S, mark: I, rate: I, code: S) ext
 	def rule = Rule.rule.section(sect)
 	def zero = !Rule.absent(sect) && mark == 0
 	def json = RankingJson(call = call, score = mark, total = rate)
+	def test(logs: Seq[LogBookData]) = Rule.rule.section(sect).summarize(logs.map(_.toList).flatten.asJava)
 }
 
 case class StationData(call: S, name: S, post: S, mail: S, note: S, uuid: U) extends ActiveRecord {
-	def apply(seq: Seq[Item]) = LogBookData(call = call, data = new TableManager().encode(seq.asJava))
+	def apply(data: Array[Byte]): LogBookData = LogBookData(call = call, data = data)
+	def apply(data: Seq[Item]): LogBookData = this(new TableManager().encode(data.asJava))
 }
 
 case class LogBookData(call: S, data: Array[Byte]) extends ActiveRecord {
-	def test(s: String) = Rule.rule.section(s).summarize(list.asJava)
-	def list = new TableManager().decode(data).asScala
+	def decode = new SheetOrTable().unpack(data).asScala
+	def toList = scala.util.Try(decode).getOrElse(Seq())
+	def toWarn = scala.util.Try(decode).failed.map(_.getCause.getMessage).toOption
 }
-
-case class RawBookData(call: S, data: Array[Byte]) extends ActiveRecord
 
 object SectionData {
 	def fill(call: String) = Subtests.groups.map(g => RankingData.fill(call, g._1).map(from)).flatten
@@ -75,17 +78,10 @@ object LogBookData extends ActiveRecordCompanion[LogBookData] {
 	def findAllByCall(call: S) = this.findAllBy("call", call).toList
 }
 
-object RawBookData extends ActiveRecordCompanion[RawBookData] {
-	def findByID(id: Long) = this.findBy("id", id)
-	def findAllByCall(call: S) = this.findAllBy("call", call).toList
-}
-
 object Tables extends ActiveRecordTables with PlaySupport {
 	val stations = table[StationData]
 	val rankings = table[RankingData]
 	val logbooks = table[LogBookData]
-	val rawbooks = table[RawBookData]
 	on(stations)(c => declare(c.note is (dbType("clob"))))
 	on(logbooks)(c => declare(c.data is (dbType("blob"))))
-	on(rawbooks)(c => declare(c.data is (dbType("blob"))))
 }

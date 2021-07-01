@@ -1,27 +1,19 @@
-@(ranking: RankingData, station: StationData, logbook: LogBookData)(implicit admin: Boolean = false)
+@(ranking: RankingData, station: StationData, logbooks: Seq[LogBookData])(implicit admin: Boolean = false)
 
 @import java.time.format.DateTimeFormatter
 
 @dfmt = @{DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss OOOO")}
 @time(t: Time) = @{t.value.format(dfmt)}
 
-@book = @{logbook.test(ranking.sect)}
+@book = @{ranking.test(logbooks)}
 @link(call: String) = {@if(admin && StationData.findAllByCall(call).nonEmpty) {<a href="@routes.Proof.proof(call)">@call</a>} else {@call}}
 
 @normalize(list: Seq[Message]) = @{list.zip(RuleKit.load("jautil.lisp").pattern().normalize(list.map(_.item).toSeq.asJava, null))}
 
 @if(!Rule.absent(ranking.sect)) {
 <div class="card mb-5">
-	<h3 class="card-header border-bottom-0 d-flex align-items-center justify-content-between">
+	<h3 class="card-header border-bottom-0">
 		<span>@ranking.sect</span>
-		<div class="btn-group">
-			@for(log <- LogBookData.findAllByCall(station.call)) {
-			<a class="btn btn-outline-primary" href="@routes.Proof.table(log.id)"><i class="fas fa-download"></i></a>
-			}
-			@for(raw <- RawBookData.findAllByCall(station.call)) {
-			<a class="btn btn-outline-success" href="@routes.Proof.sheet(raw.id)"><i class="fas fa-download"></i></a>
-			}
-		</div>
 	</h3>
 	<table class="table table-sm table-hover text-monospace">
 		<thead>

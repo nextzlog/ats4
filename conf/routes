@@ -25,7 +25,6 @@ POST    /admin/email/:call   controllers.Proof.email(call: String)
 GET     /admin/proof/:call   controllers.Proof.proof(call: String)
 DELETE  /admin/proof/:call   controllers.Proof.clean(call: String)
 GET     /admin/table/:id.log controllers.Proof.table(id: Long)
-GET     /admin/sheet/:id.log controllers.Proof.sheet(id: Long)
 
 # WebSocket
 GET     /agent/:uuid        controllers.Agent.agent(uuid: UUID)
