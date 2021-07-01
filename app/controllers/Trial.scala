@@ -14,8 +14,7 @@ import views.html.{pages, warns}
 	def trial = this.check(admin = false)
 	def admin = this.check(admin = true)
 	def check(implicit admin: Boolean) = Action(implicit r => util.Try {
-		val data = r.body.asMultipartFormData
-		valid.push(files = data.get.files.map(_.ref))
+		valid.push(files = r.body.asMultipartFormData.get.files.map(_.ref))
 		Ok(pages.trial(succ = true))
 	}.recover {
 		case ex: Chset => Ok(pages.trial(warn = Some(warns.chset()), ex=Some(ex)))

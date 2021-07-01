@@ -5,7 +5,7 @@
 @dfmt = @{DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss OOOO")}
 @time(t: Time) = @{t.value.format(dfmt)}
 
-@rate = @{logbook.rate(ranking.sect)}
+@book = @{logbook.test(ranking.sect)}
 @link(call: String) = {@if(admin && StationData.findAllByCall(call).nonEmpty) {<a href="@routes.Proof.proof(call)">@call</a>} else {@call}}
 
 @normalize(list: Seq[Message]) = @{list.zip(RuleKit.load("jautil.lisp").pattern().normalize(list.map(_.item).toSeq.asJava, null))}
@@ -14,9 +14,14 @@
 <div class="card mb-5">
 	<h3 class="card-header border-bottom-0 d-flex align-items-center justify-content-between">
 		<span>@ranking.sect</span>
-	@if(admin) {
-		<a class="btn btn-outline-success" href="@routes.Proof.table(station.call)"><i class="fas fa-download"></i></a>
-	}
+		<div class="btn-group">
+			@for(log <- LogBookData.findAllByCall(station.call)) {
+			<a class="btn btn-outline-primary" href="@routes.Proof.table(log.id)"><i class="fas fa-download"></i></a>
+			}
+			@for(raw <- RawBookData.findAllByCall(station.call)) {
+			<a class="btn btn-outline-success" href="@routes.Proof.sheet(raw.id)"><i class="fas fa-download"></i></a>
+			}
+		</div>
 	</h3>
 	<table class="table table-sm table-hover text-monospace">
 		<thead>
@@ -32,7 +37,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			@for((msg, item) <- normalize(rate.accepted().toSeq)) {
+			@for((msg, item) <- normalize(book.accepted().toSeq)) {
 			<tr>
 				<td>@{time(item.get(Qxsl.TIME).asInstanceOf[Time])}</td>
 				<td>@link(String.valueOf(item.get(Qxsl.CALL)))</td>
@@ -44,7 +49,7 @@
 				<td>-</td>
 			</tr>
 			}
-			@for((msg, item) <- normalize(rate.rejected().toSeq)) {
+			@for((msg, item) <- normalize(book.rejected().toSeq)) {
 			<tr class="table-warning">
 				<td>@{time(msg.item.get(Qxsl.TIME).asInstanceOf[Time])}</td>
 				<td>@link(String.valueOf(msg.item.get(Qxsl.CALL)))</td>

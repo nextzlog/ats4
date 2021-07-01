@@ -3,7 +3,6 @@ package models
 import java.nio.file.Files
 import java.util.UUID
 
-import qxsl.model.Item
 import qxsl.sheet.SheetOrTable
 
 import scala.jdk.CollectionConverters._
@@ -14,8 +13,8 @@ import play.libs.mailer.MailerClient
 
 class Verifier {
 	val decoder = new SheetOrTable()
-	def push(files: Seq[TemporaryFile]): Seq[Item] = {
-		files.map(_.toFile.toPath).map(Files.readAllBytes).map(decoder.unpack).map(_.asScala).flatten
+	def push(files: Seq[TemporaryFile]) = {
+		files.map(_.toFile.toPath).map(Files.readAllBytes).foreach(decoder.unpack)
 	}
 }
 
@@ -27,11 +26,13 @@ class Acceptor(implicit smtp: MailerClient) {
 		StationData.findAllByCall(post.station.call).foreach(_.delete())
 		RankingData.findAllByCall(post.station.call).foreach(_.delete())
 		LogBookData.findAllByCall(post.station.call).foreach(_.delete())
+		RawBookData.findAllByCall(post.station.call).foreach(_.delete())
 		post.station.save()
 		post.station(items).save()
 		for (t <- post.ranking) post(t).save()
-		Logger(this.getClass).info(s"accept: $post")
+		for (d <- bytes) RawBookData(post.station.call, d).save()
 		StationData.findAllByCall(post.station.call).foreach(new SendMail().send)
+		Logger(this.getClass).info(s"accept: $post")
 		post.station.call
 	}
 }

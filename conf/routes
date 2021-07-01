@@ -3,28 +3,29 @@
 # ~~~~
 
 # Public pages
-GET     /                   controllers.Index.index
-GET     /calls              controllers.Index.calls
-GET     /entry              controllers.Index.entry
-POST    /entry              controllers.Entry.entry
-GET     /trial              controllers.Index.trial
-POST    /trial              controllers.Trial.trial
-GET     /forum              controllers.Index.forum
-GET     /guide              controllers.Index.guide
-GET     /lists              controllers.Index.lists
+GET     /                    controllers.Index.index
+GET     /calls               controllers.Index.calls
+GET     /entry               controllers.Index.entry
+POST    /entry               controllers.Entry.entry
+GET     /trial               controllers.Index.trial
+POST    /trial               controllers.Trial.trial
+GET     /forum               controllers.Index.forum
+GET     /guide               controllers.Index.guide
+GET     /lists               controllers.Index.lists
 
 # Secret pages
-GET     /admin              controllers.Admin.index
-DELETE  /admin              controllers.Admin.clean
-GET     /admin/excel        controllers.Admin.excel
-GET     /admin/entry        controllers.Admin.entry
-GET     /admin/trial        controllers.Admin.trial
-POST    /admin/trial        controllers.Trial.admin
-GET     /admin/force/:call  controllers.Admin.force(call: String)
-GET     /admin/table/:call  controllers.Proof.table(call: String)
-POST    /admin/email/:call  controllers.Proof.email(call: String)
-GET     /admin/proof/:call  controllers.Proof.proof(call: String)
-DELETE  /admin/proof/:call  controllers.Proof.clean(call: String)
+GET     /admin               controllers.Admin.index
+DELETE  /admin               controllers.Admin.clean
+GET     /admin/excel         controllers.Admin.excel
+GET     /admin/entry         controllers.Admin.entry
+GET     /admin/trial         controllers.Admin.trial
+POST    /admin/trial         controllers.Trial.admin
+GET     /admin/force/:call   controllers.Admin.force(call: String)
+POST    /admin/email/:call   controllers.Proof.email(call: String)
+GET     /admin/proof/:call   controllers.Proof.proof(call: String)
+DELETE  /admin/proof/:call   controllers.Proof.clean(call: String)
+GET     /admin/table/:id.log controllers.Proof.table(id: Long)
+GET     /admin/sheet/:id.log controllers.Proof.sheet(id: Long)
 
 # WebSocket
 GET     /agent/:uuid        controllers.Agent.agent(uuid: UUID)
