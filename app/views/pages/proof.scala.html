@@ -42,7 +42,11 @@
 			</tr>
 		</tbody>
 	</table>
-	<div class="card-footer" id="UUID">@station.uuid</div>
+	<div class="card-footer" id="UUID">
+		<a href="http://localhost:8873?id=@station.uuid">
+			リアルタイム・ロギングソフトと連携する場合は、ロギングソフトを起動し、待機状態にしてから、ここをクリックします。
+		</a>
+	</div>
 </div>
 @if(station.note.nonEmpty) {
 <blockquote class="mb-5">
