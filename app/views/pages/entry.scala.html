@@ -14,10 +14,10 @@
 		お手持ちの交信記録がこのシステムで処理可能な書式であるか、事前に検査できます。
 		また、書類提出に何度か失敗した場合は、メール対応のご案内をする場合があります。
 	</p>
-	<a class="btn btn-primary" href="@routes.Index.trial()"> 交信記録の書式を検査する</a>
+	<a class="btn btn-primary" href="@routes.Index.trial"> 交信記録の書式を検査する</a>
 </div>
 }
-@helper.form(action = routes.Entry.entry(), Symbol("enctype")->"multipart/form-data") {
+@helper.form(action = routes.Entry.entry, Symbol("enctype")->"multipart/form-data") {
 @helper.CSRF.formField
 <div class="card bg-light mb-5">
 	<h3 class="card-header">
@@ -34,14 +34,14 @@
 		</fieldset>
 	</div>
 </div>
-@for(((code, sects), idx) <- Subtests.groups.zipWithIndex) {
+@for((code, idx) <- Rule.groups.zipWithIndex) {
 <div class="card bg-light mb-5">
 	<h3 class="card-header">
 		<span>@code</span>
 	</h3>
 	<div class="card-body">
 		<fieldset>
-			@choice(form(s"section[$idx]"), sectOpts=sects, cityOpts=CityBase.all)
+			@choice(form(s"section[$idx]"), sectOpts=Rule.rule.filter(_.code == code), cityOpts=CityBase.all)
 		</fieldset>
 	</div>
 </div>
@@ -62,7 +62,7 @@
 	</div>
 </div>
 <a class="btn btn-lg btn-primary" href="#submitModal" data-toggle="modal"><i class="fas fa-thumbs-up"></i> この内容で提出する</a>
-<a class="btn btn-lg btn-outline-secondary" href="@routes.Index.guide()"><i class="fas fa-question"></i> ヘルプ画面に移動する</a>
+<a class="btn btn-lg btn-outline-secondary" href="@routes.Index.guide"><i class="fas fa-question"></i> ヘルプ画面に移動する</a>
 <div class="modal" id="submitModal">
 	<div class="modal-dialog">
 		<div class="modal-content">

@@ -15,7 +15,7 @@
 <pre class="text-white bg-dark rounded p-2">@{e.getMessage()}</pre>
 }
 }
-@helper.form(action = if(admin) routes.Trial.admin() else routes.Trial.trial(), Symbol("enctype")->"multipart/form-data") {
+@helper.form(action = if(admin) routes.Trial.admin else routes.Trial.trial, Symbol("enctype")->"multipart/form-data") {
 @helper.CSRF.formField
 <div class="card bg-light mb-5">
 	<h3 class="card-header">
@@ -32,6 +32,6 @@
 	</div>
 </div>
 <button class="btn btn-lg btn-primary" type="submit"><i class="fas fa-thumbs-up"></i> 対応済みの書式か確認する</button>
-<a class="btn btn-lg btn-outline-secondary" href="@routes.Index.guide()"><i class="fas fa-question"></i> ヘルプ画面に移動する</a>
+<a class="btn btn-lg btn-outline-secondary" href="@routes.Index.guide"><i class="fas fa-question"></i> ヘルプ画面に移動する</a>
 }
 }

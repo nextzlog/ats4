@@ -13,9 +13,9 @@
 	<div class="row d-flex justify-content-center py-2">
 		<a class="btn btn-lg btn-outline-dark mx-2" href="http://@Rule.rule.link">規約を閲覧する</a>
 		@if(Schedule.accept) {
-		<a class="btn btn-lg btn-outline-primary mx-2" href="@routes.Index.entry()">書類を提出する</a>
+		<a class="btn btn-lg btn-outline-primary mx-2" href="@routes.Index.entry">書類を提出する</a>
 		} else {
-		<a class="btn btn-lg btn-outline-primary mx-2" href="@routes.Index.lists()">結果を閲覧する</a>
+		<a class="btn btn-lg btn-outline-primary mx-2" href="@routes.Index.lists">結果を閲覧する</a>
 		}
 	</div>
 	} else {
@@ -37,7 +37,7 @@
 <blockquote>
 @if(note.nonEmpty) {
 @defining(util.Random.shuffle(note).head) {station =>
-	<p>@station.note<footer><a href="@routes.Index.forum()#@station.call">@station.call</a></footer></p>
+	<p>@station.note<footer><a href="@routes.Index.forum#@station.call">@station.call</a></footer></p>
 }
 } else {
 	<p>本日は晴天なり</p>

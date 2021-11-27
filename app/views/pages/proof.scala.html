@@ -98,7 +98,7 @@ $('#remindButton').click(function () {
 	$.ajax({type: "POST", url: "@helper.CSRF(routes.Proof.email(station.call))"}).done(() => $('#remindModal').modal('hide'));
 });
 $('#deleteButton').click(function () {
-	$.ajax({type: "DELETE", url: "@helper.CSRF(routes.Proof.clean(station.call))"}).done(() => window.location="@routes.Admin.index()");
+	$.ajax({type: "DELETE", url: "@helper.CSRF(routes.Proof.clean(station.call))"}).done(() => window.location="@routes.Admin.index");
 });
 </script>
 }

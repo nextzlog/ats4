@@ -1,12 +1,12 @@
 name := "ats4"
 version := "SNAPSHOT"
-scalaVersion := "2.13.3"
+scalaVersion := "2.13.7"
 scalacOptions += "-feature"
 libraryDependencies ++= Seq(
 	filters,
 	guice,
 	jdbc,
-	"qxsl" % "qxsl" % "0.1.195",
+	"qxsl" % "qxsl" % "0.1.199",
 	"org.jruby" % "jruby-core" % "9.+",
 	"com.h2database" % "h2" % "1.4.+",
 	"com.typesafe.play" %% "play-mailer" % "7.0.+",

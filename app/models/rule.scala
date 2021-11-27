@@ -1,6 +1,5 @@
 package models
 
-import java.io.InputStreamReader
 import java.time.{LocalDate, ZoneId}
 import java.util.{List => JList}
 
@@ -14,10 +13,8 @@ import play.api.Logger
 
 object Rule {
 	lazy val rule = Try(this.load).tap(_.failed.foreach(warn)).get
-	def file = "/application.rb"
-	def load = RuleKit.forName("ruby").eval(reader).contest()
-	def reader = new InputStreamReader(this.stream)
-	def stream = getClass.getResourceAsStream(file)
+	def groups = rule.asScala.map(_.code).toSeq.distinct
+	def load = RuleKit.load("/application.rb").contest()
 	def warn(ex: Throwable) = Logger("rule").error("bad rule", ex)
 	def absent(sect: String) = rule.section(sect).isInstanceOf[Absence]
 }
@@ -34,10 +31,6 @@ object Schedule {
 	lazy val dead = Rule.rule.getDeadLine(year)
 	def finish = Rule.rule.finish(year, ZoneId.systemDefault())
 	def accept = Rule.rule.accept(year, ZoneId.systemDefault())
-}
-
-object Subtests {
-	def groups = Rule.rule.asScala.groupBy(_.code).toSeq.sortBy(_._1)
 }
 
 object CityBase {

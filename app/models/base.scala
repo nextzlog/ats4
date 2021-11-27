@@ -49,7 +49,7 @@ case class LogBookData(call: S, data: Array[Byte]) extends ActiveRecord {
 }
 
 object SectionData {
-	def fill(call: String) = Subtests.groups.map(g => RankingData.fill(call, g._1).map(from)).flatten
+	def fill(call: String) = Rule.groups.sorted.map(g => RankingData.fill(call, g).map(from)).flatten
 	def from(post: RankingData) = SectionData(sect = post.sect, city = post.city)
 }
 
