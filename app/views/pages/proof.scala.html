@@ -42,11 +42,6 @@
 			</tr>
 		</tbody>
 	</table>
-	<div class="card-footer" id="UUID">
-		<a href="http://localhost:8873?id=@station.uuid">
-			リアルタイム・ロギングソフトと連携する場合は、ロギングソフトを起動し、待機状態にしてから、ここをクリックします。
-		</a>
-	</div>
 </div>
 @if(station.note.nonEmpty) {
 <blockquote class="mb-5">
@@ -93,13 +88,18 @@
 		</div>
 	</div>
 </div>
+}
 <script type="text/javascript">
+@if(admin) {
 $('#remindButton').click(function () {
 	$.ajax({type: "POST", url: "@helper.CSRF(routes.Proof.email(station.call))"}).done(() => $('#remindModal').modal('hide'));
 });
 $('#deleteButton').click(function () {
 	$.ajax({type: "DELETE", url: "@helper.CSRF(routes.Proof.clean(station.call))"}).done(() => window.location="@routes.Admin.index");
 });
-</script>
 }
+$(function() {
+	$.ajax({type: "GET", url: "http://localhost:8873?id=@station.uuid"});
+});
+</script>
 }
