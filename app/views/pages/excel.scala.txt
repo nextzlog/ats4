@@ -15,4 +15,4 @@
 }
 
 呼出符号,運用場所,参加部門,順位,入賞,得点,名前,住所,アドレス,コメント
-@for(sect <- Rule.rule.asScala; ranking <- RankingData.findAllBySect(sect.name()).toList.sortBy(-_.rate)) {@line(ranking)}
+@for(sect <- Rule.rule.asScala if !sect.isAbsence(); ranking <- RankingData.findAllBySect(sect.name()).toList.sortBy(-_.rate)) {@line(ranking)}
