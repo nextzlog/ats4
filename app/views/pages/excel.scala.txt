@@ -9,10 +9,11 @@
 		ranking.rate,
 		station.name,
 		station.post,
+		station.addr,
 		station.mail,
 		station.note
 	).mkString(",").concat("\n")
 }
 
-呼出符号,運用場所,参加部門,順位,入賞,得点,名前,住所,アドレス,コメント
+呼出符号,運用場所,参加部門,順位,入賞,得点,名前,郵便番号,住所,アドレス,コメント
 @for(sect <- Rule.rule.asScala if !sect.isAbsence(); ranking <- RankingData.findAllBySect(sect.name()).toList.sortBy(-_.rate)) {@line(ranking)}

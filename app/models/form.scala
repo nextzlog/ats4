@@ -18,6 +18,7 @@ object StationForm extends Form[StationData](
 		"call" -> Forms.nonEmptyText.verifying(Call.isValid(_)).transform(new Call(_).value(), identity[String]),
 		"name" -> Forms.nonEmptyText,
 		"post" -> Forms.nonEmptyText,
+		"addr" -> Forms.nonEmptyText,
 		"mail" -> Forms.email,
 		"note" -> Forms.text,
 		"uuid" -> OptionalMapping(Forms.uuid).transform(_.getOrElse(StationData.uuid), Some[UUID](_))

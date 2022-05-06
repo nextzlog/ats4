@@ -27,7 +27,8 @@
 		<fieldset>
 			@input(form("station.call"), text = "呼出符号", hint = "移動運用の例: JA1ZLO/1")
 			@input(form("station.name"), text = "お名前", hint = "この宛名で賞を発送します。")
-			@input(form("station.post"), text = "ご住所", hint = "この宛先に賞を発送します。", multiline = true)
+			@input(form("station.post"), text = "郵便番号", hint = "この宛先に賞を発送します。")
+			@input(form("station.addr"), text = "ご住所", hint = "この宛先に賞を発送します。", multiline = true)
 			@input(form("station.mail"), text = "メール", hint = "受理通知メールが届きます。")
 			@input(form("station.note"), text = "ご感想", hint = "呼出符号付きで公表します。", multiline = true)
 			@input(form("station.uuid"), hidden = true)

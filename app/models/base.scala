@@ -37,7 +37,7 @@ case class RankingData(call: S, sect: S, city: S, mark: I, rate: I, code: S) ext
 	def test(logs: Seq[LogBookData]) = Rule.rule.section(sect).summarize(logs.map(_.toList).flatten.asJava)
 }
 
-case class StationData(call: S, name: S, post: S, mail: S, note: S, uuid: U) extends ActiveRecord {
+case class StationData(call: S, name: S, post: S, addr: S, mail: S, note: S, uuid: U) extends ActiveRecord {
 	def apply(data: Array[Byte]): LogBookData = LogBookData(call = call, data = data)
 	def apply(data: Seq[Item]): LogBookData = this(new TableManager().encode(data.asJava))
 }
