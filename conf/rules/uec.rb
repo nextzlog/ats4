@@ -1,13 +1,13 @@
 # UEC CONTEST DEFINED by ATS-4
 
-import 'qxsl.draft.Band'
-import 'qxsl.draft.Qxsl'
-import 'qxsl.ruler.Contest'
-import 'qxsl.ruler.Element'
-import 'qxsl.ruler.Failure'
-import 'qxsl.ruler.RuleKit'
-import 'qxsl.ruler.Section'
-import 'qxsl.ruler.Success'
+java_import 'qxsl.draft.Band'
+java_import 'qxsl.draft.Qxsl'
+java_import 'qxsl.ruler.Contest'
+java_import 'qxsl.ruler.Element'
+java_import 'qxsl.ruler.Failure'
+java_import 'qxsl.ruler.RuleKit'
+java_import 'qxsl.ruler.Section'
+java_import 'qxsl.ruler.Success'
 
 require 'rules/util'
 
@@ -17,7 +17,7 @@ ZONEID = ZoneId.of('Asia/Tokyo')
 
 HOURDB = [17, 18, 19, 20]
 MODEDB = ['CW']
-CITYDB = JAUTIL.get('CITYDB').toList.select{|c| c.code.length <= 3 and not ['01', '48'].include?(c.code)}
+CITYDB = JAUTIL.get('CITY-LIST').select{|c| c.code.length <= 3 and not ['01', '48'].include?(c.code)}
 
 module BandEnum
 	B3_5 =  3500
@@ -114,6 +114,9 @@ class SectionUEC < Section
 	end
 	def code()
 		'UEC'
+	end
+	def getCityList()
+		CITYDB
 	end
 	def verify(item)
 		verify_item(JAUTIL.normalize(item, nil), @band)

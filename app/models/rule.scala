@@ -17,6 +17,7 @@ object Rule {
 	def load = RuleKit.load("/application.rb").contest()
 	def warn(ex: Throwable) = Logger("rule").error("bad rule", ex)
 	def absent(sect: String) = rule.section(sect).isInstanceOf[Absence]
+	def cities(sect: String) = rule.section(sect).getCityList().asScala
 }
 
 object Rank {
@@ -31,8 +32,4 @@ object Schedule {
 	lazy val dead = Rule.rule.getDeadLine(year)
 	def finish = Rule.rule.finish(year, ZoneId.systemDefault())
 	def accept = Rule.rule.accept(year, ZoneId.systemDefault())
-}
-
-object CityBase {
-	def all = Rule.rule.get("CITYDB").asInstanceOf[JList[_]].asScala.map(_.toString)
 }

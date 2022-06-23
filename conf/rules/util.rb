@@ -1,9 +1,9 @@
 # CONTEST UTILITIES DEFINED by ATS-4
 
-import 'java.time.DayOfWeek'
-import 'java.time.LocalDate'
-import 'java.time.ZoneId'
-import 'java.time.temporal.TemporalAdjusters'
+java_import 'java.time.DayOfWeek'
+java_import 'java.time.LocalDate'
+java_import 'java.time.ZoneId'
+java_import 'java.time.temporal.TemporalAdjusters'
 
 def schedule(year, month, nth, dayOfWeek)
 	week = DayOfWeek.valueOf(dayOfWeek)

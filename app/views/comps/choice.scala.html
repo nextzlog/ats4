@@ -1,4 +1,6 @@
-@(field: Field, sectOpts: Iterable[Section], cityOpts: Iterable[String])
+@(field: Field, sectOpts: Iterable[Section])
+
+@cityOpts = @{sectOpts.map(_.getCityList).flatten.toSeq.distinct}
 
 @sect = @{field("sect")}
 @city = @{field("city")}

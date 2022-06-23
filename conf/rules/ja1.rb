@@ -1,12 +1,11 @@
 # ALLJA1 CONTEST DEFINED by ATS-4
 
-import 'qxsl.ruler.Contest'
-import 'qxsl.ruler.RuleKit'
+java_import 'qxsl.ruler.Contest'
+java_import 'qxsl.ruler.RuleKit'
 
 require 'rules/util'
 
 ALLJA1 = RuleKit.load('allja1.lisp').contest
-CITYDB = ALLJA1.get('CITYDB').toList.select{|c| c.code.length > 3}
 
 class ContestJA1 < Contest
 	def initialize(sections)

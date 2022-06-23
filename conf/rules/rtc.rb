@@ -1,12 +1,11 @@
 # REAL-TIME CONONLINE DEFINED by ATS-4
 
-import 'qxsl.ruler.Contest'
-import 'qxsl.ruler.RuleKit'
+java_import 'qxsl.ruler.Contest'
+java_import 'qxsl.ruler.RuleKit'
 
 require 'rules/util'
 
 ONLINE = RuleKit.load('online.lisp').contest
-CITYDB = ONLINE.get('CITYDB').toList.select{|c| c.code.length <= 3 and not ['01', '48'].include?(c.code)}
 
 class ContestRTC < Contest
 	def initialize(sections)

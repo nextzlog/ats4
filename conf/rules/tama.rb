@@ -1,13 +1,13 @@
 # TAMAGAWA CONTEST DEFINED by ATS-4
 
-import 'qxsl.draft.Qxsl'
-import 'qxsl.local.LocalCityBase'
-import 'qxsl.ruler.Contest'
-import 'qxsl.ruler.Element'
-import 'qxsl.ruler.Failure'
-import 'qxsl.ruler.RuleKit'
-import 'qxsl.ruler.Section'
-import 'qxsl.ruler.Success'
+java_import 'qxsl.draft.Qxsl'
+java_import 'qxsl.local.LocalCityBase'
+java_import 'qxsl.ruler.Contest'
+java_import 'qxsl.ruler.Element'
+java_import 'qxsl.ruler.Failure'
+java_import 'qxsl.ruler.RuleKit'
+java_import 'qxsl.ruler.Section'
+java_import 'qxsl.ruler.Success'
 
 require 'rules/util'
 
@@ -102,6 +102,9 @@ class SectionTama < Section
 	end
 	def code()
 		'TAMA'
+	end
+	def getCityList()
+		CITYDB
 	end
 	def verify(item)
 		verify_item(JAUTIL.normalize(item, nil), @mode)

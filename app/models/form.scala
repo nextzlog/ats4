@@ -10,7 +10,10 @@ object SectionForm extends Form[SectionData](
 	Forms.mapping(
 		"sect" -> Forms.text,
 		"city" -> Forms.text
-	)(SectionData.apply)(SectionData.unapply).verifying(p => Rule.absent(p.sect) || p.city.nonEmpty), Map.empty, Nil, None
+	)(SectionData.apply)(SectionData.unapply).verifying(p => {
+		Rule.absent(p.sect) ||
+		Rule.cities(p.sect).exists(_.toString == p.city)
+	}), Map.empty, Nil, None
 )
 
 object StationForm extends Form[StationData](

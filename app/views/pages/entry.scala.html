@@ -42,7 +42,7 @@
 	</h3>
 	<div class="card-body">
 		<fieldset>
-			@choice(form(s"section[$idx]"), sectOpts=Rule.rule.filter(_.code == code), cityOpts=CityBase.all)
+			@choice(form(s"section[$idx]"), sectOpts=Rule.rule.filter(_.code == code))
 		</fieldset>
 	</div>
 </div>
