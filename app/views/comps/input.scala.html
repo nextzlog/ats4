@@ -3,14 +3,14 @@
 @style = {form-control @if(field.hasErrors){is-invalid}}
 
 @if(hidden) {
-<input type="hidden" name="@field.name" value="@field.value">
+<input type="hidden" id="@field.id" name="@field.name" value="@field.value">
 } else {
 <div class="form-group">
 	<label for="@field.name">@text</label>
 	@if(multiline) {
-	<textarea class="@style" name="@field.name" placeholder="@hint" rows="5">@field.value</textarea>
+	<textarea class="@style" id="@field.id" name="@field.name" placeholder="@hint" rows="5">@field.value</textarea>
 	} else {
-	<input type="text" class="@style" name="@field.name" placeholder="@hint" value="@field.value">
+	<input type="text" class="@style" id="@field.id" name="@field.name" placeholder="@hint" value="@field.value">
 	}
 </div>
 }
