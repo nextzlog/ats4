@@ -12,10 +12,10 @@ import views.html.{pages, warns}
 @Singleton class Trial @Inject() extends InjectedController {
 	val valid = new Verifier
 	def trial = Action(implicit r => util.Try {
-		valid.push(files = r.body.asMultipartFormData.get.files.map(_.ref))
-		Ok(pages.trial(succ = true))
+		r.body.asMultipartFormData.get.files.map(_.ref).foreach(valid.test)
+		Ok(warns.ready())
 	}.recover {
-		case ex: Chset => Ok(pages.trial(warn = Some(warns.chset()), ex=Some(ex)))
-		case ex: Unsup => Ok(pages.trial(warn = Some(warns.unsup()), ex=Some(ex)))
+		case ex: Chset => Ok(warns.chset())
+		case ex: Unsup => Ok(warns.unsup())
 	}.get)
 }

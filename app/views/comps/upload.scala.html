@@ -1,12 +1,38 @@
-@(id: String = "", hint: String = "", multiple: Boolean = true, required: Boolean = true)
+@(id: String = "", hint: String = "")(implicit req: RequestHeader)
 
-<div class="form-group custom-file">
-	<input type="file" id="@id" name="@id" class="custom-file-input" @if(multiple) {multiple} @if(required) {required}>
-	<label class="custom-file-label" id="@id-label" for="@id" data-browse="参照">@hint</label>
+<div class="card bg-light mb-5">
+	<h3 class="card-header">
+		<span>交信記録</span>
+	</h3>
+	<div class="card-body">
+		<fieldset>
+			<div class="form-group custom-file">
+				<input type="file" id="@id" name="@id" class="custom-file-input" multiple required>
+				<label class="custom-file-label" id="@id-label" for="@id" data-browse="参照">@hint</label>
+			</div>
+		</fieldset>
+	</div>
+	<div id="@id-footer" class="card-footer">
+		全ての部門の交信記録を提出しましょう。
+		複数のファイルをまとめて添付できます。
+	</div>
 </div>
 <script type="text/javascript">
 $('#@id').on('change', function() {
 	let text = Array.from(this.files).map(f => f.name).join(', ');
 	$('#@id-label').html(!text? '@hint': text);
+	const data = new FormData();
+	$.each(this.files, (i, file) => data.append('file', file));
+	$.ajax({
+		type: "POST",
+		data: data,
+		cache: false,
+		contentType: false,
+		processData: false,
+		dataType: "html",
+		url: '@helper.CSRF(routes.Trial.trial)',
+	}).done((data) => {
+		$('#@id-footer').html(data);
+	});
 });
 </script>

@@ -12,10 +12,9 @@ import play.api.libs.Files.TemporaryFile
 import play.libs.mailer.MailerClient
 
 class Verifier {
-	val decoder = new SheetOrTable()
-	def push(files: Seq[TemporaryFile]) = {
-		files.map(_.toFile.toPath).map(Files.readAllBytes).foreach(decoder.unpack)
-	}
+	val tables = new SheetOrTable()
+	def load(file: TemporaryFile) = Files.readAllBytes(file.toFile.toPath)
+	def test(file: TemporaryFile) = tables.unpack(load(file))
 }
 
 class Acceptor(implicit smtp: MailerClient) {

@@ -1,32 +1,9 @@
-@(succ: Boolean = false, warn: Option[Html] = None, ex: Option[Exception] = None)(implicit req: RequestHeader)
+@()(implicit req: RequestHeader)
 
 @comps.frame(title = "書式検査", nav = "trial") {
-@if(succ) {
-<div class="alert alert-success">
-	<i class="fas fa-thumbs-up"></i> 対応済みの書式です。
-</div>
-} else if(warn.nonEmpty) {
-<div class="alert alert-warning">
-	@warn
-</div>
-}
 @helper.form(action = routes.Trial.trial, Symbol("enctype")->"multipart/form-data") {
 @helper.CSRF.formField
-<div class="card bg-light mb-5">
-	<h3 class="card-header">
-		<span>交信記録</span>
-	</h3>
-	<div class="card-body">
-		<fieldset>
-			@upload(id="sheet", hint="未選択 (*.ZLO, *.ZLOX, *.LG8, *.ADI, *.ADX 推奨)")
-		</fieldset>
-	</div>
-	<div class="card-footer">
-		お手持ちの交信記録を選択してください。
-		複数のファイルをまとめて送信できます。
-	</div>
-</div>
-<button class="btn btn-lg btn-primary" type="submit"><i class="fas fa-thumbs-up"></i> 対応済みの書式か確認する</button>
+@upload(id="sheet", hint="未選択 (*.ZLO, *.LG8, *.ADI, ...)")
 <a class="btn btn-lg btn-outline-secondary" href="@routes.Index.guide"><i class="fas fa-question"></i> ヘルプ画面に移動する</a>
 }
 }
