@@ -18,4 +18,8 @@ import views.html.{pages, warns}
 		case ex: Chset => Ok(warns.chset())
 		case ex: Unsup => Ok(warns.unsup())
 	}.get)
+	def unbox = Action(implicit r => util.Try {
+		val files = r.body.asMultipartFormData.get.files.map(_.ref)
+		Ok(files.map(f => util.Try(valid.head(f)).toOption).flatten.head)
+	}.getOrElse(Ok("")))
 }

@@ -1,4 +1,4 @@
-@(id: String = "", hint: String = "")(implicit req: RequestHeader)
+@(id: String = "", hint: String = "", form: Option[Form[ContestData]] = None)(implicit req: RequestHeader)
 
 <div class="card bg-light mb-5">
 	<h3 class="card-header">
@@ -34,5 +34,25 @@ $('#@id').on('change', function() {
 	}).done((data) => {
 		$('#@id-footer').html(data);
 	});
+	@if(form.isDefined) {
+		$.ajax({
+			type: "POST",
+			data: data,
+			cache: false,
+			contentType: false,
+			processData: false,
+			dataType: "html",
+			url: '@helper.CSRF(routes.Trial.unbox)',
+		}).done((data) => {
+			if(data) {
+				const json = JSON.parse(data);
+				$('#@{form.get("station.call").id}').val(json.call);
+				$('#@{form.get("station.name").id}').val(json.name);
+				$('#@{form.get("station.addr").id}').val(json.addr);
+				$('#@{form.get("station.mail").id}').val(json.mail);
+				$('#@{form.get("station.note").id}').val(json.note);
+			}
+		});
+	}
 });
 </script>

@@ -3,7 +3,7 @@
 @comps.frame(title = "書式検査", nav = "trial") {
 @helper.form(action = routes.Trial.trial, Symbol("enctype")->"multipart/form-data") {
 @helper.CSRF.formField
-@upload(id="sheet", hint="未選択 (*.ZLO, *.LG8, *.ADI, ...)")
+@upload(id = "sheet", hint = "未選択 (*.ZLO, *.LG8, *.ADI, ...)")
 <a class="btn btn-lg btn-outline-secondary" href="@routes.Index.guide"><i class="fas fa-question"></i> ヘルプ画面に移動する</a>
 }
 }

@@ -9,6 +9,7 @@ GET     /entry               controllers.Index.entry
 POST    /entry               controllers.Entry.entry
 GET     /trial               controllers.Index.trial
 POST    /trial               controllers.Trial.trial
+POST    /unbox               controllers.Trial.unbox
 GET     /forum               controllers.Index.forum
 GET     /guide               controllers.Index.guide
 GET     /lists               controllers.Index.lists

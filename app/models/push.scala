@@ -3,7 +3,7 @@ package models
 import java.nio.file.Files
 import java.util.UUID
 
-import qxsl.sheet.SheetOrTable
+import qxsl.sheet.{SheetManager, SheetOrTable}
 
 import scala.jdk.CollectionConverters._
 
@@ -12,9 +12,11 @@ import play.api.libs.Files.TemporaryFile
 import play.libs.mailer.MailerClient
 
 class Verifier {
+	val sheets = new SheetManager()
 	val tables = new SheetOrTable()
 	def load(file: TemporaryFile) = Files.readAllBytes(file.toFile.toPath)
 	def test(file: TemporaryFile) = tables.unpack(load(file))
+	def head(file: TemporaryFile) = SummaryJson(sheets.factory("jarl").decoder(load(file)).decode())
 }
 
 class Acceptor(implicit smtp: MailerClient) {
