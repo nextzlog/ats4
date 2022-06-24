@@ -27,7 +27,6 @@
 					@if(admin) {
 					<a class="nav-item nav-link @("active".when(nav == "lists"))" href="@routes.Admin.index">暫定結果</a>
 					<a class="nav-item nav-link @("active".when(nav == "force"))" href="@routes.Admin.entry">書類提出</a>
-					<a class="nav-item nav-link @("active".when(nav == "trial"))" href="@routes.Admin.trial">書式検査</a>
 					<a class="nav-item nav-link @("active".when(nav == "excel"))" href="@routes.Admin.excel">集計結果</a>
 					} else {
 					<a class="nav-item nav-link @("active".when(nav == "entry"))" href="@routes.Index.entry">書類提出</a>

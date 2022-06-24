@@ -18,8 +18,6 @@ GET     /admin               controllers.Admin.index
 DELETE  /admin               controllers.Admin.clean
 GET     /admin/excel         controllers.Admin.excel
 GET     /admin/entry         controllers.Admin.entry
-GET     /admin/trial         controllers.Admin.trial
-POST    /admin/trial         controllers.Trial.admin
 GET     /admin/force/:call   controllers.Admin.force(call: String)
 POST    /admin/email/:call   controllers.Proof.email(call: String)
 GET     /admin/proof/:call   controllers.Proof.proof(call: String)

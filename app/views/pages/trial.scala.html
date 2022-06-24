@@ -1,4 +1,4 @@
-@(succ: Boolean = false, warn: Option[Html] = None, ex: Option[Exception] = None)(implicit req: RequestHeader, admin: Boolean = false)
+@(succ: Boolean = false, warn: Option[Html] = None, ex: Option[Exception] = None)(implicit req: RequestHeader)
 
 @comps.frame(title = "書式検査", nav = "trial") {
 @if(succ) {
@@ -10,12 +10,7 @@
 	@warn
 </div>
 }
-@if(admin) {
-@for(e <- ex) {
-<pre class="text-white bg-dark rounded p-2">@{e.getMessage()}</pre>
-}
-}
-@helper.form(action = if(admin) routes.Trial.admin else routes.Trial.trial, Symbol("enctype")->"multipart/form-data") {
+@helper.form(action = routes.Trial.trial, Symbol("enctype")->"multipart/form-data") {
 @helper.CSRF.formField
 <div class="card bg-light mb-5">
 	<h3 class="card-header">
