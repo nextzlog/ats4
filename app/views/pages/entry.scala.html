@@ -5,7 +5,7 @@
 @comps.frame(title = "書類提出", nav = if(admin) "force" else "entry") {
 @if(warn.nonEmpty) {
 <div class="alert alert-warning">
-	<i class="fas fa-exclamation-triangle"></i> @warn
+	@warn
 </div>
 } else {
 <div class="alert alert-info">
