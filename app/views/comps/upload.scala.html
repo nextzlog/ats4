@@ -46,11 +46,11 @@ $('#@id').on('change', function() {
 		}).done((data) => {
 			if(data) {
 				const json = JSON.parse(data);
-				$('#@{form.get("station.call").id}').val(json.call);
-				$('#@{form.get("station.name").id}').val(json.name);
-				$('#@{form.get("station.addr").id}').val(json.addr);
-				$('#@{form.get("station.mail").id}').val(json.mail);
-				$('#@{form.get("station.note").id}').val(json.note);
+				if(!$('#@{form.get("station.call").id}').val()) $('#@{form.get("station.call").id}').val(json.call);
+				if(!$('#@{form.get("station.name").id}').val()) $('#@{form.get("station.name").id}').val(json.name);
+				if(!$('#@{form.get("station.addr").id}').val()) $('#@{form.get("station.addr").id}').val(json.addr);
+				if(!$('#@{form.get("station.mail").id}').val()) $('#@{form.get("station.mail").id}').val(json.mail);
+				if(!$('#@{form.get("station.note").id}').val()) $('#@{form.get("station.note").id}').val(json.note);
 			}
 		});
 	}
