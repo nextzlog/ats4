@@ -11,7 +11,12 @@
 		@if(RankingData.findAllByCall(station.call).exists(_.zero)) {
 		<tr class="table-warning">
 			<td>@station.call</td>
-			<td>0点です。再提出をお勧めします。</td>
+			<td>無得点の部門があります。再提出が必要です。</td>
+		</tr>
+		} else if(RankingData.findAllByCall(station.call).isEmpty) {
+		<tr class="table-warning">
+			<td>@station.call</td>
+			<td>どの部門にも未参加です。再提出が必要です。</td>
 		</tr>
 		} else {
 		<tr>
