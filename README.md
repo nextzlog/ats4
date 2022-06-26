@@ -8,7 +8,7 @@ ATS-4: Amateur-Radio Contest Administration System
 ![image](https://img.shields.io/badge/PlayFramework-2.8-blueviolet.svg)
 ![image](https://img.shields.io/badge/license-GPL3-darkblue.svg)
 
-ATS-4 is an Automatic Acceptance & Tabulation System for Amateur-Radio Contests, based on [qxsl: Amateur-Radio Logging Library & LISP](https://github.com/nextzlog/qxsl).
+ATS-4 is an Automatic Acceptance & Tabulation System for Amateur-Radio Contests, based on [QxSL](https://github.com/nextzlog/qxsl).
 
 ## Features
 
@@ -27,7 +27,7 @@ ATS-4 supports many contests including:
 ## Documents
 
 - [Javadoc](https://nextzlog.github.io/qxsl/doc/index.html)
-- [コンテスト運営を支援する自動集計システム (PDF)](https://pafelog.net/ats4.pdf)
+- [ATS-4 (PDF)](https://pafelog.net/ats4.pdf)
 
 ## Demo
 
