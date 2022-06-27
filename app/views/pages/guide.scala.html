@@ -1,30 +1,30 @@
 @comps.frame(title = "ヘルプ", nav = "guide") {
-<p>お困りの内容に応じて、パネルをクリックします。</p>
-<div class="my-3">
-	@accord(id="fmts", title="交信記録のフォーマットの対応状況") {
-	<p>以下のバイナリフォーマットもしくはテキストフォーマットでの提出が可能です。</p>
-	@for(fmt <- new TableManager()) {
+<div class="card my-3">
+	<h3 class="card-header">交信記録のフォーマットの対応状況</h3>
+	<div class="card-body">
+		<p>以下のバイナリフォーマットもしくはテキストフォーマットでの提出が可能です。</p>
+		@for(fmt <- new TableManager()) {
 		<div class="my-2">
 			<h5>@fmt.name</h5>
-		@if(fmt.help.nonEmpty) {
+			@if(fmt.help.nonEmpty) {
 			<pre class="text-white bg-dark rounded p-2">@{fmt.help}</pre>
-		}
+			}
 		</div>
-	}
-	}
+		}
+	</div>
 </div>
-<div class="my-3">
-	@accord(id="summ", title="サマリーシートでの交信記録の提出") {
-	<p>以下のサマリーシートでも提出できます。交信記録の部分は、別記の対応済み書式に従います。</p>
-	@for(fmt <- new SheetManager()) {
+<div class="card my-3">
+	<h3 class="card-header">サマリーシートでの交信記録の提出</h3>
+	<div class="card-body">
+		<p>以下のバイナリフォーマットもしくはテキストフォーマットでの提出が可能です。</p>
+		@for(fmt <- new SheetManager()) {
 		<div class="my-2">
 			<h5>@fmt.name</h5>
-		@if(fmt.help.nonEmpty) {
+			@if(fmt.help.nonEmpty) {
 			<pre class="text-white bg-dark rounded p-2">@{fmt.help}</pre>
-		}
+			}
 		</div>
-	}
-	}
+		}
+	</div>
 </div>
-<a class="btn btn-lg btn-primary" href="mailto:@Rule.rule.mail"><i class="fas fa-envelope"></i> お問い合わせ</a>
 }

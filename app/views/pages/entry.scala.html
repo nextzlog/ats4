@@ -7,10 +7,6 @@
 <div class="alert alert-warning">
 	@warn
 </div>
-} else {
-<div class="alert alert-info">
-	最後まで目を通し、必要事項を漏れなく記入して、提出します。
-</div>
 }
 @helper.form(action = routes.Entry.entry, Symbol("enctype")->"multipart/form-data") {
 @helper.CSRF.formField
@@ -44,7 +40,6 @@
 </div>
 }
 <a class="btn btn-lg btn-primary" href="#submitModal" data-toggle="modal"><i class="fas fa-thumbs-up"></i> この内容で提出する</a>
-<a class="btn btn-lg btn-outline-secondary" href="@routes.Index.guide"><i class="fas fa-question"></i> ヘルプ画面に移動する</a>
 <div class="modal" id="submitModal">
 	<div class="modal-dialog">
 		<div class="modal-content">
