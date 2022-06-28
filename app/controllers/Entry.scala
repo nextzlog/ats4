@@ -20,5 +20,5 @@ import org.apache.commons.mail.EmailException
 	}.recover {
 		case ex: OmissException => Ok(pages.entry(ContestForm.bindFromRequest(), Some(warns.omiss())))
 		case ex: EmailException => Ok(pages.entry(ContestForm.bindFromRequest(), Some(warns.email())))
-	}.get else Ok(pages.entry(ContestForm, Some(warns.token()))))
+	}.get else Ok(warns.token()))
 }
