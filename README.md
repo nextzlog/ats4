@@ -7,6 +7,7 @@ ATS-4: Amateur-Radio Contest Administration System
 ![image](https://img.shields.io/badge/JRuby-9.2-orange.svg)
 ![image](https://img.shields.io/badge/PlayFramework-2.8-blueviolet.svg)
 ![image](https://img.shields.io/badge/license-GPL3-darkblue.svg)
+![badge](https://github.com/nextzlog/ats4/actions/workflows/build.yaml/badge.svg)
 
 ATS-4 is an Automatic Acceptance & Tabulation System for Amateur-Radio Contests, based on [QxSL](https://github.com/nextzlog/qxsl).
 
@@ -35,33 +36,24 @@ Feel free to visit [ALLJA1 ATS-4](https://allja1.org).
 
 ## Usage
 
-First, clone this repository.
+Docker image is available:
 
 ```sh
-$ git clone https://github.com/nextzlog/ats4
-$ cd ats4
-```
-
-To update ATS-4, first stop the system, then clear the database, and finally pull the latest version.
-
-```sh
-$ kill `cat target/universal/stage/RUNNING_PID`
-$ ./destroy.sh
-$ git reset --hard
-$ git pull
+$ docker pull ghcr.io/nextzlog/ats4:master
+$ docker run -it -p 8000:9000 ghcr.io/nextzlog/ats4:master
 ```
 
 ### Start
 
-Clear your mind and cast a spell.
+Clear your mind and cast a spell:
 
 ```sh
-$ sbt run # develop mode
-$ sbt "start -Dhttp.port=8000"
+$ sbt run # development mode
+$ sbt start
 ```
 
 Just wait and relax.
-You will find the following message.
+You will find the following message:
 
 ```
 (Starting server. Type Ctrl+D to exit logs, the server will remain in background)
@@ -72,11 +64,10 @@ Browse the web page on port 8000.
 
 ### Stop
 
-First, kill the server process, and delete the file as follows.
+First, kill the server process, and delete the `RUNNING_PID` file as follows:
 
 ```sh
-$ kill `cat target/universal/stage/RUNNING_PID`
-$ rm target/universal/stage/RUNNING_PID
+$ kill `cat target/universal/stage/RUNNING_PID` && rm target/universal/stage/RUNNING_PID
 ```
 
 ## Settings
