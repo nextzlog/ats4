@@ -10,29 +10,18 @@ ATS-4: Amateur-Radio Contest Administration System
 ![badge](https://github.com/nextzlog/ats4/actions/workflows/build.yaml/badge.svg)
 
 ATS-4 is an Automatic Acceptance & Tabulation System for Amateur-Radio Contests, based on [QxSL](https://github.com/nextzlog/qxsl).
+Feel free to visit [ALLJA1 ATS-4](https://allja1.org).
 
 ## Features
 
 - provides a web interface for contest-log acceptance.
 - verifies the uploaded logs according to the contest rules described in Ruby or LISP forms.
-
-## Supports
-
-ATS-4 supports many contests including:
-
-- [UEC](https://www.ja1zgp.com/uectest_public_info/),
-- [ALLJA1](http://ja1zlo.u-tokyo.org/allja1/),
-- [REALTIME](http://ja1zlo.u-tokyo.org/rt/rt1.html),
-- [TAMAGAWA](http://apollo.c.ooco.jp/).
+- supports many contests including [UEC](https://www.ja1zgp.com/uectest_public_info/), [ALLJA1](http://ja1zlo.u-tokyo.org/allja1/), [REALTIME](http://ja1zlo.u-tokyo.org/rt/rt1.html), and [TAMAGAWA](http://apollo.c.ooco.jp/).
 
 ## Documents
 
 - [Javadoc](https://nextzlog.github.io/qxsl/doc/index.html)
 - [ATS-4 (PDF)](https://pafelog.net/ats4.pdf)
-
-## Demo
-
-Feel free to visit [ALLJA1 ATS-4](https://allja1.org).
 
 ## Usage
 
@@ -43,28 +32,21 @@ $ docker pull ghcr.io/nextzlog/ats4:master
 $ docker run -it -p 8000:9000 ghcr.io/nextzlog/ats4:master
 ```
 
-### Start
-
-Clear your mind and cast a spell:
+After logging in to the container, clear your mind and enter the following command:
 
 ```sh
-$ sbt run # development mode
+$ sbt run # dev mode
 $ sbt start
 ```
 
 Just wait and relax.
-You will find the following message:
+Browse the web page on port 8000 when you see the following message:
 
 ```
 (Starting server. Type Ctrl+D to exit logs, the server will remain in background)
 ```
 
-Then, type `Ctrl+D` and exit.
-Browse the web page on port 8000.
-
-### Stop
-
-First, kill the server process, and delete the `RUNNING_PID` file as follows:
+To kill the system, enter the following command:
 
 ```sh
 $ kill `cat target/universal/stage/RUNNING_PID` && rm target/universal/stage/RUNNING_PID
@@ -72,15 +54,171 @@ $ kill `cat target/universal/stage/RUNNING_PID` && rm target/universal/stage/RUN
 
 ## Settings
 
-[READ ME](CONFIG.md).
+Follow the instructions below.
 
-## Streaming
+### Proxy
 
-[READ ME](STREAM.md).
+We expect that ATS-4 operates as a backend server, which is hidden behind a frontend server such as Apache and Nginx.
+Make sure that unauthorized clients have no access to admin pages under `/admin` before you start the system as follows.
+
+```nginx
+server {
+  server_name allja1.org;
+  location / {
+    proxy_pass http://localhost:9000;
+    location /admin/ {
+      allow 127.0.0.1;
+      deny all;
+    }
+    location ~ /admin {
+      allow 127.0.0.1;
+      deny all;
+    }
+  }
+}
+```
+
+We recommend that you utilize the BASIC authentication in addition to SSH authentication to protect the private pages.
+
+### Email
+
+Open the system configuration file [`conf/application.conf`](conf/application.conf).
+You will find the mail settings as follows.
+
+```ini
+# Typesafe Mailer Plugin
+play.mailer.host=mail.allja1.org
+play.mailer.port=465
+play.mailer.ssl=true
+play.mailer.user="***********"
+play.mailer.password="*******"
+
+# Never forget to disable mock mode before the contest:
+play.mailer.mock=true
+```
+
+Modify the settings properly.
+In addition, disable the `mock` mode of the mailer plugin.
+
+### Regulation
+
+Open the contest configuration file [`conf/application.rb`](conf/application.rb).
+You will find the contest settings as follows:
+
+```Ruby
+# Load ja1.rb in the conf directory.
+require 'rules/ja1'
+
+# Returns the contest object.
+TEST
+```
+
+Modify the contest settings properly.
+The [`Contest`](https://nextzlog.github.io/qxsl/doc/qxsl/ruler/Contest) object is the entity of the contest rules.
+See [`ja1.rb`](conf/rules/ja1.rb) and [`rtc.rb`](conf/rules/rtc.rb) and [`uec.rb`](conf/rules/uec.rb) for example.
+
+```Ruby
+TEST = ContestJA1.new(ALLJA1)
+```
+
+## Stream API
+
+ATS-4 provides the streaming API for the [REAL-TIME CONTEST](http://ja1zlo.u-tokyo.org/rt/rt1.html).
+
+### Registration
+
+Contest participants will register their account information with ATS-4 in advance.
+ATS-4 returns a security key (UUID) by sending a `GET` request to `http://localhost:8873?id=UUID`.
+Clients may retrieve the key by listening on the 8873 port and access `/agent/<UUID>`.
+
+### Upstream
+
+When the contest starts, the client always connects to the server via WebSocket.
+Each time a participant contacts another participant on air, the client sends the difference in the QSO records to the server.
+Messages from the clients to the server must follow the format below.
+
+|position|field                 |
+|--------|----------------------|
+|1st byte|number of QSOs deleted|
+|sequence|header of the QSO data|
+|sequence|QSO entities to delete|
+|sequence|QSO entities to append|
+
+The second and subsequent bytes of the messages are formatted as a single electronic log file.
+The format must be officially supported by the [QXSL](https://github.com/nextzlog/qxsl) library.
+
+### Downstream
+
+The server receives the QSO records, scores it, wait a few seconds, and then notifies all clients of the score update.
+JSON messages from the server to the clients are formatted as follows:
+
+```JSON
+{
+  "14MHz": [
+    {"call": "JA1ZLO", "score": 200, "total": 2200},
+    {"call": "JA1YWX", "score": 100, "total": 2100}
+  ]
+}
+```
+
+### Demonstration
+
+A simple WebSocket client for ATS-4 may be written as follows.
+
+```html
+<!DOCTYPE html>
+<html lang='ja'>
+  <head>
+    <title>ATS-4</title>
+    <script type="application/javascript" src="client.js"></script>
+  </head>
+  <body>
+    <h1>Streaming Demo</h1>
+    <textarea cols='160' rows='30' id='QSOs'></textarea>
+    <p>
+      <label>Delete <input type='number' id='trim' min='0' max='255' value='0'>QSOs,</label>
+      <label>Submission Key: <input type='text' id='UUID' placeholder='/agent/UUID'></label>
+      <button type='button' onclick='access();'>Access</button>
+      <button type='button' onclick='submit();'>Submit</button>
+    </p>
+    <div id='messages'></div>
+  </body>
+</html>
+```
+
+The JavaScript program referenced may be written as follows.
+
+```js
+let sock;
+function access() {
+  const uuid = document.getElementById('UUID').value;
+  sock = new WebSocket('ws://localhost:9000' + uuid);
+  sock.binaryType = 'arraybuffer';
+  sock.onmessage = function(msg) {
+    const decoder = new TextDecoder();
+    const data = decoder.decode(new Uint8Array(msg.data));
+    const text = document.createTextNode(data);
+    const node = document.createElement('div');
+    document.getElementById('messages').appendChild(node);
+    node.appendChild(text);
+  };
+}
+function submit() {
+  const encoder = new TextEncoder();
+  const QSOs = document.getElementById('QSOs').value;
+  const trim = document.getElementById('trim').value;
+  const data = new TextEncoder().encode(QSOs);
+  const full = new (data.constructor)(data.length + 1);
+  full[0] = parseInt(trim);
+  full.set(data, 1);
+  sock.send(full);
+}
+```
 
 ## Contribution
 
-Feel free to contact [@nextzlog](https://twitter.com/nextzlog) on Twitter.
+Feel free to make issues at [nextzlog/todo](https://github.com/nextzlog/todo).
+Follow [@nextzlog](https://twitter.com/nextzlog) on Twitter.
 
 ## License
 
