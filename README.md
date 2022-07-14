@@ -25,31 +25,33 @@ Feel free to visit [ALLJA1 ATS-4](https://allja1.org).
 
 ## Usage
 
-Docker image is available:
+Docker image is available.
+Create `docker-compose.yaml` as follows:
+
+```yaml
+version: '3'
+services:
+  ATS4:
+    image: ghcr.io/nextzlog/ats4:master
+    ports:
+    - 8000:9000
+    volumes:
+    - ./ats/data:/ats/data
+    - ./ats/logs:/ats/logs
+    command: /ats/bin/ats4
+```
+
+Then, create a container as follows:
 
 ```sh
-$ docker pull ghcr.io/nextzlog/ats4:master
-$ docker run -it -p 8000:9000 ghcr.io/nextzlog/ats4:master
+$ docker-compose up -d
 ```
 
-After logging in to the container, clear your mind and enter the following command:
+Just wait and relax, and browse the web page on port 8000.
+To kill the container, enter the following command:
 
 ```sh
-$ sbt run # dev mode
-$ sbt start
-```
-
-Just wait and relax.
-Browse the web page on port 8000 when you see the following message:
-
-```
-(Starting server. Type Ctrl+D to exit logs, the server will remain in background)
-```
-
-To kill the system, enter the following command:
-
-```sh
-$ kill `cat target/universal/stage/RUNNING_PID` && rm target/universal/stage/RUNNING_PID
+$ docker-compose kill
 ```
 
 ## Settings
@@ -59,7 +61,7 @@ Follow the instructions below.
 ### Proxy
 
 We expect that ATS-4 operates as a backend server, which is hidden behind a frontend server such as Apache and Nginx.
-Make sure that unauthorized clients have no access to admin pages under `/admin` before you start the system as follows.
+Make sure that unauthorized clients have no access to admin pages under `/admin` before you start the system as follows:
 
 ```nginx
 server {
@@ -83,7 +85,7 @@ We recommend that you utilize the BASIC authentication in addition to SSH authen
 ### Email
 
 Open the system configuration file [`conf/application.conf`](conf/application.conf).
-You will find the mail settings as follows.
+You will find the mail settings as follows:
 
 ```ini
 # Typesafe Mailer Plugin
@@ -163,7 +165,7 @@ JSON messages from the server to the clients are formatted as follows:
 
 ### Demonstration
 
-A simple WebSocket client for ATS-4 may be written as follows.
+A simple WebSocket client for ATS-4 may be written as follows:
 
 ```html
 <!DOCTYPE html>
@@ -186,7 +188,7 @@ A simple WebSocket client for ATS-4 may be written as follows.
 </html>
 ```
 
-The JavaScript program referenced may be written as follows.
+The JavaScript program referenced may be written as follows:
 
 ```js
 let sock;
