@@ -11,6 +11,18 @@ class ContestRTC < Contest
 	def initialize(sections)
 		super(*sections.map{|s| s.cache})
 	end
+	def name()
+		ONLINE.name
+	end
+	def host()
+		ONLINE.host
+	end
+	def mail()
+		ONLINE.mail
+	end
+	def link()
+		ONLINE.link
+	end
 	def get(name)
 		eval name
 	end
@@ -26,17 +38,13 @@ class ContestRTC < Contest
 	def finish(year, zone)
 		true
 	end
-	def name()
-		ONLINE.name
+	def limitMultipleEntry(code)
+		ONLINE.limitMultipleEntry(code)
 	end
-	def host()
-		ONLINE.host
-	end
-	def mail()
-		ONLINE.mail
-	end
-	def link()
-		ONLINE.link
+	def conflict(entries)
+		mul = entries.map{|e| e.name.include?("団体")}.any?
+		sin = entries.map{|e| e.name.include?("個人")}.any?
+		mul && sin
 	end
 end
 

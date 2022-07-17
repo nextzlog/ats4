@@ -10,9 +10,9 @@ object SectionForm extends Form[SectionData](
 	Forms.mapping(
 		"sect" -> Forms.text,
 		"city" -> Forms.text
-	)(SectionData.apply)(SectionData.unapply).verifying(p => {
-		Rule.absent(p.sect) ||
-		Rule.cities(p.sect).exists(_.toString == p.city)
+	)(SectionData.apply)(SectionData.unapply).verifying(s => {
+		Rule.absent(s.sect) ||
+		Rule.cities(s.sect).exists(_.toString == s.city)
 	}), Map.empty, Nil, None
 )
 
@@ -31,6 +31,6 @@ object StationForm extends Form[StationData](
 object ContestForm extends Form[ContestData](
 	Forms.mapping(
 		"station" -> StationForm.mapping,
-		"section" -> Forms.seq(SectionForm.mapping)
+		"section" -> Forms.seq(SectionForm.mapping).verifying(seq => !Rule.conflict(seq.map(_.sect)))
 	)(ContestData.apply)(ContestData.unapply), Map.empty, Nil, None
 )

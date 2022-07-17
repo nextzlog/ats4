@@ -1,7 +1,7 @@
 .*
 target
 /logs
-/*.db
+*.db
 /gradle
 /gradlew
 /gradlew.bat

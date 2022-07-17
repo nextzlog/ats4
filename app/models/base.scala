@@ -49,7 +49,7 @@ case class LogBookData(call: S, data: Array[Byte]) extends ActiveRecord {
 }
 
 object SectionData {
-	def fill(call: String) = Rule.groups.sorted.map(g => RankingData.fill(call, g).map(from)).flatten
+	def fill(call: String) = Rule.groups.map(g => RankingData.fill(call, g).map(from)).flatten
 	def from(post: RankingData) = SectionData(sect = post.sect, city = post.city)
 }
 
@@ -68,7 +68,7 @@ object StationData extends ActiveRecordCompanion[StationData] {
 }
 
 object RankingData extends ActiveRecordCompanion[RankingData] {
-	def fill(call: String, code: String) = findAllByCall(call).find(_.code == code)
+	def fill(call: String, code: String) = findAllByCall(call).filter(_.code == code)
 	def findAllByCall(call: S) = this.findAllBy("call", call).toList
 	def findAllBySect(sect: S) = this.findAllBy("sect", sect).toList
 }

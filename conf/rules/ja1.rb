@@ -11,6 +11,18 @@ class ContestJA1 < Contest
 	def initialize(sections)
 		super(*sections.map{|s| s.cache})
 	end
+	def name()
+		ALLJA1.name
+	end
+	def host()
+		ALLJA1.host
+	end
+	def mail()
+		ALLJA1.mail
+	end
+	def link()
+		ALLJA1.link
+	end
 	def get(name)
 		eval name
 	end
@@ -23,17 +35,13 @@ class ContestJA1 < Contest
 	def getDeadLine(year)
 		opt_dead_line(ALLJA1.method(:getDeadLine), year)
 	end
-	def name()
-		ALLJA1.name
+	def limitMultipleEntry(code)
+		ALLJA1.limitMultipleEntry(code)
 	end
-	def host()
-		ALLJA1.host
-	end
-	def mail()
-		ALLJA1.mail
-	end
-	def link()
-		ALLJA1.link
+	def conflict(entries)
+		mul = entries.map{|e| e.name.include?("団体")}.any?
+		sin = entries.map{|e| e.name.include?("個人")}.any?
+		mul && sin
 	end
 end
 

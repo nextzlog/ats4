@@ -18,6 +18,8 @@ object Rule {
 	def warn(ex: Throwable) = Logger("rule").error("bad rule", ex)
 	def absent(sect: String) = rule.section(sect).isInstanceOf[Absence]
 	def cities(sect: String) = rule.section(sect).getCityList().asScala
+	def limit(code: String) = rule.limitMultipleEntry(code)
+	def conflict(sects: Seq[String]) = rule.conflict(sects.map(rule.section).filterNot(_.isAbsence).toArray)
 }
 
 object Rank {

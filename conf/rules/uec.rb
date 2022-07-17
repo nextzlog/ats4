@@ -2,6 +2,9 @@
 
 java_import 'qxsl.draft.Band'
 java_import 'qxsl.draft.Qxsl'
+java_import 'qxsl.local.LocalCityBase'
+java_import 'qxsl.local.LocalCityItem'
+java_import 'qxsl.ruler.Absence'
 java_import 'qxsl.ruler.Contest'
 java_import 'qxsl.ruler.Element'
 java_import 'qxsl.ruler.Failure'
@@ -15,9 +18,21 @@ require 'rules/util'
 JAUTIL = RuleKit.load('jautil.lisp').pattern
 ZONEID = ZoneId.of('Asia/Tokyo')
 
+def prepare_city_base()
+	base = LocalCityBase.load('qxsl/local/city.ja').toList
+	base = base.select{|c| c.code.length <= 3}
+	base = base.select{|c| c.code != '01'}
+	base = base.select{|c| c.code != '48'}
+	base.push LocalCityItem.new('海上', '00')
+	base
+end
+
 HOURDB = [17, 18, 19, 20]
 MODEDB = ['CW']
-CITYDB = JAUTIL.get('CITY-LIST').select{|c| c.code.length <= 3 and not ['01', '48'].include?(c.code)}
+CITYDB = prepare_city_base()
+
+ALLBAND = 'オールバンド/SWL'
+SINBAND = 'シングルバンド'
 
 module BandEnum
 	B3_5 =  3500
@@ -77,6 +92,18 @@ def dead_line(year)
 end
 
 class ContestUEC < Contest
+	def name()
+		'電通大コンテスト'
+	end
+	def host()
+		'JA1ZGP'
+	end
+	def mail()
+		'uectest-info@example.com'
+	end
+	def link()
+		'www.ja1zgp.com/uectest_public_info'
+	end
 	def get(name)
 		eval name
 	end
@@ -89,17 +116,14 @@ class ContestUEC < Contest
 	def getDeadLine(year)
 		opt_dead_line(method(:dead_line), year)
 	end
-	def name()
-		'電通大コンテスト(仮)'
+	def limitMultipleEntry(code)
+		return 1 if code == ALLBAND
+		return 2 if code == SINBAND
 	end
-	def host()
-		'JA1ZGP'
-	end
-	def mail()
-		'uectest-info@example.com'
-	end
-	def link()
-		'www.ja1zgp.com/uectest_public_info'
+	def conflict(entries)
+		codes = entries.map{|e| e.code}.uniq
+		names = entries.map{|e| e.name}.uniq
+		codes.size > 1 || names.size < entries.size
 	end
 end
 
@@ -111,9 +135,6 @@ class SectionUEC < Section
 	end
 	def name()
 		@name
-	end
-	def code()
-		'UEC'
 	end
 	def getCityList()
 		CITYDB
@@ -137,14 +158,35 @@ class AllBandUEC < SectionUEC
 	def initialize(name)
 		super('%s部門' % name, BandEnum.all)
 	end
+	def code()
+		ALLBAND
+	end
 end
 
 class SinBandUEC < SectionUEC
 	def initialize(band)
 		super('%s部門' % Band.new(band), [band])
 	end
+	def code()
+		SINBAND
+	end
 end
 
+class AbsenceUEC < Absence
+	def initialize(code)
+		super()
+		@code = code
+	end
+	def code()
+		@code
+	end
+	def name()
+		"#{@code} 不参加"
+	end
+end
+
+ANIL = AbsenceUEC.new(ALLBAND)
+SNIL = AbsenceUEC.new(SINBAND)
 AQSO = AllBandUEC.new('オールバンド')
 S3_5 = SinBandUEC.new(BandEnum::B3_5)
 S7_0 = SinBandUEC.new(BandEnum::B7_0)
@@ -155,4 +197,4 @@ S50_ = SinBandUEC.new(BandEnum::B50_)
 ASWL = AllBandUEC.new('SWL')
 
 # returns UEC contest definition
-TEST = ContestUEC.new(AQSO, S3_5, S7_0, S14_, S21_, S28_, S50_, ASWL)
+TEST = ContestUEC.new(ANIL, SNIL, AQSO, S3_5, S7_0, S14_, S21_, S28_, S50_, ASWL)

@@ -65,6 +65,18 @@ def dead_line(year)
 end
 
 class ContestTama < Contest
+	def name()
+		'多摩川コンテスト'
+	end
+	def host()
+		'APOLLO'
+	end
+	def mail()
+		'jk1mgc@example.com'
+	end
+	def link()
+		'apollo.c.ooco.jp'
+	end
 	def get(name)
 		eval name
 	end
@@ -77,17 +89,11 @@ class ContestTama < Contest
 	def getDeadLine(year)
 		opt_dead_line(method(:dead_line), year)
 	end
-	def name()
-		'多摩川コンテスト(仮)'
+	def limitMultipleEntry(code)
+		1
 	end
-	def host()
-		'APOLLO'
-	end
-	def mail()
-		'jk1mgc@example.com'
-	end
-	def link()
-		'apollo.c.ooco.jp'
+	def conflict(entries)
+		entries.length > 1
 	end
 end
 

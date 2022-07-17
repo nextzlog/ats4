@@ -27,14 +27,14 @@
 		</fieldset>
 	</div>
 </div>
-@for((code, idx) <- Rule.groups.zipWithIndex) {
+@for((code, idx) <- Rule.groups.map(c => Seq.fill(Rule.limit(c))(c)).flatten.zipWithIndex) {
 <div class="card bg-light mb-5">
 	<h3 class="card-header">
 		<span>@code</span>
 	</h3>
 	<div class="card-body">
 		<fieldset>
-			@choice(form(s"section[$idx]"), sectOpts=Rule.rule.filter(_.code == code))
+			@choice(form(s"section[$idx]"), form("section"), sectOpts=Rule.rule.filter(_.code == code))
 		</fieldset>
 	</div>
 </div>

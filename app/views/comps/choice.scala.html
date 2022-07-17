@@ -1,11 +1,11 @@
-@(field: Field, sectOpts: Iterable[Section])
+@(field: Field, parent: Field, sectOpts: Iterable[Section])
 
 @cityOpts = @{sectOpts.map(_.getCityList).flatten.toSeq.distinct}
 
 @sect = @{field("sect")}
 @city = @{field("city")}
 
-@style = {form-control selectpicker custom-select my-2 @if(field.hasErrors){is-invalid}}
+@style = {form-control selectpicker custom-select my-2 @if(parent.hasErrors || field.hasErrors){is-invalid}}
 
 <select class="@style sect" id="@sect.id" name="@sect.name" data-size="10">
 	@for(opt <- sectOpts.map(_.toString)) {
