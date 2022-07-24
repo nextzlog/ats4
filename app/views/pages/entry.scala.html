@@ -1,40 +1,39 @@
-@(form: Form[ContestData], warn: Option[Html] = None)(implicit req: RequestHeader, admin: Boolean = false)
-
-@import java.util.UUID
+@(form: Form[ContestFormData], warn: Option[Html] = None)(implicit req: RequestHeader, ats: ATS, contest: Contest, admin: Boolean = false)
 
 @comps.frame(title = "書類提出", nav = if(admin) "force" else "entry") {
+@if(contest.accept() || admin) {
 @if(warn.nonEmpty) {
 <div class="alert alert-warning">
 	@warn
 </div>
 }
-@helper.form(action = routes.Entry.entry, Symbol("enctype")->"multipart/form-data") {
+@helper.form(action = if(admin) routes.Force.edit else routes.Entry.entry, Symbol("enctype")->"multipart/form-data") {
 @helper.CSRF.formField
-@upload(id = "sheet", hint = "未選択 (*.ZLO, *.LG8, *.ADI, ...)", form = Some(form))
+@comps.upload(id = "sheet", hint = "未選択 (*.ZLO, *.LG8, *.ADI, ...)", form = Some(form))
 <div class="card bg-light mb-5">
 	<h3 class="card-header">
 		<span>共通事項</span>
 	</h3>
 	<div class="card-body">
 		<fieldset>
-			@input(form("station.call"), text = "呼出符号", hint = "移動運用の例: JA1ZLO/1")
-			@input(form("station.name"), text = "お名前", hint = "この宛名で賞を発送します。")
-			@input(form("station.post"), text = "郵便番号", hint = "この宛先に賞を発送します。")
-			@input(form("station.addr"), text = "ご住所", hint = "この宛先に賞を発送します。", multiline = true)
-			@input(form("station.mail"), text = "メール", hint = "受理通知メールが届きます。")
-			@input(form("station.note"), text = "ご感想", hint = "呼出符号付きで公表します。", multiline = true)
-			@input(form("station.uuid"), hidden = true)
+			@comps.input(form("station.call"), text = "呼出符号", hint = "移動運用の例: JA1ZLO/1")
+			@comps.input(form("station.name"), text = "お名前", hint = "この宛名で賞を発送します。")
+			@comps.input(form("station.post"), text = "郵便番号", hint = "この宛先に賞を発送します。")
+			@comps.input(form("station.addr"), text = "ご住所", hint = "この宛先に賞を発送します。", multiline = true)
+			@comps.input(form("station.mail"), text = "メール", hint = "受理通知メールが届きます。")
+			@comps.input(form("station.note"), text = "ご感想", hint = "呼出符号付きで公表します。", multiline = true)
+			@comps.input(form("station.uuid"), hidden = true)
 		</fieldset>
 	</div>
 </div>
-@for((code, idx) <- Rule.groups.map(c => Seq.fill(Rule.limit(c))(c)).flatten.zipWithIndex) {
+@for((code, idx) <- contest.getSectionCodes().asScala.map(c => Seq.fill(contest.limitMultipleEntry(c))(c)).flatten.zipWithIndex) {
 <div class="card bg-light mb-5">
 	<h3 class="card-header">
 		<span>@code</span>
 	</h3>
 	<div class="card-body">
 		<fieldset>
-			@choice(form(s"section[$idx]"), form("section"), sectOpts=Rule.rule.filter(_.code == code))
+			@comps.choice(form(s"section[$idx]"), form("section"), sectOpts=contest.filter(_.code == code))
 		</fieldset>
 	</div>
 </div>
@@ -55,6 +54,11 @@
 			</div>
 		</div>
 	</div>
+</div>
+}
+} else {
+<div class="alert alert-warning">
+	提出期間外です。
 </div>
 }
 }

@@ -1,10 +1,10 @@
 ATS-4: Amateur-Radio Contest Administration System
 ====
 
-![image](https://img.shields.io/badge/sbt-1.3.8-red.svg)
+![image](https://img.shields.io/badge/sbt-1.5.5-red.svg)
 ![image](https://img.shields.io/badge/Java-JDK11-red.svg)
 ![image](https://img.shields.io/badge/Scala-2.13-orange.svg)
-![image](https://img.shields.io/badge/JRuby-9.2-orange.svg)
+![image](https://img.shields.io/badge/JRuby-9.3-orange.svg)
 ![image](https://img.shields.io/badge/PlayFramework-2.8-blueviolet.svg)
 ![image](https://img.shields.io/badge/license-GPL3-darkblue.svg)
 ![badge](https://github.com/nextzlog/ats4/actions/workflows/build.yaml/badge.svg)
@@ -16,7 +16,7 @@ Feel free to visit [ALLJA1 ATS-4](https://allja1.org).
 
 - provides a web interface for contest-log acceptance.
 - verifies the uploaded logs according to the contest rules described in Ruby or LISP forms.
-- supports many contests including [UEC](https://www.ja1zgp.com/uectest_public_info/), [ALLJA1](http://ja1zlo.u-tokyo.org/allja1/), [REALTIME](http://ja1zlo.u-tokyo.org/rt/rt1.html), and [TAMAGAWA](http://apollo.c.ooco.jp/).
+- supports many contests including [UEC](https://www.ja1zgp.com/uectest_public_info), [ALLJA1](http://ja1zlo.u-tokyo.org/allja1), [REALTIME](http://ja1zlo.u-tokyo.org/rt/rt1.html), and [TAMAGAWA](http://apollo.c.ooco.jp).
 
 ## Documents
 
@@ -104,18 +104,15 @@ In addition, disable the `mock` mode of the mailer plugin.
 
 ### Regulation
 
-Open the contest configuration file [`conf/application.rb`](conf/application.rb).
+Open the system configuration file [`conf/application.conf`](conf/application.conf).
 You will find the contest settings as follows:
 
-```Ruby
-# Load ja1.rb in the conf directory.
-require 'rules/ja1'
-
-# Returns the contest object.
-TEST
+```ini
+# Contest
+ats4.rules=/rules/ja1.rb
 ```
 
-Modify the contest settings properly.
+Modify the settings properly.
 The [`Contest`](https://nextzlog.github.io/qxsl/doc/qxsl/ruler/Contest) object is the entity of the contest rules.
 See [`ja1.rb`](conf/rules/ja1.rb) and [`rtc.rb`](conf/rules/rtc.rb) and [`uec.rb`](conf/rules/uec.rb) for example.
 
@@ -130,7 +127,7 @@ ATS-4 provides the streaming API for the [REAL-TIME CONTEST](http://ja1zlo.u-tok
 ### Registration
 
 Contest participants will register their account information with ATS-4 in advance.
-ATS-4 returns a security key (UUID) by sending a `GET` request to `http://localhost:8873?id=UUID`.
+ATS-4 returns a security key (UUID) by sending a `GET` request to `http://localhost:8873?id=<UUID>`.
 Clients may retrieve the key by listening on the 8873 port and access `/agent/<UUID>`.
 
 ### Upstream

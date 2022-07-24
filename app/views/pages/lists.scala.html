@@ -1,13 +1,17 @@
-@()(implicit req: RequestHeader, admin: Boolean = false)
+@()(implicit req: RequestHeader, ats: ATS, contest: Contest, admin: Boolean = false)
+
+@getRank(ranking: RankingData) = @{ranking.getRankFromZeroIn(ats.rankings())}
+
+@getAwardLimit(ranking: RankingData) = @{ats.rankings().getAwardLimit(ranking.rule(contest))}
 
 @link(ranking: RankingData) = {
-	@if(admin) {window.location='@routes.Proof.proof(ranking.call)';}
+	@if(admin) {window.location='@routes.Admin.proof(ranking.call)';}
 }
 
 @comps.frame(title = "暫定結果", nav = "lists") {
-@if(admin || Schedule.finish) {
-@for(sect <- Rule.rule.asScala if !sect.isAbsence()) {
-@if(RankingData.findAllBySect(sect.name()).nonEmpty) {
+@if(admin || contest.finish()) {
+@for(sect <- contest.asScala if !sect.isAbsence()) {
+@if(ats.rankings().bySect(sect.name()).nonEmpty) {
 <div class="card mb-5">
 	<h3 class="card-header d-flex justify-content-between border-bottom-0">
 		<span>@sect.name()</span>
@@ -23,12 +27,12 @@
 			</tr>
 		</thead>
 		<tbody>
-			@for(ranking <- RankingData.findAllBySect(sect.name()).toSeq.sortBy(-_.rate)) {
-			<tr class="link @if(Rank.glad(ranking)) {award}" onclick="@link(ranking)">
-				<td>@{1 + Rank.rank(ranking)}</td>
+			@for(ranking <- ats.rankings().bySect(sect.name()).asScala.sortBy(-_.total)) {
+			<tr class="link @if(getRank(ranking) < getAwardLimit(ranking)) {award}" onclick="@link(ranking)">
+				<td>@{1 + getRank(ranking)}</td>
 				<td>@{ranking.call}</td>
-				<td>@{ranking.mark}</td>
-				<td>@{ranking.rate}</td>
+				<td>@{ranking.score}</td>
+				<td>@{ranking.total}</td>
 				<td>@{ranking.city}</td>
 			</tr>
 			}
@@ -66,7 +70,7 @@
 </div>
 <script type="text/javascript">
 $('#deleteButton').click(function () {
-	$.ajax({type: "DELETE", url: "@helper.CSRF(routes.Admin.clean)"}).done(() => location.reload());
+	$.ajax({type: "DELETE", url: "@helper.CSRF(routes.Force.init)"}).done(() => location.reload());
 });
 </script>
 }

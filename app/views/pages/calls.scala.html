@@ -1,3 +1,7 @@
+@()(implicit ats: ATS, contest: Contest)
+
+@zero(ranking: RankingData) = @{!contest.section(ranking.sect).isAbsence && ranking.score == 0}
+
 @comps.frame(title = "全参加局", nav = "calls") {
 <table class="table table-hover text-monospace">
 	<thead>
@@ -8,14 +12,14 @@
 		</tr>
 	</thead>
 	<tbody>
-		@for((station, count) <- StationData.toList.zipWithIndex) {
-		@if(RankingData.findAllByCall(station.call).exists(_.zero)) {
+		@for((station, count) <- ats.stations().list().asScala.zipWithIndex) {
+		@if(ats.rankings().byCall(station.call).asScala.exists(zero)) {
 		<tr class="table-warning">
 			<td>@{count + 1}
 			<td>@station.call</td>
 			<td>無得点の部門があります。</td>
 		</tr>
-		} else if(RankingData.findAllByCall(station.call).isEmpty) {
+		} else if(ats.rankings.byCall(station.call).isEmpty) {
 		<tr class="table-warning">
 			<td>@{count + 1}
 			<td>@station.call</td>

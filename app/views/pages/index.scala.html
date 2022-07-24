@@ -1,18 +1,18 @@
-@(status: Option[Int] = None)(implicit cfg: Configuration)
+@(status: Option[Int] = None)(implicit cfg: Configuration, ats: ATS, contest: Contest)
 
-@note = @{StationData.toList.filter(_.note.nonEmpty)}
+@note = @{ats.stations().list().asScala.filter(_.note.nonEmpty)}
 
 @comps.frame(nav = "index") {
 <div class="jumbotron text-center">
 	@if(status.isEmpty) {
-	<h1 class="display-2">@Rule.rule.name</h1>
+	<h1 class="display-2">@contest.name()</h1>
 	<h2 class="display-4">書類受付システム</h2>
 	<p class="lead my-3">
-		@{Schedule.date}開催 @{Schedule.dead}締切
+		@{contest.getStartDay()}開催 @{contest.getDeadLine()}締切
 	</p>
 	<div class="row d-flex justify-content-center py-2">
-		<a class="btn btn-lg btn-outline-dark mx-2" href="http://@Rule.rule.link">規約を閲覧する</a>
-		@if(Schedule.accept) {
+		<a class="btn btn-lg btn-outline-dark mx-2" href="http://@contest.link()">規約を閲覧する</a>
+		@if(contest.accept()) {
 		<a class="btn btn-lg btn-outline-primary mx-2" href="@routes.Index.entry">書類を提出する</a>
 		} else {
 		<a class="btn btn-lg btn-outline-primary mx-2" href="@routes.Index.lists">結果を閲覧する</a>
@@ -31,7 +31,7 @@
 <div class="alert alert-warning">
 	メール送信機能は試験モードに設定されています。実際には送信されません。
 </div>
-} else if(!Schedule.accept) {
+} else if(!contest.accept()) {
 <div class="alert alert-info">
 	提出期間外につき、新規の提出は受理できません。暫定結果を閲覧できます。
 </div>

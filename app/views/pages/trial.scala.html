@@ -1,8 +1,8 @@
-@()(implicit req: RequestHeader)
+@()(implicit req: RequestHeader, ats: ATS, contest: Contest)
 
 @comps.frame(title = "書式検査", nav = "trial") {
-@helper.form(action = routes.Trial.trial, Symbol("enctype")->"multipart/form-data") {
+@helper.form(action = routes.Entry.trial, Symbol("enctype")->"multipart/form-data") {
 @helper.CSRF.formField
-@upload(id = "sheet", hint = "未選択 (*.ZLO, *.LG8, *.ADI, ...)")
+@comps.upload(id = "sheet", hint = "未選択 (*.ZLO, *.LG8, *.ADI, ...)")
 }
 }

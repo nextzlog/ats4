@@ -1,5 +1,7 @@
+@()(implicit ats: ATS, contest: Contest)
+
 @comps.frame(title = "皆様の声", nav = "forum") {
-@for(station <- StationData.toList.filter(_.note.nonEmpty)) {
+@for(station <- ats.stations().list().asScala.filter(_.note.nonEmpty)) {
 <blockquote id="@station.call">
 	<p>@station.note <footer>@station.call</footer></p>
 </blockquote>

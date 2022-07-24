@@ -3,30 +3,35 @@
 # ~~~~
 
 # Public pages
-GET     /                    controllers.Index.index
-GET     /calls               controllers.Index.calls
-GET     /entry               controllers.Index.entry
-POST    /entry               controllers.Entry.entry
-GET     /trial               controllers.Index.trial
-POST    /trial               controllers.Trial.trial
-POST    /unbox               controllers.Trial.unbox
-GET     /forum               controllers.Index.forum
-GET     /guide               controllers.Index.guide
-GET     /lists               controllers.Index.lists
+GET     /                        controllers.Index.index
+GET     /entry                   controllers.Index.entry
+GET     /trial                   controllers.Index.trial
+GET     /lists                   controllers.Index.lists
+GET     /calls                   controllers.Index.calls
+GET     /forum                   controllers.Index.forum
+GET     /guide                   controllers.Index.guide
+
+# Public posts
+POST    /entry                   controllers.Entry.entry
+POST    /trial                   controllers.Entry.trial
+POST    /unbox                   controllers.Entry.unbox
 
 # Secret pages
-GET     /admin               controllers.Admin.index
-DELETE  /admin               controllers.Admin.clean
-GET     /admin/excel         controllers.Admin.excel
-GET     /admin/entry         controllers.Admin.entry
-GET     /admin/force/:call   controllers.Admin.force(call: String)
-POST    /admin/email/:call   controllers.Proof.email(call: String)
-GET     /admin/proof/:call   controllers.Proof.proof(call: String)
-DELETE  /admin/proof/:call   controllers.Proof.clean(call: String)
-GET     /admin/table/:id.log controllers.Proof.table(id: Long)
+GET     /admin                   controllers.Admin.index
+GET     /admin/entry             controllers.Admin.entry
+GET     /admin/excel             controllers.Admin.excel
+GET     /admin/force/:call       controllers.Admin.force(call: String)
+GET     /admin/proof/:call       controllers.Admin.proof(call: String)
+GET     /admin/table/:call/:file controllers.Admin.table(call: String, file: String)
+
+# Secret posts
+DELETE  /admin                   controllers.Force.init
+DELETE  /admin/proof/:call       controllers.Force.drop(call: String)
+POST    /admin/email/:call       controllers.Force.mail(call: String)
+POST    /admin/entry             controllers.Force.edit
 
 # WebSocket
-GET     /agent/:uuid        controllers.Agent.agent(uuid: UUID)
+GET     /agent/:uuid             controllers.Agent.agent(uuid: UUID)
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file       controllers.Assets.versioned(path="/public", file: Asset)
+GET     /assets/*file            controllers.Assets.versioned(path="/public", file: Asset)

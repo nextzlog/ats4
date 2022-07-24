@@ -1,0 +1,3 @@
+@(call: String)(implicit req: RequestHeader, ats: ATS, contest: Contest, admin: Boolean = false)
+
+@entry(new ContestForm().fill(ContestFormData(call)))

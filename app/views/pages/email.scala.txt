@@ -1,11 +1,11 @@
-@(call: String)
+@(call: String)(implicit ats: ATS, contest: Contest)
 
-@{Rule.rule.name}書類提出の完了 ; 空白を除く先頭行はメールの件名
+@{contest.name}書類提出の完了 ; 空白を除く先頭行はメールの件名
 
 @{call}様
 
-この度は@{Rule.rule.name}に参加いただきありがとうございます。
-@for(ranking <- RankingData.findAllByCall(call)) {
+この度は@{contest.name()}に参加いただきありがとうございます。
+@for(ranking <- ats.rankings().byCall(call)) {
 @{ranking.sect} (運用地@{ranking.city})}
 にて受理いたしました。
 今後とも当コンテストをよろしくお願いいたします。
@@ -14,7 +14,7 @@
 このメールに心当たりがない場合はお手数ですが下記の連絡先までご連絡ください。
 
 ---
-@{Rule.rule.host}
-@{Rule.rule.name}受付担当係
-@{Rule.rule.link}
-@{Rule.rule.mail}
+@{contest.host()}
+@{contest.name()}受付担当係
+@{contest.link()}
+@{contest.mail()}

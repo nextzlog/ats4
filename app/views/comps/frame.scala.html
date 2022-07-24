@@ -1,11 +1,11 @@
-@(title: String = "", nav: String = "")(content: Html)(implicit admin: Boolean = false)
+@(title: String = "", nav: String = "")(content: Html)(implicit ats: ATS, contest: Contest, admin: Boolean = false)
 
 @vBStrap={@@4.5.3}
 @vSelect={@@1.13.14}
 
 <html>
 	<head>
-		<title>@Rule.rule.name ATS-4 - @Rule.rule.host</title>
+		<title>@contest.name() ATS-4 - @contest.host()</title>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@vBStrap/dist/css/bootstrap.min.css" media="screen">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@vSelect/dist/css/bootstrap-select.min.css">
 		<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
@@ -39,7 +39,7 @@
 				</div>
 				<div class="navbar-nav">
 					<a class="nav-item nav-link" href="http://github.com/nextzlog/ats4">GitHub</a>
-					<a class="nav-item nav-link" href="http://@Rule.rule.link">@Rule.rule.host</a>
+					<a class="nav-item nav-link" href="http://@contest.link()">@contest.host()</a>
 					<a class="nav-item nav-link" href="http://pafelog.net">無線部開発班</a>
 				</div>
 			</div>

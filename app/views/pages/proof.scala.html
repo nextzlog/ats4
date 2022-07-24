@@ -1,9 +1,9 @@
-@(call: String)(implicit req: RequestHeader, admin: Boolean = false)
+@(call: String)(implicit req: RequestHeader, ats: ATS, contest: Contest, admin: Boolean = false)
 
-@station = @{StationData.findAllByCall(call).head}
-@logdata = @{LogBookData.findAllByCall(call)}
+@station = @{ats.stations().byCall(call).get(0)}
+@archive = @{ats.archives().byCall(call).asScala.toList}
 
-@comps.frame(title = "提出書類の確認", nav = if(admin) "admin" else "proof") {
+@comps.frame(title = "提出書類の確認", nav = "lists") {
 @if(!admin) {
 <div class="alert alert-success">
 	下記の内容で受理しました。
@@ -48,11 +48,11 @@
 	@station.note
 </blockquote>
 }
-@for((log,idx) <- logdata.zipWithIndex) {
-	@error(log, idx)
+@for(log <- archive) {
+	@comps.error(log)
 }
-@for(ranking <- RankingData.findAllByCall(station.call)) {
-	@table(ranking,station,logdata)
+@for(ranking <- ats.rankings().byCall(station.call)) {
+	@comps.table(ranking,station,archive)
 }
 @if(admin) {
 <div class="modal" id="remindModal">
@@ -92,10 +92,10 @@
 <script type="text/javascript">
 @if(admin) {
 $('#remindButton').click(function () {
-	$.ajax({type: "POST", url: "@helper.CSRF(routes.Proof.email(station.call))"}).done(() => $('#remindModal').modal('hide'));
+	$.ajax({type: "POST", url: "@helper.CSRF(routes.Force.mail(station.call))"}).done(() => $('#remindModal').modal('hide'));
 });
 $('#deleteButton').click(function () {
-	$.ajax({type: "DELETE", url: "@helper.CSRF(routes.Proof.clean(station.call))"}).done(() => window.location="@routes.Admin.index");
+	$.ajax({type: "DELETE", url: "@helper.CSRF(routes.Force.drop(station.call))"}).done(() => window.location="@routes.Admin.index");
 });
 }
 $(function() {
