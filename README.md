@@ -20,7 +20,7 @@ Feel free to visit [ALLJA1 ATS-4](https://allja1.org).
 
 ## Documents
 
-- [Javadoc](https://nextzlog.github.io/qxsl/doc/index.html)
+- [Scaladoc](https://nextzlog.github.io/ats4/api)
 - [ATS-4 (PDF)](https://pafelog.net/ats4.pdf)
 
 ## Usage

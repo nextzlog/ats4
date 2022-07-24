@@ -9,7 +9,14 @@ env:
 jobs:
   BuildATS4:
     runs-on: ubuntu-latest
+    env:
+      NAME: github-actions[bot]
+      MAIL: github-actions[bot]@users.noreply.github.com
+      HEAD: ${{github.event.head_commit.message}}
+      DOCS: ./target/scala-2.13
+      OPTS: --allow-empty
     steps:
+    - uses: actions/checkout@v2
     - uses: docker/login-action@v2
       with:
         registry: ${{env.REGISTRY}}
@@ -23,3 +30,20 @@ jobs:
       with:
         push: true
         tags: ${{steps.meta.outputs.tags}}
+    - uses: actions/setup-java@v3
+      with:
+        distribution: temurin
+        java-version: 11
+    - uses: actions/checkout@v2
+      with:
+        ref: gh-pages
+        path: ${{env.DOCS}}
+    - run: sbt doc
+    - name: 'publish docs'
+      run: |
+        git config user.name  ${{env.NAME}}
+        git config user.email ${{env.MAIL}}
+        git add api
+        git commit ${{env.OPTS}} -m '${{env.HEAD}}'
+        git push
+      working-directory: ${{env.DOCS}}
