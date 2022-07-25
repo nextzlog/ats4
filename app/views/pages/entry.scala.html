@@ -15,14 +15,15 @@
 		<span>共通事項</span>
 	</h3>
 	<div class="card-body">
-		<fieldset>
+		<fieldset class="h-adr">
+			<input type="hidden" class="p-country-name" value="Japan">
 			@comps.input(form("station.call"), text = "呼出符号", hint = "移動運用の例: JA1ZLO/1")
 			@comps.input(form("station.name"), text = "お名前", hint = "この宛名で賞を発送します。")
-			@comps.input(form("station.post"), text = "郵便番号", hint = "この宛先に賞を発送します。")
-			@comps.input(form("station.addr"), text = "ご住所", hint = "この宛先に賞を発送します。", multiline = true)
+			@comps.input(form("station.post"), text = "郵便番号", hint = "この宛先に賞を発送します。", post = true)
+			@comps.input(form("station.addr"), text = "ご住所", hint = "この宛先に賞を発送します。", multiline = true, addr = true)
 			@comps.input(form("station.mail"), text = "メール", hint = "受理通知メールが届きます。")
 			@comps.input(form("station.note"), text = "ご感想", hint = "呼出符号付きで公表します。", multiline = true)
-			@comps.input(form("station.uuid"), hidden = true)
+			@comps.token(form("station.uuid"))
 		</fieldset>
 	</div>
 </div>

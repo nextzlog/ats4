@@ -19,7 +19,7 @@
 </div>
 <script type="text/javascript">
 $('#@id').on('change', function() {
-	let text = Array.from(this.files).map(f => f.name).join(', ');
+	const text = Array.from(this.files).map(f => f.name).join(', ');
 	$('#@id-label').html(!text? '@hint': text);
 	const data = new FormData();
 	$.each(this.files, (i, file) => data.append('file', file));

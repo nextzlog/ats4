@@ -35,7 +35,7 @@ class ContestRTC < Contest
 	def getDeadLine(year)
 		opt_dead_line(ONLINE.method(:getStartDay), year)
 	end
-	def finish(year, zone)
+	def finish(zone)
 		true
 	end
 	def limitMultipleEntry(code)
