@@ -56,14 +56,6 @@ def entity_item(item)
 	Element.new(item.getRcvd.value(Qxsl::CODE))
 end
 
-def start_day(year)
-	schedule(year, 11, 4, 'SUNDAY')
-end
-
-def dead_line(year)
-	start_day(year).plusMonths(1)
-end
-
 class ContestTama < Contest
 	def name()
 		'多摩川コンテスト'
@@ -80,14 +72,17 @@ class ContestTama < Contest
 	def get(name)
 		eval name
 	end
+	def year()
+		opt_year(method(:getStartDay))
+	end
 	def getStartDay(year)
-		opt_start_day(method(:start_day), year)
+		schedule(year, 11, 4, 'SUNDAY')
 	end
 	def getFinalDay(year)
-		opt_start_day(method(:start_day), year)
+		schedule(year, 11, 4, 'SUNDAY')
 	end
 	def getDeadLine(year)
-		opt_dead_line(method(:dead_line), year)
+		start_day(year).plusWeeks(2)
 	end
 	def limitMultipleEntry(code)
 		1
@@ -140,5 +135,5 @@ LIST.push SectionTama.new(OUTER + MORSE, ModeEnum::MORSE)
 LIST.push SectionTama.new(OUTER + PHONE, ModeEnum::PHONE)
 LIST.push SectionTama.new(SWLER,         ModeEnum::PHONE)
 
-# returns TAMAGAWA contest definition
-TEST = ContestTama.new(*LIST)
+# returns contest definition
+ContestTama.new(*LIST)

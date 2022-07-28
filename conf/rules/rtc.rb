@@ -26,14 +26,17 @@ class ContestRTC < Contest
 	def get(name)
 		eval name
 	end
+	def year()
+		opt_year(method(:getStartDay))
+	end
 	def getStartDay(year)
-		opt_start_day(ONLINE.method(:getStartDay), year)
+		schedule(year, 7, 4, 'MONDAY')
 	end
 	def getFinalDay(year)
-		opt_final_day(ONLINE.method(:getFinalDay), year)
+		schedule(year, 12, 4, 'MONDAY')
 	end
 	def getDeadLine(year)
-		opt_dead_line(ONLINE.method(:getStartDay), year)
+		schedule(year, 12, 4, 'MONDAY')
 	end
 	def finish(zone)
 		true
@@ -48,4 +51,5 @@ class ContestRTC < Contest
 	end
 end
 
-TEST = ContestRTC.new(ONLINE)
+# returns contest definition
+ContestRTC.new(ONLINE)

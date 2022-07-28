@@ -83,14 +83,6 @@ def entity_item(item)
 	Element.new([band, city])
 end
 
-def start_day(year)
-	schedule(year, 7, 3, 'SATURDAY')
-end
-
-def dead_line(year)
-	LocalDate.of(year, 8, 31)
-end
-
 class ContestUEC < Contest
 	def name()
 		'電通大コンテスト'
@@ -107,14 +99,17 @@ class ContestUEC < Contest
 	def get(name)
 		eval name
 	end
+	def year()
+		opt_year(method(:getStartDay))
+	end
 	def getStartDay(year)
-		opt_start_day(method(:start_day), year)
+		schedule(year, 7, 3, 'SATURDAY')
 	end
 	def getFinalDay(year)
-		opt_start_day(method(:start_day), year)
+		schedule(year, 7, 3, 'SATURDAY')
 	end
 	def getDeadLine(year)
-		opt_dead_line(method(:dead_line), year)
+		LocalDate.of(year, 8, 31)
 	end
 	def limitMultipleEntry(code)
 		return 1 if code == ALLBAND
@@ -196,5 +191,5 @@ S28_ = SinBandUEC.new(BandEnum::B28_)
 S50_ = SinBandUEC.new(BandEnum::B50_)
 ASWL = AllBandUEC.new('SWL')
 
-# returns UEC contest definition
-TEST = ContestUEC.new(ANIL, SNIL, AQSO, S3_5, S7_0, S14_, S21_, S28_, S50_, ASWL)
+# returns contest definition
+ContestUEC.new(ANIL, SNIL, AQSO, S3_5, S7_0, S14_, S21_, S28_, S50_, ASWL)

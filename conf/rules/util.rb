@@ -2,6 +2,7 @@
 
 java_import 'java.time.DayOfWeek'
 java_import 'java.time.LocalDate'
+java_import 'java.time.Year'
 java_import 'java.time.ZoneId'
 java_import 'java.time.temporal.TemporalAdjusters'
 
@@ -11,23 +12,9 @@ def schedule(year, month, nth, dayOfWeek)
 	date.with(TemporalAdjusters.dayOfWeekInMonth(nth, week))
 end
 
-def opt_start_day(start_day, year, span = 6)
-	day = start_day.call(year + 0)
-	nex = start_day.call(year + 1)
-	exp = day.until(LocalDate.now)
-	exp.getMonths >= span ? nex : day
-end
-
-def opt_Final_day(final_day, year, span = 6)
-	day = final_day.call(year)
-	nex = final_day.call(year + 1)
-	exp = day.until(LocalDate.now)
-	exp.getMonths >= span ? nex : day
-end
-
-def opt_dead_line(dead_line, year, span = 6)
-	day = dead_line.call(year)
-	nex = dead_line.call(year + 1)
-	exp = day.until(LocalDate.now)
-	exp.getMonths >= span ? nex : day
+def opt_year(func_start_day, months = 9)
+	year = Year.now.getValue
+	date = func_start_day.call(year)
+	span = date.until(LocalDate.now)
+	(span.getMonths > months ? 1: 0) + year
 end

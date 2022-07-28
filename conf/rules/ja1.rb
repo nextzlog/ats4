@@ -26,14 +26,17 @@ class ContestJA1 < Contest
 	def get(name)
 		eval name
 	end
+	def year()
+		opt_year(method(:getStartDay))
+	end
 	def getStartDay(year)
-		opt_start_day(ALLJA1.method(:getStartDay), year)
+		ALLJA1.method(:getStartDay).call(year)
 	end
 	def getFinalDay(year)
-		opt_final_day(ALLJA1.method(:getFinalDay), year)
+		ALLJA1.method(:getFinalDay).call(year)
 	end
 	def getDeadLine(year)
-		opt_dead_line(ALLJA1.method(:getDeadLine), year)
+		ALLJA1.method(:getDeadLine).call(year)
 	end
 	def limitMultipleEntry(code)
 		ALLJA1.limitMultipleEntry(code)
@@ -45,4 +48,5 @@ class ContestJA1 < Contest
 	end
 end
 
-TEST = ContestJA1.new(ALLJA1)
+# returns contest definition
+ContestJA1.new(ALLJA1)
