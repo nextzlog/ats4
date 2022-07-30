@@ -63,13 +63,6 @@ class Index @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Contest) exte
 	def entry = Action(implicit r => Ok(pages.entry(new ContestForm)))
 
 	/**
-	 * 書式検査のページのビューを返します。
-	 *
-	 * @return 書式検査のページ
-	 */
-	def trial = Action(implicit r => Ok(pages.trial()))
-
-	/**
 	 * 暫定結果のページのビューを返します。
 	 *
 	 * @return 暫定結果のページ

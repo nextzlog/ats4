@@ -9,7 +9,7 @@
 }
 @helper.form(action = if(admin) routes.Force.edit else routes.Entry.entry, Symbol("enctype")->"multipart/form-data") {
 @helper.CSRF.formField
-@comps.upload(id = "sheet", hint = "未選択 (*.ZLO, *.LG8, *.ADI, ...)", form = Some(form))
+@comps.upload(id = "sheet", form = form)
 <div class="card bg-light mb-5">
 	<h3 class="card-header">
 		<span>共通事項</span>
@@ -34,7 +34,7 @@
 	</h3>
 	<div class="card-body">
 		<fieldset>
-			@comps.choice(form(s"section[$idx]"), form("section"), sectOpts=contest.filter(_.code == code))
+			@comps.choice(form(s"entries[$idx]"), form("entries"), sectOpts=contest.filter(_.code == code))
 		</fieldset>
 	</div>
 </div>

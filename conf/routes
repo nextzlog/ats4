@@ -5,7 +5,6 @@
 # Public pages
 GET     /                        controllers.Index.index
 GET     /entry                   controllers.Index.entry
-GET     /trial                   controllers.Index.trial
 GET     /lists                   controllers.Index.lists
 GET     /calls                   controllers.Index.calls
 GET     /forum                   controllers.Index.forum

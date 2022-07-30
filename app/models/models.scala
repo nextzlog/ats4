@@ -56,15 +56,30 @@ case class StationFormData(
 
 
 /**
+ * 交信記録のフォームに入力されたデータです。
+ *
+ *
+ * @param file このファイルの名前
+ * @param keep このファイルを使う場合は真
+ */
+case class ArchiveFormData(
+	file: String,
+	keep: Boolean
+)
+
+
+/**
  * 書類提出のフォームに入力されたデータです。
  *
  *
  * @param station 共通事項のデータ
  * @param entries 部門選択のデータ
+ * @param uploads 交信記録のデータ
  */
 case class ContestFormData(
 	station: StationFormData,
-	entries: Seq[SectionFormData]
+	entries: Seq[SectionFormData],
+	uploads: Seq[ArchiveFormData]
 )
 
 
@@ -83,6 +98,7 @@ object ContestFormData {
 	def apply(call: String)(implicit ats: ATS, contest: Contest) = {
 		val station = ats.stations().byCall(call).get(0)
 		val entries = ats.rankings().byCall(call).asScala.toList
+		val uploads = ats.archives().byCall(call).asScala.toList
 		new ContestFormData(
 			StationFormData(
 				call = station.call,
@@ -92,7 +108,9 @@ object ContestFormData {
 				mail = station.mail,
 				note = station.note,
 				uuid = UUID.fromString(station.uuid)
-			), entries.map(r => new SectionFormData(r.sect, r.city))
+			),
+			entries.map(r => new SectionFormData(r.sect, r.city)),
+			uploads.map(a => new ArchiveFormData(a.file, true))
 		)
 	}
 }
@@ -144,6 +162,23 @@ class StationForm(implicit ats: ATS, contest: Contest) extends Form[StationFormD
 
 
 /**
+ * 交信記録のフォームとデータの関連付けと検証を実装します。
+ *
+ *
+ * @param ats データベースの依存性注入
+ * @param contest コンテスト規約の依存性注入
+ */
+class ArchiveForm(implicit ats: ATS, contest: Contest) extends Form[ArchiveFormData](
+	Forms.mapping(
+		"file" -> Forms.nonEmptyText,
+		"keep" -> Forms.boolean,
+	)
+	(ArchiveFormData.apply)
+	(ArchiveFormData.unapply), Map.empty, Nil, None
+)
+
+
+/**
  * 書類提出のフォームとデータの関連付けと検証を実装します。
  *
  *
@@ -153,9 +188,10 @@ class StationForm(implicit ats: ATS, contest: Contest) extends Form[StationFormD
 class ContestForm(implicit ats: ATS, contest: Contest) extends Form[ContestFormData](
 	Forms.mapping(
 		"station" -> new StationForm().mapping,
-		"section" -> Forms.seq(new SectionForm().mapping).verifying(seq => {
+		"entries" -> Forms.seq(new SectionForm().mapping).verifying(seq => {
 			!contest.conflict(seq.map(_.sect).map(contest.section).filterNot(_.isAbsence).toArray)
-		})
+		}),
+		"uploads" -> Forms.seq(new ArchiveForm().mapping)
 	)
 	(ContestFormData.apply)
 	(ContestFormData.unapply), Map.empty, Nil, None

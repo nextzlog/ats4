@@ -4,7 +4,7 @@
 @postStyle = {@if(post){p-postal-code} @if(addr){p-region p-locality p-street-address p-extended-address}}
 
 <div class="form-group">
-	<label for="@field.name">@text</label>
+	<label for="@field.id">@text</label>
 	@if(multiline) {
 	<textarea class="@formStyle @postStyle" id="@field.id" name="@field.name" placeholder="@hint" rows="5">@field.value</textarea>
 	} else {

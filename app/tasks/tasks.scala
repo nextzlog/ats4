@@ -57,6 +57,8 @@ class UploadTask(implicit smtp: MailerClient, ats: ATS, contest: Contest, admin:
 		if (CSRF.getToken.isDefined) util.Try {
 			val post = form.get
 			val files = req.body.asMultipartFormData.get.files
+			val prevLogs = ats.archives().byCall(post.station.call)
+			val stayLogs = prevLogs.asScala.map(f => f.file -> f).toMap
 			ats.drop(post.station.call)
 			val station = new StationData()
 			station.call = post.station.call
@@ -68,6 +70,11 @@ class UploadTask(implicit smtp: MailerClient, ats: ATS, contest: Contest, admin:
 			station.uuid = post.station.uuid.toString
 			ats.stations().push(station)
 			val logs = collection.mutable.Buffer[Item]()
+			for (up <- post.uploads if up.keep) util.Try {
+				val file = stayLogs(up.file)
+				logs.addAll(file.toItemList.asScala)
+				ats.archives().push(file)
+			}
 			for (file <- files) util.Try {
 				val archive = new ArchiveData()
 				archive.call = post.station.call
