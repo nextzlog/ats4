@@ -4,8 +4,8 @@
 
 @getAwardLimit(ranking: RankingData) = @{ats.rankings().getAwardLimit(ranking.rule(contest))}
 
-@link(ranking: RankingData) = {
-	@if(admin) {window.location='@routes.Admin.proof(ranking.call)';}
+@link(call: String) = {
+	@if(admin) {<a href='@routes.Admin.proof(call)'>@call</a>} else {@call}
 }
 
 @comps.frame(title = "暫定結果", nav = "lists") {
@@ -28,9 +28,9 @@
 		</thead>
 		<tbody>
 			@for(ranking <- ats.rankings().bySect(sect.name()).asScala.sortBy(-_.total)) {
-			<tr class="link @if(getRank(ranking) < getAwardLimit(ranking)) {award}" onclick="@link(ranking)">
+			<tr class="@if(getRank(ranking) < getAwardLimit(ranking)) {award}">
 				<td>@{1 + getRank(ranking)}</td>
-				<td>@{ranking.call}</td>
+				<td>@link(ranking.call)</td>
 				<td>@{ranking.score}</td>
 				<td>@{ranking.total}</td>
 				<td>@{ranking.city}</td>

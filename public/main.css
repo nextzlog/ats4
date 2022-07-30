@@ -39,10 +39,6 @@ th {
 	text-align: left;
 }
 
-tr.link > td {
-	cursor: pointer;
-}
-
 tr.award > td {
 	color: red;
 	font-weight: bold;
