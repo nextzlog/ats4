@@ -42,9 +42,13 @@ class ContestJA1 < Contest
 		ALLJA1.limitMultipleEntry(code)
 	end
 	def conflict(entries)
-		mul = entries.map{|e| e.name.include?("団体")}.any?
-		sin = entries.map{|e| e.name.include?("個人")}.any?
-		mul && sin
+		muls = entries.map{|e| e.name.include?("団体")}
+		alls = entries.map{|e| e.name.include?("総合")}
+		in1s = entries.map{|e| e.name.include?("1エリア内")}
+		js1s = entries.map{|e| /1エリア内 .+ 総合/.match?(e.name)}
+		return true if muls.any? and not muls.all?
+		return true if in1s.any? and not js1s.any?
+		not alls.any? and not entries.empty?
 	end
 end
 
