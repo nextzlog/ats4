@@ -26,7 +26,6 @@ GET     /admin/table/:call/:file controllers.Admin.table(call: String, file: Str
 # Secret posts
 DELETE  /admin                   controllers.Force.init
 DELETE  /admin/proof/:call       controllers.Force.drop(call: String)
-POST    /admin/email/:call       controllers.Force.mail(call: String)
 POST    /admin/entry             controllers.Force.edit
 
 # WebSocket

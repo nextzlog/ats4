@@ -237,14 +237,6 @@ class Force @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Contest) exte
 	def drop(call: String) = Action(implicit r => Ok(new DeleteTask().delete(call)))
 
 	/**
-	 * 指定された呼出符号の参加局に通知メールを再送します。
-	 *
-	 * @param call 再送対象の呼出符号
-	 * @return 空のページ
-	 */
-	def mail(call: String) = Action(Ok(new SendMailAgainTask().send(call)))
-
-	/**
 	 * 書類提出のリクエストを処理して、確認画面のページのビューを返します。
 	 *
 	 * @return 確認画面または再提出のページ

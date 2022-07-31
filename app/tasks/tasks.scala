@@ -94,7 +94,7 @@ class UploadTask(implicit smtp: MailerClient, ats: ATS, contest: Contest, admin:
 				ranking.total = data.total()
 				ats.rankings().push(ranking)
 			}
-			new SendMailFirstTask().send(station)
+			new NotifyTask().send(station)
 			Logger(this.getClass).info(s"accept: $post")
 			pages.proof(post.station.call)
 		}.recover {
@@ -217,7 +217,7 @@ class FileDLTask(call: String, file: String)(implicit ats: ATS) {
  * @param ats データベースの依存性注入
  * @param contest コンテスト規約の依存性注入
  */
-class SendMailFirstTask(implicit smtp: MailerClient, ats: ATS, contest: Contest) {
+class NotifyTask(implicit smtp: MailerClient, ats: ATS, contest: Contest) {
 	/**
 	 * 指定された参加局に対してメールを送信します。
 	 *
@@ -234,28 +234,6 @@ class SendMailFirstTask(implicit smtp: MailerClient, ats: ATS, contest: Contest)
 		smtp.send(mail)
 	}.recover {
 		case ex: EmailException => Logger("mail").error("MAIL ERROR!", ex)
-	}
-}
-
-
-/**
- * 書類提出を受理した内容のメールを参加局に再送します。
- *
- *
- * @param smtp メールクライアントの依存性注入
- * @param ats データベースの依存性注入
- * @param contest コンテスト規約の依存性注入
- */
-class SendMailAgainTask(implicit smtp: MailerClient, ats: ATS, contest: Contest) {
-	/**
-	 * 指定された参加局に対してメールを送信します。
-	 *
-	 * @param call 参加局の呼出符号
-	 * @return 呼出符号
-	 */
-	def send(call: String): String = {
-		ats.stations().byCall(call).asScala.foreach(new SendMailFirstTask().send)
-		call
 	}
 }
 
