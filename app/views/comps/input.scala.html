@@ -1,13 +1,13 @@
 @(field: Field, text: String = "", hint: String = "", multiline: Boolean = false, post: Boolean = false, addr: Boolean = false)
 
-@formStyle = {form-control @if(field.hasErrors){is-invalid}}
-@postStyle = {@if(post){p-postal-code} @if(addr){p-region p-locality p-street-address p-extended-address}}
+@postStyle = {@if(post) {p-postal-code} else if(addr) {p-region p-locality p-street-address p-extended-address}}
+@formStyle = {form-control @if(field.hasErrors) {is-invalid} @postStyle}
 
-<div class="form-group">
-	<label for="@field.id">@text</label>
+<div class='mb-3'>
+	<label class='form-label' for='@field.id'>@text</label>
 	@if(multiline) {
-	<textarea class="@formStyle @postStyle" id="@field.id" name="@field.name" placeholder="@hint" rows="5">@field.value</textarea>
+		<textarea class='@formStyle' id='@field.id' name='@field.name' placeholder='@hint' rows='5'>@field.value</textarea>
 	} else {
-	<input type="text" class="@formStyle @postStyle" id="@field.id" name="@field.name" placeholder="@hint" value="@field.value">
+		<input type='text' class='@formStyle' id='@field.id' name='@field.name' placeholder='@hint' value='@field.value'>
 	}
 </div>

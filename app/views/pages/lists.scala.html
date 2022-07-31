@@ -9,69 +9,71 @@
 }
 
 @comps.frame(title = "暫定結果", nav = "lists") {
-@if(admin || contest.finish()) {
-@for(sect <- contest.asScala if !sect.isAbsence()) {
-@if(ats.rankings().bySect(sect.name()).nonEmpty) {
-<div class="card mb-5">
-	<h3 class="card-header d-flex justify-content-between border-bottom-0">
-		<span>@sect.name()</span>
-	</h3>
-	<table class="table table-hover text-monospace">
-		<thead>
-			<tr>
-				<th width="10%">順位</th>
-				<th width="30%">呼出符号</th>
-				<th width="10%">素点</th>
-				<th width="10%">総得点</th>
-				<th width="40%">運用地</th>
-			</tr>
-		</thead>
-		<tbody>
-			@for(ranking <- ats.rankings().bySect(sect.name()).asScala.sortBy(-_.total)) {
-			<tr class="@if(getRank(ranking) < getAwardLimit(ranking)) {award}">
-				<td>@{1 + getRank(ranking)}</td>
-				<td>@link(ranking.call)</td>
-				<td>@{ranking.score}</td>
-				<td>@{ranking.total}</td>
-				<td>@{ranking.city}</td>
-			</tr>
+	@if(admin || contest.finish()) {
+		@for(sect <- contest.asScala if !sect.isAbsence()) {
+			@if(ats.rankings().bySect(sect.name()).nonEmpty) {
+				<div class='my-5'>
+					<h4>@sect.name()</h4>
+					<table class='table table-hover font-monospace'>
+						<thead class='table-dark'>
+							<tr>
+								<th width='10%'>順位</th>
+								<th width='30%'>呼出符号</th>
+								<th width='10%'>素点</th>
+								<th width='10%'>総得点</th>
+								<th width='30%'>運用地</th>
+								<th width='10%'>@if(admin) {閲覧} else {入賞}</th>
+							</tr>
+						</thead>
+						<tbody>
+							@for(ranking <- ats.rankings().bySect(sect.name()).asScala.sortBy(-_.total)) {
+								@defining(getRank(ranking) < getAwardLimit(ranking)) {award =>
+									<tr class='@if(award) {award}'>
+										<td>@{1 + getRank(ranking)}</td>
+										<td>@link(ranking.call)</td>
+										<td>@{ranking.score}</td>
+										<td>@{ranking.total}</td>
+										<td>@{ranking.city}</td>
+										<td>@if(award) {入賞} else {-}</td>
+									</tr>
+								}
+							}
+						</tbody>
+					</table>
+				</div>
 			}
-		</tbody>
-	</table>
-	<div class="card-footer">
-		現時点での表彰局を赤文字で掲示します。
-	</div>
-</div>
-}
-}
-} else {
-<div class="alert alert-info">
-	受付期間の終了と同時に暫定結果を公表します。
-</div>
-}
-@if(admin) {
-<a class="btn btn-outline-danger" href="#deleteModal" data-toggle="modal"><i class="fas fa-trash"></i> 全書類を消去する</a>
-<div class="modal" id="deleteModal">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title">書類の削除</h4>
-			</div>
-			<div class="modal-body">
-				<p>全参加局の書類を消去します。</p>
-				<p class="text-danger">この操作は取り消せません。</p>
-			</div>
-			<div class="modal-footer">
-				<button class="btn btn-danger" id="deleteButton">消去する</button>
-				<button class="btn btn-primary" data-dismiss="modal">消去しない</button>
+		}
+	} else {
+		<div class='alert alert-info'>
+			受付期間の終了と同時に暫定結果を公表します。
+		</div>
+	}
+	@if(admin) {
+		<button type='button' class='btn btn-outline-danger' data-bs-toggle='modal' data-bs-target='#deleteModal'>
+			<i class='fas fa-trash'></i>
+			全書類を消去する
+		</button>
+		<div class='modal' id='deleteModal'>
+			<div class='modal-dialog'>
+				<div class='modal-content'>
+					<div class='modal-header'>
+						<h4 class='modal-title'>書類の削除</h4>
+					</div>
+					<div class='modal-body'>
+						<p>全参加局の書類を消去します。</p>
+						<p class='text-danger'>この操作は取り消せません。</p>
+					</div>
+					<div class='modal-footer'>
+						<button type='button' class='btn btn-danger' id='deleteButton'>消去する</button>
+						<button type='button' class='btn btn-primary' data-bs-dismiss='modal'>キャンセル</button>
+					</div>
+				</div>
 			</div>
 		</div>
-	</div>
-</div>
-<script type="text/javascript">
-$('#deleteButton').click(function () {
-	$.ajax({type: "DELETE", url: "@helper.CSRF(routes.Force.init)"}).done(() => location.reload());
-});
-</script>
-}
+	}
+	<script>
+	$('#deleteButton').click(function () {
+		$.ajax({type: 'DELETE', url: '@helper.CSRF(routes.Force.init)'}).done(() => location.reload());
+	});
+	</script>
 }

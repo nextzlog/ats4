@@ -3,36 +3,36 @@
 @zero(ranking: RankingData) = @{!contest.section(ranking.sect).isAbsence && ranking.score == 0}
 
 @comps.frame(title = "全参加局", nav = "calls") {
-<table class="table table-hover text-monospace">
-	<thead>
-		<tr>
-			<th>#</th>
-			<th>呼出符号</th>
-			<th>再提出の警告</th>
-		</tr>
-	</thead>
-	<tbody>
-		@for((station, count) <- ats.stations().list().asScala.zipWithIndex) {
-		@if(ats.rankings().byCall(station.call).asScala.exists(zero)) {
-		<tr class="table-warning">
-			<td>@{count + 1}
-			<td>@station.call</td>
-			<td>無得点の部門があります。</td>
-		</tr>
-		} else if(ats.rankings.byCall(station.call).isEmpty) {
-		<tr class="table-warning">
-			<td>@{count + 1}
-			<td>@station.call</td>
-			<td>どの部門にも未登録です。</td>
-		</tr>
-		} else {
-		<tr>
-			<td>@{count + 1}
-			<td>@station.call</td>
-			<td>-</td>
-		</tr>
-		}
-		}
-	</tbody>
-</table>
+	<table class='table table-hover font-monospace'>
+		<thead class='table-dark'>
+			<tr>
+				<th>#</th>
+				<th>呼出符号</th>
+				<th>再提出の警告</th>
+			</tr>
+		</thead>
+		<tbody>
+			@for((station, count) <- ats.stations().list().asScala.zipWithIndex) {
+				@if(ats.rankings().byCall(station.call).asScala.exists(zero)) {
+					<tr class='table-warning'>
+						<td>@{count + 1}
+						<td>@station.call</td>
+						<td>無得点の部門があります。</td>
+					</tr>
+				} else if(ats.rankings.byCall(station.call).isEmpty) {
+					<tr class='table-warning'>
+						<td>@{count + 1}
+						<td>@station.call</td>
+						<td>どの部門にも未登録です。</td>
+					</tr>
+				} else {
+					<tr>
+						<td>@{count + 1}
+						<td>@station.call</td>
+						<td>-</td>
+					</tr>
+				}
+			}
+		</tbody>
+	</table>
 }

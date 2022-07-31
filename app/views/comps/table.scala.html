@@ -6,17 +6,22 @@
 @time(t: Time) = @{t.value.format(dfmt)}
 
 @book = @{contest.section(ranking.sect).summarize(archives.map(_.toItemList().asScala).flatten.asJava)}
-@link(call: String) = {@if(admin && ats.stations().byCall(call).nonEmpty) {<a href="@routes.Admin.proof(call)">@call</a>} else {@call}}
+@link(call: String) = {@if(admin && ats.stations().byCall(call).nonEmpty) {<a href='@routes.Admin.proof(call)'>@call</a>} else {@call}}
 
 @normalize(list: Seq[Message]) = @{list.zip(RuleKit.load("jautil.lisp").pattern().normalize(list.map(_.item).toSeq.asJava, null))}
 
 @if(!contest.section(ranking.sect).isAbsence) {
-<div class="card mb-5">
-	<h3 class="card-header border-bottom-0">
-		<span>@ranking.sect</span>
-	</h3>
-	<table class="table table-sm table-hover text-monospace">
-		<thead>
+	<div class='card my-5'>
+		<h3 class='card-header'>
+			<span>@ranking.sect</span>
+		</h3>
+		<div class='card-body'>
+			@if(ranking.city.nonEmpty){運用地は@{ranking.city}です。}
+			暫定の得点は<strong>@{ranking.total}点</strong>(素点@{ranking.score})です。
+		</div>
+	</div>
+	<table class='table table-hover font-monospace'>
+		<thead class='table-dark'>
 			<tr>
 				<th>交信日時</th>
 				<th>相手局</th>
@@ -30,34 +35,29 @@
 		</thead>
 		<tbody>
 			@for((msg, item) <- normalize(book.accepted().toSeq)) {
-			<tr>
-				<td>@{time(item.get(Qxsl.TIME).asInstanceOf[Time])}</td>
-				<td>@link(String.valueOf(item.get(Qxsl.CALL)))</td>
-				<td>@{item.get(Qxsl.BAND)}</td>
-				<td>@{item.get(Qxsl.MODE)}</td>
-				<td>@{item.getRcvd.get(Qxsl.CODE)}</td>
-				<td>@{item.get(Qxsl.NAME)}</td>
-				<td>@{msg.score()}</td>
-				<td>-</td>
-			</tr>
+				<tr>
+					<td>@{time(item.get(Qxsl.TIME).asInstanceOf[Time])}</td>
+					<td>@link(String.valueOf(item.get(Qxsl.CALL)))</td>
+					<td>@{item.get(Qxsl.BAND)}</td>
+					<td>@{item.get(Qxsl.MODE)}</td>
+					<td>@{item.getRcvd.get(Qxsl.CODE)}</td>
+					<td>@{item.get(Qxsl.NAME)}</td>
+					<td>@{msg.score()}</td>
+					<td>-</td>
+				</tr>
 			}
 			@for((msg, item) <- normalize(book.rejected().toSeq)) {
-			<tr class="table-warning">
-				<td>@{time(msg.item.get(Qxsl.TIME).asInstanceOf[Time])}</td>
-				<td>@link(String.valueOf(msg.item.get(Qxsl.CALL)))</td>
-				<td>@{msg.item.get(Qxsl.BAND)}</td>
-				<td>@{msg.item.get(Qxsl.MODE)}</td>
-				<td>@{msg.item.getRcvd.get(Qxsl.CODE)}</td>
-				<td>@{msg.item.get(Qxsl.NAME)}</td>
-				<td>@{msg.score()}</td>
-				<td>@if(msg.text.nonEmpty){@msg.text}else{dupe}</td>
-			</tr>
+				<tr class='table-warning'>
+					<td>@{time(msg.item.get(Qxsl.TIME).asInstanceOf[Time])}</td>
+					<td>@link(String.valueOf(msg.item.get(Qxsl.CALL)))</td>
+					<td>@{msg.item.get(Qxsl.BAND)}</td>
+					<td>@{msg.item.get(Qxsl.MODE)}</td>
+					<td>@{msg.item.getRcvd.get(Qxsl.CODE)}</td>
+					<td>@{msg.item.get(Qxsl.NAME)}</td>
+					<td>@{msg.score()}</td>
+					<td>@if(msg.text.nonEmpty){@msg.text}else{dupe}</td>
+				</tr>
 			}
 		</tbody>
 	</table>
-	<div class="card-footer">
-		@if(ranking.city.nonEmpty){運用地は@{ranking.city}です。}
-		暫定の得点は<strong>@{ranking.total}点</strong>(素点@{ranking.score})です。
-	</div>
-</div>
 }

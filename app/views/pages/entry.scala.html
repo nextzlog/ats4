@@ -1,70 +1,73 @@
 @(form: Form[ContestFormData], warn: Option[Html] = None)(implicit req: RequestHeader, ats: ATS, contest: Contest, admin: Boolean = false)
 
 @comps.frame(title = "書類提出", nav = if(admin) "force" else "entry") {
-@if(contest.accept() || admin) {
-@if(warn.nonEmpty) {
-<div class="alert alert-warning">
-	@warn
-</div>
-}
-@helper.form(action = if(admin) routes.Force.edit else routes.Entry.entry, Symbol("enctype")->"multipart/form-data") {
-@helper.CSRF.formField
-@comps.upload(id = "sheet", form = form)
-<div class="card bg-light mb-5">
-	<h3 class="card-header">
-		<span>共通事項</span>
-	</h3>
-	<div class="card-body">
-		<fieldset class="h-adr">
-			<input type="hidden" class="p-country-name" value="Japan">
-			@comps.input(form("station.call"), text = "呼出符号", hint = "移動運用の例: JA1ZLO/1")
-			@comps.input(form("station.name"), text = "お名前", hint = "この宛名で賞を発送します。")
-			@comps.input(form("station.post"), text = "郵便番号", hint = "この宛先に賞を発送します。", post = true)
-			@comps.input(form("station.addr"), text = "ご住所", hint = "この宛先に賞を発送します。", multiline = true, addr = true)
-			@comps.input(form("station.mail"), text = "メール", hint = "受理通知メールが届きます。")
-			@comps.input(form("station.note"), text = "ご感想", hint = "呼出符号付きで公表します。", multiline = true)
-			@comps.token(form("station.uuid"))
-		</fieldset>
-	</div>
-</div>
-@for((code, idx) <- contest.getSectionCodes().asScala.map(c => Seq.fill(contest.limitMultipleEntry(c))(c)).flatten.zipWithIndex) {
-<div class="card bg-light mb-5">
-	<h3 class="card-header">
-		<span>@code</span>
-	</h3>
-	<div class="card-body">
-		<fieldset>
-			@comps.choice(form(s"entries[$idx]"), form("entries"), sectOpts=contest.filter(_.code == code))
-		</fieldset>
-	</div>
-</div>
-}
-<a class="btn btn-lg btn-primary" href="#submitModal" data-toggle="modal"><i class="fas fa-thumbs-up"></i> この内容で提出する</a>
-<div class="modal" id="submitModal">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title">書類提出</h4>
+	@if(contest.accept() || admin) {
+		@if(warn.nonEmpty) {
+			<div class='alert alert-warning'>
+				@warn
 			</div>
-			<div class="modal-body">
-				<p>以前の登録内容を全て破棄して、指定された部門で参加登録します。</p>
+		}
+		@helper.form(action = if(admin) routes.Force.edit else routes.Entry.entry, Symbol("enctype")->"multipart/form-data") {
+			@helper.CSRF.formField
+			@comps.upload(id = "sheet", form = form)
+			<div class='card bg-light mb-5'>
+				<h3 class='card-header'>
+					<span>共通事項</span>
+				</h3>
+				<div class='card-body'>
+					<fieldset class='h-adr'>
+						<input type='hidden' class='p-country-name' value='Japan'>
+						@comps.input(form("station.call"), text = "呼出符号", hint = "移動運用の例: JA1ZLO/1")
+						@comps.input(form("station.name"), text = "お名前", hint = "この宛名で賞を発送します。")
+						@comps.input(form("station.post"), text = "郵便番号", hint = "この宛先に賞を発送します。", post = true)
+						@comps.input(form("station.addr"), text = "ご住所", hint = "この宛先に賞を発送します。", multiline = true, addr = true)
+						@comps.input(form("station.mail"), text = "メール", hint = "受理通知メールが届きます。")
+						@comps.input(form("station.note"), text = "ご感想", hint = "呼出符号付きで公表します。", multiline = true)
+						@comps.token(form("station.uuid"))
+					</fieldset>
+				</div>
 			</div>
-			<div class="modal-footer">
-				<button class="btn btn-primary" id="submit" type="submit">提出する</button>
-				<button class="btn btn-default" data-dismiss="modal">キャンセル</button>
+			@for((code, idx) <- contest.getSectionCodes().asScala.map(c => Seq.fill(contest.limitMultipleEntry(c))(c)).flatten.zipWithIndex) {
+				<div class='card bg-light mb-5'>
+					<h3 class='card-header'>
+						<span>@code</span>
+					</h3>
+					<div class='card-body'>
+						<fieldset>
+							@comps.choice(form(s"entries[$idx]"), form("entries"), sectOpts=contest.filter(_.code == code))
+						</fieldset>
+					</div>
+				</div>
+			}
+			<button type='button' class='btn btn-lg btn-primary' data-bs-toggle='modal' data-bs-target='#submitModal'>
+				<i class='fas fa-thumbs-up'></i>
+				この内容で提出する
+			</button>
+			<div class='modal' id='submitModal'>
+				<div class='modal-dialog'>
+					<div class='modal-content'>
+						<div class='modal-header'>
+							<h4 class='modal-title'>書類提出</h4>
+						</div>
+						<div class='modal-body'>
+							<p>以前の登録内容を全て破棄して、指定された部門で参加登録します。</p>
+						</div>
+						<div class='modal-footer'>
+							<button type='submit' class='btn btn-primary' id='submit'>提出する</button>
+							<button type='button' class='btn btn-default' data-bs-dismiss='modal'>キャンセル</button>
+						</div>
+					</div>
+				</div>
 			</div>
+		}
+	} else {
+		<div class='alert alert-warning'>
+			提出期間外です。
 		</div>
-	</div>
-</div>
-<script type="text/javascript">
-$('form').submit(function() {
-	$(this).find(':submit').prop('disabled', 'true');
-});
-</script>
-}
-} else {
-<div class="alert alert-warning">
-	提出期間外です。
-</div>
-}
+	}
+	<script>
+	$('form').submit(function() {
+		$(this).find(':submit').prop('disabled', 'true');
+	});
+	</script>
 }

@@ -6,7 +6,9 @@
 
 この度は@{contest.name()}に参加いただきありがとうございます。
 @for(ranking <- ats.rankings().byCall(call)) {
-@{ranking.sect} (運用地@{ranking.city})}
+@{ranking.sect}
+(運用地@{ranking.city})
+}
 にて受理いたしました。
 今後とも当コンテストをよろしくお願いいたします。
 

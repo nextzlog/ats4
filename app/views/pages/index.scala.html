@@ -1,52 +1,52 @@
 @(status: Option[Int] = None)(implicit cfg: Configuration, ats: ATS, contest: Contest)
 
-@note = @{ats.stations().list().asScala.filter(_.note.nonEmpty)}
+@notes = @{ats.stations().list().asScala.filter(_.note.nonEmpty)}
 
 @comps.frame(nav = "index") {
-<div class="jumbotron text-center">
-	@if(status.isEmpty) {
-	<h1 class="display-2">@contest.name()</h1>
-	<h2 class="display-4">書類受付システム</h2>
-	<p class="lead my-3">
-		@{contest.getStartDay()}開催 @{contest.getDeadLine()}締切
-	</p>
-	<div class="row d-flex justify-content-center py-2">
-		<a class="btn btn-lg btn-outline-dark mx-2" href="http://@contest.link()">規約を閲覧する</a>
-		@if(contest.accept()) {
-		<a class="btn btn-lg btn-outline-primary mx-2" href="@routes.Index.entry">書類を提出する</a>
+	<div class='bg-light rounded p-5 my-3 text-center'>
+		@if(status.isEmpty) {
+			<h1 class='display-1'>@contest.name()</h1>
+			<h1 class='display-5'>書類受付システム</h1>
+			<p class='lead my-3'>
+				@{contest.getStartDay()}開催
+				@{contest.getDeadLine()}締切
+			</p>
+			<div class='d-flex justify-content-center py-2'>
+				<a class='btn btn-lg btn-outline-dark mx-2' href='http://@contest.link()'>規約を閲覧する</a>
+				@if(contest.accept()) {
+					<a class='btn btn-lg btn-outline-primary mx-2' href='@routes.Index.entry'>書類を提出する</a>
+				} else {
+					<a class='btn btn-lg btn-outline-primary mx-2' href='@routes.Index.lists'>結果を閲覧する</a>
+				}
+			</div>
 		} else {
-		<a class="btn btn-lg btn-outline-primary mx-2" href="@routes.Index.lists">結果を閲覧する</a>
+			<h1 class='display-1'>@status</h1>
+			<h1 class='display-5'>ERROR</h1>
+			@comps.email()
 		}
 	</div>
-	} else {
-	<h1 class="display-2">@status</h1>
-	<h1 class="display-4">ERROR</h1>
-	<div class="row d-flex justify-content-center py-2">
-		@comps.email()
-	</div>
+	<div class='text-center'>
+	@if(cfg.get[Boolean]("play.mailer.mock")) {
+		<div class='alert alert-warning'>
+			メール送信機能は試験モードに設定されています。実際には送信されません。
+		</div>
+	} else if(!contest.accept()) {
+		<div class='alert alert-info'>
+			提出期間外につき、新規の提出は受理できません。暫定結果を閲覧できます。
+		</div>
 	}
-</div>
-<div class="text-center">
-@if(cfg.get[Boolean]("play.mailer.mock")) {
-<div class="alert alert-warning">
-	メール送信機能は試験モードに設定されています。実際には送信されません。
-</div>
-} else if(!contest.accept()) {
-<div class="alert alert-info">
-	提出期間外につき、新規の提出は受理できません。暫定結果を閲覧できます。
-</div>
-}
-</div>
-<blockquote>
-@if(note.nonEmpty) {
-@defining(util.Random.shuffle(note).head) {station =>
-	<p>@station.note<footer><a href="@routes.Index.forum#@station.call">@station.call</a></footer></p>
-}
-} else {
-	<p>本日は晴天なり</p>
-}
-</blockquote>
-<div class="text-center">
-	<a href="https://zlog.org">zLog令和エディションで快適なコンテストを体験しよう。</a>
-</div>
+	</div>
+	<figure>
+		@defining(util.Random.shuffle(notes).headOption) {station =>
+			<blockquote class='blockquote'>
+				@station.map(_.note).getOrElse("本日は晴天なり")
+			</blockquote>
+			<figcaption class='blockquote-footer'>
+				@station.map(_.call).getOrElse(contest.host())
+			</figcaption>
+		}
+	</figure>
+	<div class='text-center'>
+		<a href='https://zlog.org'>zLog令和エディションで快適なコンテストを体験しよう。</a>
+	</div>
 }

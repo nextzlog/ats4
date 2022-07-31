@@ -23,20 +23,8 @@ blockquote p {
 	display: inline;
 }
 
-label.custom-file-label {
-	cursor: pointer;
-}
-
-input.custom-file-input {
-	cursor: pointer;
-}
-
 .bootstrap-select .btn {
 	background-color: white;
-}
-
-th {
-	text-align: left;
 }
 
 tr.award > td {

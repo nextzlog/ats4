@@ -2,20 +2,22 @@
 
 @warn = @{Option(archive.getWarningMessage).getOrElse("")}
 
-<div class="card mb-5 @if(warn.nonEmpty){bg-warning}">
-	<h3 class="card-header border-bottom-0 d-flex align-items-center justify-content-between">
+<div class='card my-5 @if(warn.nonEmpty) {bg-warning}'>
+	<h3 class='card-header d-flex justify-content-between'>
 		<span>@{archive.file}</span>
 		@if(admin) {
-		<a class="btn btn-outline-success" href="@routes.Admin.table(archive.call, archive.file)"><i class="fas fa-download"></i></a>
+			<a class='btn btn-outline-success' href='@routes.Admin.table(archive.call, archive.file)'>
+				<i class='fas fa-download'></i>
+			</a>
 		}
 	</h3>
 	@if(warn.nonEmpty){
-	@if(admin){
-	<pre class="card-body">@{warn}</pre>
+		@if(admin){
+			<pre class='card-body'>@{warn}</pre>
+		} else {
+			<div class='card-body'>交信記録が読み取れません。再提出をお勧めします。</div>
+		}
 	} else {
-	<div class="card-body">交信記録が読み取れません。再提出をお勧めします。</div>
-	}
-	} else {
-	<div class="card-body">読み取り完了</div>
+		<div class='card-body'>@{archive.toItemList().size()}件の交信</div>
 	}
 </div>

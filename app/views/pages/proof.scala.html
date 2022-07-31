@@ -4,102 +4,71 @@
 @archive = @{ats.archives().byCall(call).asScala.toList}
 
 @comps.frame(title = "提出書類の確認", nav = "lists") {
-@if(!admin) {
-<div class="alert alert-success">
-	下記の内容で受理しました。
-	交信記録が正しく読み込まれたかご確認ください。
-	訂正が必要な場合は期間内に限り再提出できます。
-</div>
-}
-<div class="card mb-5">
-	<h3 class="card-header d-flex align-items-center justify-content-between border-bottom-0">
-		<span id="CALL">@station.call</span>
-		@if(admin) {
-		<div>
-			<a class="btn btn-outline-success" href="#remindModal" data-toggle="modal"><i class="fas fa-paper-plane"></i></a>
-			<a class="btn btn-outline-primary" href="@routes.Admin.force(station.call)"><i class="fas fa-edit"></i></a>
-			<a class="btn btn-outline-warning" href="#deleteModal" data-toggle="modal"><i class="fas fa-trash"></i></a>
+	@if(!admin) {
+		<div class='alert alert-success'>
+			下記の内容で受理しました。
+			交信記録が正しく読み込まれたかご確認ください。
+			訂正が必要な場合は期間内に限り再提出できます。
 		</div>
-		}
-	</h3>
-	<table class="table">
-		<colgroup>
-			<col width="20%">
-			<col width="80%">
-		</colgroup>
-		<tbody>
-			<tr>
-				<td>お名前</td>
-				<td>@station.name</td>
-			</tr>
-			<tr>
-				<td>ご住所</td>
-				<td>@station.post @station.addr</td>
-			</tr>
-			<tr>
-				<td>連絡先</td>
-				<td><a href="mailto:@station.mail">@station.mail</a></td>
-			</tr>
-		</tbody>
-	</table>
-</div>
-@if(station.note.nonEmpty) {
-<blockquote class="mb-5">
-	@station.note
-</blockquote>
-}
-@for(log <- archive) {
-	@comps.error(log)
-}
-@for(ranking <- ats.rankings().byCall(station.call)) {
-	@comps.table(ranking,station,archive)
-}
-@if(admin) {
-<div class="modal" id="remindModal">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title">通知の再送</h4>
-			</div>
-			<div class="modal-body">
-				<p>@{station.call}に通知を再送します。</p>
-			</div>
-			<div class="modal-footer">
-				<button class="btn btn-danger" id="remindButton">再送する</button>
-				<button class="btn btn-primary" data-dismiss="modal">再送しない</button>
-			</div>
+	}
+	<div class='card mb-5'>
+		<h3 class='card-header d-flex justify-content-between'>
+			<span id='CALL'>@station.call</span>
+			@if(admin) {
+				<a class='btn btn-outline-primary' href='@routes.Admin.force(station.call)'>
+					<i class='fas fa-edit'></i>
+				</a>
+			}
+		</h3>
+		<div class="card-body">
+			<p>〒@{station.post} @{station.addr}</p>
+			<p>@{station.name}様</p>
+			<p><a href='mailto:@station.mail'>@station.mail</a></p>
 		</div>
 	</div>
-</div>
-<div class="modal" id="deleteModal">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title">書類の削除</h4>
-			</div>
-			<div class="modal-body">
-				<p>@{station.call}の書類を削除します。</p>
-				<p class="text-danger">この操作は取り消せません。</p>
-			</div>
-			<div class="modal-footer">
-				<button class="btn btn-danger" id="deleteButton">削除する</button>
-				<button class="btn btn-primary" data-dismiss="modal">削除しない</button>
+	@if(station.note.nonEmpty) {
+		<blockquote class='mb-5'>
+			@station.note
+		</blockquote>
+	}
+	@for(log <- archive) {
+		@comps.error(log)
+	}
+	@for(ranking <- ats.rankings().byCall(station.call)) {
+		@comps.table(ranking, station, archive)
+	}
+	@if(admin) {
+		<button type='button' class='btn btn-outline-danger' data-bs-toggle='modal' data-bs-target='#deleteModal'>
+			<i class='fas fa-trash'></i>
+			削除する
+		</button>
+		<div class='modal' id='deleteModal'>
+			<div class='modal-dialog'>
+				<div class='modal-content'>
+					<div class='modal-header'>
+						<h4 class='modal-title'>書類の削除</h4>
+					</div>
+					<div class='modal-body'>
+						<p>@{station.call}の書類を削除します。</p>
+						<p class='text-danger'>この操作は取り消せません。</p>
+					</div>
+					<div class='modal-footer'>
+						<button type='button' class='btn btn-danger' id='deleteButton'>削除する</button>
+						<button type='button' class='btn btn-primary' data-bs-dismiss='modal'>キャンセル</button>
+					</div>
+				</div>
 			</div>
 		</div>
-	</div>
-</div>
-}
-<script type="text/javascript">
-@if(admin) {
-$('#remindButton').click(function () {
-	$.ajax({type: "POST", url: "@helper.CSRF(routes.Force.mail(station.call))"}).done(() => $('#remindModal').modal('hide'));
-});
-$('#deleteButton').click(function () {
-	$.ajax({type: "DELETE", url: "@helper.CSRF(routes.Force.drop(station.call))"}).done(() => window.location="@routes.Admin.index");
-});
-}
-$(function() {
-	$.ajax({type: "GET", url: "http://localhost:8873?id=@station.uuid"});
-});
-</script>
+	}
+	<script>
+	@if(admin) {
+		$('#deleteButton').click(function () {
+			$.ajax({type: 'DELETE', url: '@helper.CSRF(routes.Force.drop(station.call))'}).done(() => window.location='@routes.Admin.index');
+		});
+	} else {
+		$(function() {
+			$.ajax({type: 'GET', url: 'http://localhost:8873?id=@station.uuid'});
+		});
+	}
+	</script>
 }

@@ -1,59 +1,52 @@
 @(id: String, form: Form[ContestFormData])(implicit req: RequestHeader, admin: Boolean = false)
 
-@hint = {未選択 (*.ZLO, *.LG8, *.ADI, ...)}
+@keep(file: Field, keep: Field) = {
+	<div class='input-group mb-3'>
+		<div class='input-group-text'>
+			<input class='keep form-check-input' type='checkbox' id='@keep.id' name='@keep.name' value=@keep.value checked>
+		</div>
+		<label class='form-control' for='@keep.id'>@file.value</label>
+		<input type='hidden' id='@file.id' name='@file.name' value='@file.value'>
+	</div>
+}
 
-<div class="card bg-light mb-5">
-	<h3 class="card-header">
+<div class='card bg-light mb-5'>
+	<h3 class='card-header'>
 		<span>交信記録</span>
 	</h3>
-	<div class="card-body">
-		<fieldset>
-			@helper.repeat(form("uploads"), min = 0) {field =>
-			<div class="form-group input-group">
-				<div class="input-group-prepend">
-					<div class="input-group-text">
-						<input class="keep-file" type="checkbox" id='@field("keep").id' name='@field("keep").name' value=@field("keep").value checked>
-					</div>
-				</div>
-				<label class="form-control" for='@field("keep").id'>@field("file").value</label>
-				<input type='hidden' id='@field("file").id' name='@field("file").name' value='@field("file").value'>
-			</div>
-			}
-			<div class="form-group custom-file">
-				<input type="file" id="@id" name="@id" class="custom-file-input" multiple>
-				<label class="custom-file-label" id="@id-label" for="@id" data-browse="参照">@hint</label>
-			</div>
-		</fieldset>
+	<div class='card-body'>
+		@helper.repeat(form("uploads"), min = 0) {field => @keep(field("file"), field("keep"))}
+		<div>
+			<input type='file' id='@id' name='@id' class='form-control' multiple>
+		</div>
 	</div>
-	<div id="@id-footer" class="card-footer">
-		全ての部門の交信記録を添付しましょう。
-		複数のファイルをまとめて選択できます。
+	<div id='@id-footer' class='card-footer'>
+		既に提出済みの交信記録は、完全に消去されます。
+		複数のファイルを選ぶと、自動的に結合されます。
 	</div>
 </div>
-<script type="text/javascript">
-$('#@id').on('change', function() {
-	const text = Array.from(this.files).map(f => f.name).join(', ');
-	$('#@id-label').html(!text? '@hint': text);
+<script>
+$('#@id').change(function() {
 	const data = new FormData();
 	$.each(this.files, (i, file) => data.append('file', file));
 	$.ajax({
-		type: "POST",
+		type: 'POST',
 		data: data,
 		cache: false,
 		contentType: false,
 		processData: false,
-		dataType: "html",
+		dataType: 'html',
 		url: '@helper.CSRF(routes.Entry.trial)',
 	}).done((data) => {
 		$('#@id-footer').html(data);
 	});
 	$.ajax({
-		type: "POST",
+		type: 'POST',
 		data: data,
 		cache: false,
 		contentType: false,
 		processData: false,
-		dataType: "html",
+		dataType: 'html',
 		url: '@helper.CSRF(routes.Entry.unbox)',
 	}).done((data) => {
 		if(data) {
@@ -66,10 +59,10 @@ $('#@id').on('change', function() {
 		}
 	});
 });
-$('.keep-file').on('change', function() {
-	$('#@id').prop('required', !$('.keep-file:checked').length);
+$('.keep').change(function() {
+	$('#@id').prop('required', !$('.keep:checked').length);
 });
 $(function() {
-	$('#@id').prop('required', !$('.keep-file:checked').length);
+	$('#@id').prop('required', !$('.keep:checked').length);
 });
 </script>
