@@ -16,7 +16,7 @@ Feel free to visit [ALLJA1 ATS-4](https://allja1.org).
 
 - provides a web interface for contest-log acceptance.
 - verifies the uploaded logs according to the contest rules described in Ruby or LISP forms.
-- supports many contests including [UEC](https://www.ja1zgp.com/uectest_public_info), [ALLJA1](http://ja1zlo.u-tokyo.org/allja1), [REALTIME](http://ja1zlo.u-tokyo.org/rt/rt1.html), and [TAMAGAWA](http://apollo.c.ooco.jp).
+- supports many contests including [UEC](https://www.ja1zgp.com/uectest_public_info), [ALLJA1](http://ja1zlo.u-tokyo.org/allja1), [REAL-TIME](http://ja1zlo.u-tokyo.org/rt/rt1.html), and [TAMAGAWA](http://apollo.c.ooco.jp).
 
 ## Documents
 
@@ -54,7 +54,13 @@ To kill the container, enter the following command:
 $ docker-compose kill
 ```
 
-## Settings
+To start ATS-4 without using the container, run the following command:
+
+```sh
+$ sbt "start -Dhttp.port=8000"
+```
+
+## Configuration
 
 Follow the instructions below.
 
@@ -113,12 +119,22 @@ ats4.rules=/rules/ja1.rb
 ```
 
 Modify the settings properly.
-The [`Contest`](https://nextzlog.github.io/qxsl/doc/qxsl/ruler/Contest) object is the entity of the contest rules.
+The [`Contest`](https://nextzlog.github.io/qxsl/docs/qxsl/ruler/Contest) object is the entity of the contest rules.
 See [`ja1.rb`](conf/rules/ja1.rb) and [`rtc.rb`](conf/rules/rtc.rb) and [`uec.rb`](conf/rules/uec.rb) for example.
 
 ```Ruby
 TEST = ContestJA1.new(ALLJA1)
 ```
+
+## Development
+
+Start ATS-4 in development mode as follows:
+
+```sh
+$ sbt run
+```
+
+In development mode, you can modify the contest rules (and/or `application.conf`) and have them reflected in the system without rebooting.
 
 ## Stream API
 
