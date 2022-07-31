@@ -307,6 +307,6 @@ class SocketTask(out: ActorRef, token: UUID)(implicit cfg: Cfg, ats: ATS, contes
 		ranking.lazyZip(sums).map(_.copy(_)).foreach(ats.rankings().push)
 		ats.archives().push(archive.head)
 		Logger(this.getClass).info(s"accept: $station.call")
-		new RankingTableToJson().json
+		if (contest.finish()) new RankingTableToJson().json else ""
 	}
 }
