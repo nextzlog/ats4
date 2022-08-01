@@ -188,14 +188,32 @@ class ArchiveForm(implicit ats: ATS, contest: Contest) extends Form[ArchiveFormD
 class ContestForm(implicit ats: ATS, contest: Contest) extends Form[ContestFormData](
 	Forms.mapping(
 		"station" -> new StationForm().mapping,
-		"entries" -> Forms.seq(new SectionForm().mapping).verifying(seq => {
-			!contest.conflict(seq.map(_.sect).map(contest.section).filterNot(_.isAbsence).toArray)
-		}),
+		"entries" -> Forms.seq(new SectionForm().mapping).verifying(new Conflict().ok(_)),
 		"uploads" -> Forms.seq(new ArchiveForm().mapping)
 	)
 	(ContestFormData.apply)
 	(ContestFormData.unapply), Map.empty, Nil, None
 )
+
+
+/**
+ * 部門選択のフォームの整合性を検証します。
+ *
+ *
+ * @param contest コンテスト規約の依存性注入
+ */
+class Conflict(implicit contest: Contest) {
+	/**
+	 * 指定された部門選択の整合性を検証します。
+	 *
+	 * @param sectionList 部門選択のリスト
+	 * @return 受理可能な場合は真
+	 */
+	def ok(sectionList: Seq[SectionFormData]): Boolean = {
+		val rules = sectionList.map(_.sect).map(contest.section)
+		! contest.conflict(rules.filterNot(_.isAbsence).toArray)
+	}
+}
 
 
 /**
