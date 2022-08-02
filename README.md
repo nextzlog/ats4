@@ -115,12 +115,12 @@ You will find the contest settings as follows:
 
 ```ini
 # Contest
-ats4.rules=/rules/ja1.rb
+ats4.rules=/rules/JA1ZLO/ja1.rb
 ```
 
 Modify the settings properly.
 The [`Program`](https://nextzlog.github.io/qxsl/docs/qxsl/ruler/Program) object is the entity of the contest rules.
-See [`ja1.rb`](conf/rules/ja1.rb) and [`rtc.rb`](conf/rules/rtc.rb) and [`uec.rb`](conf/rules/uec.rb) for example.
+See [`ja1.rb`](conf/rules/JA1ZLO/ja1.rb) and [`rtc.rb`](conf/rules/JA1ZLO/rtc.rb) and [`uec.rb`](conf/rules/JA1ZGP/uec.rb) for example.
 
 ```Ruby
 ProgramJA1.new(ALLJA1)

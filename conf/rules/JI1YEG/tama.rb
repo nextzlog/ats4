@@ -1,5 +1,10 @@
 # TAMAGAWA CONTEST DEFINED by ATS-4
 
+java_import 'java.time.DayOfWeek'
+java_import 'java.time.LocalDate'
+java_import 'java.time.Year'
+java_import 'java.time.ZoneId'
+java_import 'java.time.temporal.TemporalAdjusters'
 java_import 'qxsl.draft.Qxsl'
 java_import 'qxsl.local.LocalCityBase'
 java_import 'qxsl.ruler.Element'
@@ -10,7 +15,18 @@ java_import 'qxsl.ruler.Section'
 java_import 'qxsl.ruler.Success'
 java_import 'qxsl.utils.AssetUtil'
 
-require 'rules/util'
+def schedule(year, month, nth, dayOfWeek)
+	week = DayOfWeek.valueOf(dayOfWeek)
+	date = LocalDate.of(year, month, 1)
+	date.with(TemporalAdjusters.dayOfWeekInMonth(nth, week))
+end
+
+def opt_year(func_start_day, months = 9)
+	year = Year.now.getValue
+	date = func_start_day.call(year)
+	span = date.until(LocalDate.now)
+	(span.getMonths > months ? 1: 0) + year
+end
 
 # JAUTIL library
 JAUTIL = RuleKit.load('jautil.lisp').pattern
@@ -18,7 +34,7 @@ ZONEID = ZoneId.of('Asia/Tokyo')
 
 HOURDB = [13, 14]
 BANDDB = [50_000]
-CITYDB = LocalCityBase.load('rules/tama.dat').toList
+CITYDB = LocalCityBase.load('rules/JI1YEG/tama.dat').toList
 
 module ModeEnum
 	MORSE = ['CW']
@@ -71,7 +87,7 @@ class ProgramTama < Program
 		'apollo.c.ooco.jp'
 	end
 	def help()
-		AssetUtil.root.string('rules/tama.md')
+		AssetUtil.root.string('rules/JI1YEG/tama.md')
 	end
 	def get(name)
 		eval name

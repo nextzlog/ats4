@@ -1,10 +1,25 @@
 # ALLJA1 CONTEST DEFINED by ATS-4
 
+java_import 'java.time.DayOfWeek'
+java_import 'java.time.LocalDate'
+java_import 'java.time.Year'
+java_import 'java.time.temporal.TemporalAdjusters'
 java_import 'qxsl.ruler.Program'
 java_import 'qxsl.ruler.RuleKit'
 java_import 'qxsl.utils.AssetUtil'
 
-require 'rules/util'
+def schedule(year, month, nth, dayOfWeek)
+	week = DayOfWeek.valueOf(dayOfWeek)
+	date = LocalDate.of(year, month, 1)
+	date.with(TemporalAdjusters.dayOfWeekInMonth(nth, week))
+end
+
+def opt_year(func_start_day, months = 9)
+	year = Year.now.getValue
+	date = func_start_day.call(year)
+	span = date.until(LocalDate.now)
+	(span.getMonths > months ? 1: 0) + year
+end
 
 ALLJA1 = RuleKit.load('allja1.lisp').contest
 
@@ -22,7 +37,7 @@ class ProgramJA1 < Program
 		'ja1zlo.u-tokyo.org/allja1'
 	end
 	def help()
-		AssetUtil.root.string('rules/ja1.md')
+		AssetUtil.root.string('rules/JA1ZLO/ja1.md')
 	end
 	def get(name)
 		eval name
