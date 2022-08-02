@@ -119,11 +119,11 @@ ats4.rules=/rules/ja1.rb
 ```
 
 Modify the settings properly.
-The [`Contest`](https://nextzlog.github.io/qxsl/docs/qxsl/ruler/Contest) object is the entity of the contest rules.
+The [`Program`](https://nextzlog.github.io/qxsl/docs/qxsl/ruler/Program) object is the entity of the contest rules.
 See [`ja1.rb`](conf/rules/ja1.rb) and [`rtc.rb`](conf/rules/rtc.rb) and [`uec.rb`](conf/rules/uec.rb) for example.
 
 ```Ruby
-TEST = ContestJA1.new(ALLJA1)
+ProgramJA1.new(ALLJA1)
 ```
 
 ## Development

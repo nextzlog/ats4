@@ -5,9 +5,9 @@ java_import 'qxsl.draft.Qxsl'
 java_import 'qxsl.local.LocalCityBase'
 java_import 'qxsl.local.LocalCityItem'
 java_import 'qxsl.ruler.Absence'
-java_import 'qxsl.ruler.Contest'
 java_import 'qxsl.ruler.Element'
 java_import 'qxsl.ruler.Failure'
+java_import 'qxsl.ruler.Program'
 java_import 'qxsl.ruler.RuleKit'
 java_import 'qxsl.ruler.Section'
 java_import 'qxsl.ruler.Success'
@@ -83,7 +83,7 @@ def entity_item(item)
 	Element.new([band, city])
 end
 
-class ContestUEC < Contest
+class ProgramUEC < Program
 	def name()
 		'電通大コンテスト'
 	end
@@ -192,4 +192,4 @@ S50_ = SinBandUEC.new(BandEnum::B50_)
 ASWL = AllBandUEC.new('SWL')
 
 # returns contest definition
-ContestUEC.new(ANIL, SNIL, AQSO, S3_5, S7_0, S14_, S21_, S28_, S50_, ASWL)
+ProgramUEC.new(ANIL, SNIL, AQSO, S3_5, S7_0, S14_, S21_, S28_, S50_, ASWL)

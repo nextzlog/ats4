@@ -1,8 +1,8 @@
-@()(implicit ats: ATS, contest: Contest)
+@()(implicit ats: ATS, rule: Program)
 
 @getRank(ranking: RankingData) = @{ranking.getRankFromZeroIn(ats.rankings())}
 
-@getAwardLimit(ranking: RankingData) = @{ats.rankings().getAwardLimit(ranking.rule(contest))}
+@getAwardLimit(ranking: RankingData) = @{ats.rankings().getAwardLimit(ranking.rule(rule))}
 
 @line(ranking: RankingData) = @{
 	val station = ats.stations().byCall(ranking.call).get(0)
@@ -22,4 +22,4 @@
 }
 
 呼出符号,運用場所,参加部門,順位,入賞,得点,名前,郵便番号,住所,アドレス,コメント
-@for(sect <- contest.asScala if !sect.isAbsence(); ranking <- ats.rankings().bySect(sect.name()).asScala.sortBy(-_.total)) {@line(ranking)}
+@for(sect <- rule.asScala if !sect.isAbsence(); ranking <- ats.rankings().bySect(sect.name()).asScala.sortBy(-_.total)) {@line(ranking)}

@@ -1,27 +1,24 @@
 # REAL-TIME CONONLINE DEFINED by ATS-4
 
-java_import 'qxsl.ruler.Contest'
+java_import 'qxsl.ruler.Program'
 java_import 'qxsl.ruler.RuleKit'
 
 require 'rules/util'
 
 ONLINE = RuleKit.load('online.lisp').contest
 
-class ContestRTC < Contest
-	def initialize(sections)
-		super(*sections.map{|s| s.cache})
-	end
+class ProgramRTC < Program
 	def name()
-		ONLINE.name
+		'リアルタイムコンテスト'
 	end
 	def host()
-		ONLINE.host
+		'東大無線部'
 	end
 	def mail()
-		ONLINE.mail
+		'allja1@ja1zlo.u-tokyo.org'
 	end
 	def link()
-		ONLINE.link
+		'ja1zlo.u-tokyo.org/rt'
 	end
 	def get(name)
 		eval name
@@ -42,7 +39,7 @@ class ContestRTC < Contest
 		true
 	end
 	def limitMultipleEntry(code)
-		ONLINE.limitMultipleEntry(code)
+		1
 	end
 	def conflict(entries)
 		mul = entries.map{|e| e.name.include?("団体")}.any?
@@ -52,4 +49,4 @@ class ContestRTC < Contest
 end
 
 # returns contest definition
-ContestRTC.new(ONLINE)
+ProgramRTC.new(*ONLINE)

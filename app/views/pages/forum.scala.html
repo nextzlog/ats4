@@ -1,4 +1,4 @@
-@()(implicit ats: ATS, contest: Contest)
+@()(implicit ats: ATS, rule: Program)
 
 @comps.frame(title = "皆様の声", nav = "forum") {
 	@for(station <- ats.stations().list().asScala.filter(_.note.nonEmpty)) {

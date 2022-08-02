@@ -1,4 +1,4 @@
-@(archive: ArchiveData)(implicit ats: ATS, contest: Contest, admin: Boolean = false)
+@(archive: ArchiveData)(implicit ats: ATS, rule: Program, admin: Boolean = false)
 
 @warn = @{Option(archive.getWarningMessage).getOrElse("")}
 

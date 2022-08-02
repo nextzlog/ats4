@@ -43,7 +43,7 @@ import org.apache.commons.mail.EmailException
  * @param rule コンテスト規約の依存性注入
  * @param admin 管理者権限
  */
-class UploadTask(implicit smtp: MailerClient, ats: ATS, contest: Contest, admin: Boolean = false) {
+class UploadTask(implicit smtp: MailerClient, ats: ATS, rule: Program, admin: Boolean = false) {
 	/**
 	 * 書類提出のリクエストを処理して、確認画面のページのビューを返します。
 	 *
@@ -84,14 +84,13 @@ class UploadTask(implicit smtp: MailerClient, ats: ATS, contest: Contest, admin:
 				logs.addAll(archive.toItemList.asScala)
 			}
 			for (sect <- post.entries) {
-				val rule = contest.section(sect.sect)
-				val data = rule.summarize(logs.asJava)
+				val summary = rule.section(sect.sect).summarize(logs.asJava)
 				val ranking = new RankingData()
 				ranking.call = post.station.call
 				ranking.sect = sect.sect
 				ranking.city = sect.city
-				ranking.score = data.score()
-				ranking.total = data.total()
+				ranking.score = summary.score()
+				ranking.total = summary.total()
 				ats.rankings().push(ranking)
 			}
 			new NotifyTask().send(station)
@@ -112,7 +111,7 @@ class UploadTask(implicit smtp: MailerClient, ats: ATS, contest: Contest, admin:
  * @param ats データベースの依存性注入
  * @param rule コンテスト規約の依存性注入
  */
-class DeleteTask(implicit req: RequestHeader, ats: ATS, contest: Contest) {
+class DeleteTask(implicit req: RequestHeader, ats: ATS, rule: Program) {
 	/**
 	 * 指定された呼出符号の参加局を削除します。
 	 *
@@ -215,9 +214,9 @@ class FileDLTask(call: String, file: String)(implicit ats: ATS) {
  *
  * @param smtp メールクライアントの依存性注入
  * @param ats データベースの依存性注入
- * @param contest コンテスト規約の依存性注入
+ * @param rule コンテスト規約の依存性注入
  */
-class NotifyTask(implicit smtp: MailerClient, ats: ATS, contest: Contest) {
+class NotifyTask(implicit smtp: MailerClient, ats: ATS, rule: Program) {
 	/**
 	 * 指定された参加局に対してメールを送信します。
 	 *
@@ -226,9 +225,9 @@ class NotifyTask(implicit smtp: MailerClient, ats: ATS, contest: Contest) {
 	def send(station: StationData): Unit = util.Try {
 		val mail = new Email
 		val text = views.txt.pages.email(station.call).body.trim
-		mail.setFrom("%s <%s>".format(contest.host, contest.mail))
+		mail.setFrom("%s <%s>".format(rule.host, rule.mail))
 		mail.addTo("%s <%s>".format(station.call, station.mail))
-		mail.addBcc(contest.mail)
+		mail.addBcc(rule.mail)
 		mail.setSubject(text.linesIterator.toSeq.head.split(";").head.trim)
 		mail.setBodyText(text.linesWithSeparators.toSeq.tail.mkString.trim)
 		smtp.send(mail)
@@ -248,7 +247,7 @@ class NotifyTask(implicit smtp: MailerClient, ats: ATS, contest: Contest) {
  * @param ats データベースの依存性注入
  * @param rule コンテスト規約の依存性注入
  */
-class SocketTask(out: ActorRef, token: UUID)(implicit cfg: Cfg, ats: ATS, contest: Contest) extends Actor {
+class SocketTask(out: ActorRef, token: UUID)(implicit cfg: Cfg, ats: ATS, rule: Program) extends Actor {
 	/**
 	 * 交信記録を読み取るデコーダです。
 	 */
@@ -281,10 +280,10 @@ class SocketTask(out: ActorRef, token: UUID)(implicit cfg: Cfg, ats: ATS, contes
 		archive.head.data = new TableManager().encode(qsoList.asJava)
 		ats.archives().byCall(station.call).asScala.foreach(ats.archives().drop)
 		ats.rankings().byCall(station.call).asScala.foreach(ats.rankings().drop)
-		val sums = ranking.map(_.rule(contest).summarize(qsoList.asJava))
+		val sums = ranking.map(_.rule(rule).summarize(qsoList.asJava))
 		ranking.lazyZip(sums).map(_.copy(_)).foreach(ats.rankings().push)
 		ats.archives().push(archive.head)
 		Logger(this.getClass).info(s"accept: $station.call")
-		if (contest.finish()) new RankingTableToJson().json else ""
+		if (rule.finish()) new RankingTableToJson().json else ""
 	}
 }

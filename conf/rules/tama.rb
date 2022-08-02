@@ -2,9 +2,9 @@
 
 java_import 'qxsl.draft.Qxsl'
 java_import 'qxsl.local.LocalCityBase'
-java_import 'qxsl.ruler.Contest'
 java_import 'qxsl.ruler.Element'
 java_import 'qxsl.ruler.Failure'
+java_import 'qxsl.ruler.Program'
 java_import 'qxsl.ruler.RuleKit'
 java_import 'qxsl.ruler.Section'
 java_import 'qxsl.ruler.Success'
@@ -56,7 +56,7 @@ def entity_item(item)
 	Element.new(item.getRcvd.value(Qxsl::CODE))
 end
 
-class ContestTama < Contest
+class ProgramTama < Program
 	def name()
 		'多摩川コンテスト'
 	end
@@ -136,4 +136,4 @@ LIST.push SectionTama.new(OUTER + PHONE, ModeEnum::PHONE)
 LIST.push SectionTama.new(SWLER,         ModeEnum::PHONE)
 
 # returns contest definition
-ContestTama.new(*LIST)
+ProgramTama.new(*LIST)

@@ -92,10 +92,10 @@ object ContestFormData {
 	 *
 	 * @param call 確認対象の呼出符号
 	 * @param ats データベースの依存性注入
-	 * @param contest コンテスト規約の依存性注入
+	 * @param rule コンテスト規約の依存性注入
 	 * @return 初期値が入力されたフォームデータ
 	 */
-	def apply(call: String)(implicit ats: ATS, contest: Contest) = {
+	def apply(call: String)(implicit ats: ATS, rule: Program) = {
 		val station = ats.stations().byCall(call).get(0)
 		val entries = ats.rankings().byCall(call).asScala.toList
 		val uploads = ats.archives().byCall(call).asScala.toList
@@ -121,17 +121,17 @@ object ContestFormData {
  *
  *
  * @param ats データベースの依存性注入
- * @param contest コンテスト規約の依存性注入
+ * @param rule コンテスト規約の依存性注入
  */
-class SectionForm(implicit ats: ATS, contest: Contest) extends Form[SectionFormData](
+class SectionForm(implicit ats: ATS, rule: Program) extends Form[SectionFormData](
 	Forms.mapping(
 		"sect" -> Forms.text,
 		"city" -> Forms.text
 	)
 	(SectionFormData.apply)
 	(SectionFormData.unapply).verifying(s => {
-		contest.section(s.sect).isAbsence() ||
-		contest.section(s.sect).getCityList().asScala.exists(_.toString == s.city)
+		rule.section(s.sect).isAbsence() ||
+		rule.section(s.sect).getCityList().asScala.exists(_.toString == s.city)
 	}), Map.empty, Nil, None
 )
 
@@ -141,12 +141,12 @@ class SectionForm(implicit ats: ATS, contest: Contest) extends Form[SectionFormD
  *
  *
  * @param ats データベースの依存性注入
- * @param contest コンテスト規約の依存性注入
+ * @param rule コンテスト規約の依存性注入
  */
-class StationForm(implicit ats: ATS, contest: Contest) extends Form[StationFormData](
+class StationForm(implicit ats: ATS, rule: Program) extends Form[StationFormData](
 	Forms.mapping(
 		"call" -> Forms.nonEmptyText
-			.verifying(Call.isValid(_))
+			.verifying(new Call(_).valid())
 			.transform(new Call(_).value(), identity[String]),
 		"name" -> Forms.nonEmptyText,
 		"post" -> Forms.nonEmptyText,
@@ -166,9 +166,9 @@ class StationForm(implicit ats: ATS, contest: Contest) extends Form[StationFormD
  *
  *
  * @param ats データベースの依存性注入
- * @param contest コンテスト規約の依存性注入
+ * @param rule コンテスト規約の依存性注入
  */
-class ArchiveForm(implicit ats: ATS, contest: Contest) extends Form[ArchiveFormData](
+class ArchiveForm(implicit ats: ATS, rule: Program) extends Form[ArchiveFormData](
 	Forms.mapping(
 		"file" -> Forms.nonEmptyText,
 		"keep" -> Forms.boolean,
@@ -183,9 +183,9 @@ class ArchiveForm(implicit ats: ATS, contest: Contest) extends Form[ArchiveFormD
  *
  *
  * @param ats データベースの依存性注入
- * @param contest コンテスト規約の依存性注入
+ * @param rule コンテスト規約の依存性注入
  */
-class ContestForm(implicit ats: ATS, contest: Contest) extends Form[ContestFormData](
+class ContestForm(implicit ats: ATS, rule: Program) extends Form[ContestFormData](
 	Forms.mapping(
 		"station" -> new StationForm().mapping,
 		"entries" -> Forms.seq(new SectionForm().mapping).verifying(new Conflict().ok(_)),
@@ -200,9 +200,9 @@ class ContestForm(implicit ats: ATS, contest: Contest) extends Form[ContestFormD
  * 部門選択のフォームの整合性を検証します。
  *
  *
- * @param contest コンテスト規約の依存性注入
+ * @param rule コンテスト規約の依存性注入
  */
-class Conflict(implicit contest: Contest) {
+class Conflict(implicit rule: Program) {
 	/**
 	 * 指定された部門選択の整合性を検証します。
 	 *
@@ -210,8 +210,8 @@ class Conflict(implicit contest: Contest) {
 	 * @return 受理可能な場合は真
 	 */
 	def ok(sectionList: Seq[SectionFormData]): Boolean = {
-		val rules = sectionList.map(_.sect).map(contest.section)
-		! contest.conflict(rules.filterNot(_.isAbsence).toArray)
+		val rules = sectionList.map(_.sect).map(rule.section)
+		! rule.conflict(rules.filterNot(_.isAbsence).toArray)
 	}
 }
 
@@ -221,15 +221,15 @@ class Conflict(implicit contest: Contest) {
  *
  *
  * @param ats データベースの依存性注入
- * @param contest コンテスト規約の依存性注入
+ * @param rule コンテスト規約の依存性注入
  */
-class RankingTableToJson(implicit ats: ATS, contest: Contest) {
+class RankingTableToJson(implicit ats: ATS, rule: Program) {
 	/**
 	 * JSONの文字列を生成します。
 	 *
 	 * @return JSONの文字列
 	 */
-	def json = Json.stringify(toJS(contest))
+	def json = Json.stringify(toJS(rule))
 
 	/**
 	 * 指定された規約に対し、得点状況を格納したJSONの文字列を生成します。
@@ -237,7 +237,7 @@ class RankingTableToJson(implicit ats: ATS, contest: Contest) {
 	 * @param rule 対象の規約
 	 * @return JSONの文字列
 	 */
-	def toJS(rule: Contest): JsValue = {
+	def toJS(rule: Program): JsValue = {
 		Json.toJson(rule.asScala.toSeq.map(s => s.name() -> toJS(s)).toMap)
 	}
 

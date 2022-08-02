@@ -8,7 +8,7 @@ package controllers
 import java.util.UUID
 import javax.inject.{Inject, Singleton}
 
-import qxsl.ruler.Contest
+import qxsl.ruler.Program
 
 import ats4.root._
 
@@ -42,7 +42,7 @@ import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, MergeHub}
  * @param rule コンテスト規約の依存性注入
  */
 @Singleton
-class Index @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Contest) extends IC {
+class Index @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Program) extends IC {
 	/**
 	 * データベースの処理を総括するオブジェクトです。
 	 */
@@ -102,7 +102,7 @@ class Index @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Contest) exte
  * @param rule コンテスト規約の依存性注入
  */
 @Singleton
-class Entry @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Contest) extends IC {
+class Entry @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Program) extends IC {
 	/**
 	 * データベースの処理を総括するオブジェクトです。
 	 */
@@ -141,7 +141,7 @@ class Entry @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Contest) exte
  * @param rule コンテスト規約の依存性注入
  */
 @Singleton
-class Admin @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Contest) extends IC {
+class Admin @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Program) extends IC {
 	/**
 	 * データベースの処理を総括するオブジェクトです。
 	 */
@@ -210,7 +210,7 @@ class Admin @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Contest) exte
  * @param rule コンテスト規約の依存性注入
  */
 @Singleton
-class Force @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Contest) extends IC {
+class Force @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Program) extends IC {
 	/**
 	 * データベースの処理を総括するオブジェクトです。
 	 */
@@ -270,7 +270,7 @@ class Cache @Inject()(implicit val mat: Mat, ec: EC, cfg: Cfg) extends Filter {
  * @param rule コンテスト規約の依存性注入
  */
 @Singleton
-class Error @Inject()(implicit cfg: Cfg, db: DB, rule: Contest) extends HttpErrorHandler {
+class Error @Inject()(implicit cfg: Cfg, db: DB, rule: Program) extends HttpErrorHandler {
 	/**
 	 * データベースの処理を総括するオブジェクトです。
 	 */
@@ -313,7 +313,7 @@ class Error @Inject()(implicit cfg: Cfg, db: DB, rule: Contest) extends HttpErro
  * @param rule コンテスト規約の依存性注入
  */
 @Singleton
-class Agent @Inject()(implicit as: ActorSystem, mat: Mat, cfg: Cfg, db: DB, rule: Contest) {
+class Agent @Inject()(implicit as: ActorSystem, mat: Mat, cfg: Cfg, db: DB, rule: Program) {
 	/**
 	 * データベースの処理を総括するオブジェクトです。
 	 */

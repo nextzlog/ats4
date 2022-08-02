@@ -1,16 +1,16 @@
-@()(implicit req: RequestHeader, ats: ATS, contest: Contest, admin: Boolean = false)
+@()(implicit req: RequestHeader, ats: ATS, rule: Program, admin: Boolean = false)
 
 @getRank(ranking: RankingData) = @{ranking.getRankFromZeroIn(ats.rankings())}
 
-@getAwardLimit(ranking: RankingData) = @{ats.rankings().getAwardLimit(ranking.rule(contest))}
+@getAwardLimit(ranking: RankingData) = @{ats.rankings().getAwardLimit(ranking.rule(rule))}
 
 @link(call: String) = {
 	@if(admin) {<a href='@routes.Admin.proof(call)'>@call</a>} else {@call}
 }
 
 @comps.frame(title = "暫定結果", nav = "lists") {
-	@if(admin || contest.finish()) {
-		@for(sect <- contest.asScala if !sect.isAbsence()) {
+	@if(admin || rule.finish()) {
+		@for(sect <- rule.asScala if !sect.isAbsence()) {
 			@if(ats.rankings().bySect(sect.name()).nonEmpty) {
 				<div class='my-5'>
 					<h4>@sect.name()</h4>

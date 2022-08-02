@@ -1,4 +1,4 @@
-@(call: String)(implicit req: RequestHeader, ats: ATS, contest: Contest, admin: Boolean = false)
+@(call: String)(implicit req: RequestHeader, ats: ATS, rule: Program, admin: Boolean = false)
 
 @station = @{ats.stations().byCall(call).get(0)}
 @archive = @{ats.archives().byCall(call).asScala.toList}

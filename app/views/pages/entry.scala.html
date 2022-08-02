@@ -1,7 +1,7 @@
-@(form: Form[ContestFormData], warn: Option[Html] = None)(implicit req: RequestHeader, ats: ATS, contest: Contest, admin: Boolean = false)
+@(form: Form[ContestFormData], warn: Option[Html] = None)(implicit req: RequestHeader, ats: ATS, rule: Program, admin: Boolean = false)
 
 @comps.frame(title = "書類提出", nav = if(admin) "force" else "entry") {
-	@if(contest.accept() || admin) {
+	@if(rule.accept() || admin) {
 		@if(warn.nonEmpty) {
 			<div class='alert alert-warning'>
 				@warn
@@ -27,14 +27,14 @@
 					</fieldset>
 				</div>
 			</div>
-			@for((code, idx) <- contest.getSectionCodes().asScala.map(c => Seq.fill(contest.limitMultipleEntry(c))(c)).flatten.zipWithIndex) {
+			@for((code, idx) <- rule.getSectionCodes().asScala.map(c => Seq.fill(rule.limitMultipleEntry(c))(c)).flatten.zipWithIndex) {
 				<div class='card bg-light mb-5'>
 					<h3 class='card-header'>
 						<span>@code</span>
 					</h3>
 					<div class='card-body'>
 						<fieldset>
-							@comps.choice(form(s"entries[$idx]"), form("entries"), sectOpts=contest.filter(_.code == code))
+							@comps.choice(form(s"entries[$idx]"), form("entries"), sectOpts=rule.filter(_.code == code))
 						</fieldset>
 					</div>
 				</div>

@@ -1,19 +1,19 @@
-@(status: Option[Int] = None)(implicit cfg: Configuration, ats: ATS, contest: Contest)
+@(status: Option[Int] = None)(implicit cfg: Configuration, ats: ATS, rule: Program)
 
 @notes = @{ats.stations().list().asScala.filter(_.note.nonEmpty)}
 
 @comps.frame(nav = "index") {
 	<div class='bg-light rounded p-5 my-3 text-center'>
 		@if(status.isEmpty) {
-			<h1 class='display-1'>@contest.name()</h1>
+			<h1 class='display-1'>@rule.name()</h1>
 			<h1 class='display-5'>書類受付システム</h1>
 			<p class='lead my-3'>
-				@{contest.getStartDay()}開催
-				@{contest.getDeadLine()}締切
+				@{rule.getStartDay()}開催
+				@{rule.getDeadLine()}締切
 			</p>
 			<div class='d-flex justify-content-center py-2'>
-				<a class='btn btn-lg btn-outline-dark mx-2' href='http://@contest.link()'>規約を閲覧する</a>
-				@if(contest.accept()) {
+				<a class='btn btn-lg btn-outline-dark mx-2' href='http://@rule.link()'>規約を閲覧する</a>
+				@if(rule.accept()) {
 					<a class='btn btn-lg btn-outline-primary mx-2' href='@routes.Index.entry'>書類を提出する</a>
 				} else {
 					<a class='btn btn-lg btn-outline-primary mx-2' href='@routes.Index.lists'>結果を閲覧する</a>
@@ -30,7 +30,7 @@
 		<div class='alert alert-warning'>
 			メール送信機能は試験モードに設定されています。実際には送信されません。
 		</div>
-	} else if(!contest.accept()) {
+	} else if(!rule.accept()) {
 		<div class='alert alert-info'>
 			提出期間外につき、新規の提出は受理できません。暫定結果を閲覧できます。
 		</div>
@@ -42,7 +42,7 @@
 				@station.map(_.note).getOrElse("本日は晴天なり")
 			</blockquote>
 			<figcaption class='blockquote-footer'>
-				@station.map(_.call).getOrElse(contest.host())
+				@station.map(_.call).getOrElse(rule.host())
 			</figcaption>
 		}
 	</figure>

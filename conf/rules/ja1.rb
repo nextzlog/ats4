@@ -1,27 +1,24 @@
 # ALLJA1 CONTEST DEFINED by ATS-4
 
-java_import 'qxsl.ruler.Contest'
+java_import 'qxsl.ruler.Program'
 java_import 'qxsl.ruler.RuleKit'
 
 require 'rules/util'
 
 ALLJA1 = RuleKit.load('allja1.lisp').contest
 
-class ContestJA1 < Contest
-	def initialize(sections)
-		super(*sections.map{|s| s.cache})
-	end
+class ProgramJA1 < Program
 	def name()
 		ALLJA1.name
 	end
 	def host()
-		ALLJA1.host
+		'東大無線部'
 	end
 	def mail()
-		ALLJA1.mail
+		'allja1@ja1zlo.u-tokyo.org'
 	end
 	def link()
-		ALLJA1.link
+		'ja1zlo.u-tokyo.org/allja1'
 	end
 	def get(name)
 		eval name
@@ -30,16 +27,16 @@ class ContestJA1 < Contest
 		opt_year(method(:getStartDay))
 	end
 	def getStartDay(year)
-		ALLJA1.method(:getStartDay).call(year)
+		schedule(year, 6, 4, 'SATURDAY')
 	end
 	def getFinalDay(year)
-		ALLJA1.method(:getFinalDay).call(year)
+		schedule(year, 6, 4, 'SATURDAY')
 	end
 	def getDeadLine(year)
-		ALLJA1.method(:getDeadLine).call(year)
+		schedule(year, 7, 3, 'SATURDAY')
 	end
 	def limitMultipleEntry(code)
-		ALLJA1.limitMultipleEntry(code)
+		1
 	end
 	def conflict(entries)
 		muls = entries.map{|e| e.name.include?("団体")}
@@ -53,4 +50,4 @@ class ContestJA1 < Contest
 end
 
 # returns contest definition
-ContestJA1.new(ALLJA1)
+ProgramJA1.new(*ALLJA1)

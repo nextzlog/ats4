@@ -5,7 +5,7 @@
 *******************************************************************************/
 package injects
 
-import qxsl.ruler.{Contest, RuleKit}
+import qxsl.ruler.{Program, RuleKit}
 
 import play.api.inject.{bind, SimpleModule}
 
@@ -19,5 +19,5 @@ import play.api.inject.{bind, SimpleModule}
  */
 class Ats4Module extends SimpleModule((env, conf) => {
 	val rule = RuleKit.load(conf.get[String]("ats4.rules"))
-	List(bind(classOf[Contest]).toInstance(rule.contest()))
+	List(bind(classOf[Program]).toInstance(rule.program()))
 })

@@ -1,16 +1,16 @@
-@(ranking: RankingData, station: StationData, archives: Seq[ArchiveData])(implicit ats: ATS, contest: Contest, admin: Boolean = false)
+@(ranking: RankingData, station: StationData, archives: Seq[ArchiveData])(implicit ats: ATS, rule: Program, admin: Boolean = false)
 
 @import java.time.format.DateTimeFormatter
 
 @dfmt = @{DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss OOOO")}
 @time(t: Time) = @{t.value.format(dfmt)}
 
-@book = @{contest.section(ranking.sect).summarize(archives.map(_.toItemList().asScala).flatten.asJava)}
+@book = @{rule.section(ranking.sect).summarize(archives.map(_.toItemList().asScala).flatten.asJava)}
 @link(call: String) = {@if(admin && ats.stations().byCall(call).nonEmpty) {<a href='@routes.Admin.proof(call)'>@call</a>} else {@call}}
 
 @normalize(list: Seq[Message]) = @{list.zip(RuleKit.load("jautil.lisp").pattern().normalize(list.map(_.item).toSeq.asJava, null))}
 
-@if(!contest.section(ranking.sect).isAbsence) {
+@if(!rule.section(ranking.sect).isAbsence) {
 	<div class='card my-5'>
 		<h3 class='card-header'>
 			<span>@ranking.sect</span>
@@ -18,7 +18,6 @@
 		<div class='card-body'>
 			@if(ranking.city.nonEmpty){運用地は@{ranking.city}です。}
 			暫定の得点は<strong>@{ranking.total}点</strong>(素点@{ranking.score})です。
-		</div>
 	</div>
 	<table class='table table-hover font-monospace'>
 		<thead class='table-dark'>
