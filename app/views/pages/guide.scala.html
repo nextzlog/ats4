@@ -2,6 +2,10 @@
 
 @comps.frame(title = "ヘルプ", nav = "guide") {
 	<div class='card my-3'>
+		<h3 class='card-header'>ご案内</h3>
+		<div class='card-body' id='help'></div>
+	</div>
+	<div class='card my-3'>
 		<h3 class='card-header'>交信記録ファイルの書式</h3>
 		<div class='card-body'>
 			<p>以下の書式での提出が可能です。</p>
@@ -33,4 +37,9 @@
 			</ul>
 		</div>
 	</div>
+	<script>
+	$(function() {
+		$('div#help').append(marked.parse(`@{rule.help()}`));
+	});
+	</script>
 }

@@ -11,6 +11,7 @@ java_import 'qxsl.ruler.Program'
 java_import 'qxsl.ruler.RuleKit'
 java_import 'qxsl.ruler.Section'
 java_import 'qxsl.ruler.Success'
+java_import 'qxsl.utils.AssetUtil'
 
 require 'rules/util'
 
@@ -95,6 +96,9 @@ class ProgramUEC < Program
 	end
 	def link()
 		'www.ja1zgp.com/uectest_public_info'
+	end
+	def help()
+		AssetUtil.root.string('rules/uec.md')
 	end
 	def get(name)
 		eval name

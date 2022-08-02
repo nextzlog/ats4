@@ -8,6 +8,7 @@ java_import 'qxsl.ruler.Program'
 java_import 'qxsl.ruler.RuleKit'
 java_import 'qxsl.ruler.Section'
 java_import 'qxsl.ruler.Success'
+java_import 'qxsl.utils.AssetUtil'
 
 require 'rules/util'
 
@@ -68,6 +69,9 @@ class ProgramTama < Program
 	end
 	def link()
 		'apollo.c.ooco.jp'
+	end
+	def help()
+		AssetUtil.root.string('rules/tama.md')
 	end
 	def get(name)
 		eval name

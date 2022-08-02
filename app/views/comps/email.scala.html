@@ -1,6 +1,11 @@
 @()(implicit ats: ATS, rule: Program)
 
-<a class='btn btn-lg btn-outline-secondary mb-2' href='mailto:@rule.mail()'>
-	<i class='fas fa-envelope'></i>
-	運営に連絡
-</a>
+<div class='btn-group'>
+	<a class='btn btn-lg btn-outline-secondary mb-2' href='mailto:@rule.mail()'>
+		<i class='fas fa-envelope'></i>
+		運営に連絡
+	</a>
+	<a class='btn btn-lg btn-outline-secondary mb-2' href='@routes.Index.guide'>
+		<i class='fas fa-question'></i>
+	</a>
+</div>

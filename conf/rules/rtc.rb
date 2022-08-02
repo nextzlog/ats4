@@ -2,6 +2,7 @@
 
 java_import 'qxsl.ruler.Program'
 java_import 'qxsl.ruler.RuleKit'
+java_import 'qxsl.utils.AssetUtil'
 
 require 'rules/util'
 
@@ -19,6 +20,9 @@ class ProgramRTC < Program
 	end
 	def link()
 		'ja1zlo.u-tokyo.org/rt'
+	end
+	def help()
+		AssetUtil.root.string('rules/rtc.md')
 	end
 	def get(name)
 		eval name
