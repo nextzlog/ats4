@@ -131,7 +131,7 @@ class SectionForm(implicit ats: ATS, rule: Program) extends Form[SectionFormData
 	(SectionFormData.apply)
 	(SectionFormData.unapply).verifying(s => {
 		rule.section(s.sect).isAbsence() ||
-		rule.section(s.sect).getCityList().asScala.exists(_.toString == s.city)
+		rule.section(s.sect).getCityList().asScala.exists(_.name() == s.city)
 	}), Map.empty, Nil, None
 )
 
@@ -145,20 +145,69 @@ class SectionForm(implicit ats: ATS, rule: Program) extends Form[SectionFormData
  */
 class StationForm(implicit ats: ATS, rule: Program) extends Form[StationFormData](
 	Forms.mapping(
-		"call" -> Forms.nonEmptyText
-			.verifying(new Call(_).valid())
-			.transform(new Call(_).value(), identity[String]),
+		"call" -> CallSign.mapping,
 		"name" -> Forms.nonEmptyText,
 		"post" -> Forms.nonEmptyText,
 		"addr" -> Forms.nonEmptyText,
 		"mail" -> Forms.email,
 		"note" -> Forms.text,
-		"uuid" -> OptionalMapping(Forms.uuid)
-			.transform(_.getOrElse(ats.stations().createUUID()), Some[UUID](_))
+		"uuid" -> new Token().mapping
 	)
 	(StationFormData.apply)
 	(StationFormData.unapply), Map.empty, Nil, None
 )
+
+
+/**
+ * 呼出符号のフォームの検証を実装します。
+ */
+object CallSign {
+	/**
+	 * 指定された呼出符号を検証します。
+	 *
+	 * @param call 呼出符号
+	 * @return 受理可能な場合は真
+	 */
+	def valid(call: String) = new Call(call).valid()
+
+	/**
+	 * 指定された呼出符号を正規化します。
+	 *
+	 * @param call 呼出符号
+	 * @return 正規化された呼出符号
+	 */
+	def apply(call: String) = new Call(call).value()
+
+	/**
+	 * 呼出符号のマッピングを構築します。
+	 *
+	 * @return マッピング
+	 */
+	def mapping = Forms.nonEmptyText.verifying(valid(_)).transform(apply(_), identity[String])
+}
+
+
+/**
+ * トークンのフォームの検証を実装します。
+ *
+ *
+ * @param ats データベースの依存性注入
+ */
+class Token(implicit ats: ATS) {
+	/**
+	 * 重複を排除してトークンを発行します。
+	 *
+	 * @return トークン
+	 */
+	def newUUID = ats.stations().createUUID()
+
+	/**
+	 * 呼出符号のマッピングを構築します。
+	 *
+	 * @return マッピング
+	 */
+	def mapping = OptionalMapping(Forms.uuid).transform(_.getOrElse(newUUID), Some[UUID](_))
+}
 
 
 /**
