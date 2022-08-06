@@ -155,7 +155,7 @@ class SectionUEC < Section
 		CITYDB
 	end
 	def verify(item)
-		verify_item(JAUTIL.normalize(item, nil), @band)
+		verify_item(JAUTIL.normalize(item, @name), @band)
 	end
 	def unique(item)
 		unique_item(item)

@@ -26,7 +26,8 @@
 				<th>相手局</th>
 				<th>周波数帯</th>
 				<th>通信方式</th>
-				<th>運用地</th>
+				<th>受信</th>
+				<th>送信</th>
 				<th>担当者</th>
 				<th>素点</th>
 				<th>無効判定</th>
@@ -39,7 +40,8 @@
 					<td>@link(String.valueOf(item.get(Qxsl.CALL)))</td>
 					<td>@{item.get(Qxsl.BAND)}</td>
 					<td>@{item.get(Qxsl.MODE)}</td>
-					<td>@{item.getRcvd.get(Qxsl.CODE)}</td>
+					<td>@{item.getRcvd().get(Qxsl.CODE)}</td>
+					<td>@{item.getSent().get(Qxsl.CODE)}</td>
 					<td>@{item.get(Qxsl.NAME)}</td>
 					<td>@{msg.score()}</td>
 					<td>-</td>
@@ -51,7 +53,8 @@
 					<td>@link(String.valueOf(msg.item.get(Qxsl.CALL)))</td>
 					<td>@{msg.item.get(Qxsl.BAND)}</td>
 					<td>@{msg.item.get(Qxsl.MODE)}</td>
-					<td>@{msg.item.getRcvd.get(Qxsl.CODE)}</td>
+					<td>@{msg.item.getRcvd().get(Qxsl.CODE)}</td>
+					<td>@{msg.item.getSent().get(Qxsl.CODE)}</td>
 					<td>@{msg.item.get(Qxsl.NAME)}</td>
 					<td>@{msg.score()}</td>
 					<td>@if(msg.text.nonEmpty){@msg.text}else{dupe}</td>
