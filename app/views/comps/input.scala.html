@@ -1,11 +1,11 @@
-@(field: Field, text: String = "", hint: String = "", multiline: Boolean = false, post: Boolean = false, addr: Boolean = false)
+@(field: Field, text: String = "", hint: String = "", area: Boolean = false, post: Boolean = false, addr: Boolean = false, up: Boolean = false)
 
 @postStyle = {@if(post) {p-postal-code} else if(addr) {p-region p-locality p-street-address p-extended-address}}
-@formStyle = {form-control @if(field.hasErrors) {is-invalid} @postStyle}
+@formStyle = {form-control @if(field.hasErrors) {is-invalid} @postStyle @if(up) {text-uppercase}}
 
 <div class='mb-3'>
 	<label class='form-label' for='@field.id'>@text</label>
-	@if(multiline) {
+	@if(area) {
 		<textarea class='@formStyle' id='@field.id' name='@field.name' placeholder='@hint' rows='5'>@field.value</textarea>
 	} else {
 		<input type='text' class='@formStyle' id='@field.id' name='@field.name' placeholder='@hint' value='@field.value'>
