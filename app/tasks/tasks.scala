@@ -69,10 +69,10 @@ class UploadTask(implicit smtp: MailerClient, ats: ATS, rule: Program, admin: Bo
 			station.note = post.station.note
 			station.uuid = post.station.uuid.toString
 			ats.stations().push(station)
-			val logs = collection.mutable.Buffer[Item]()
+			val logs = new java.util.LinkedList[Item]()
 			for (up <- post.uploads if up.keep) util.Try {
 				val file = stayLogs(up.file)
-				logs.addAll(file.toItemList.asScala)
+				logs.addAll(file.toItemList)
 				ats.archives().push(file)
 			}
 			for (file <- files) util.Try {
@@ -81,16 +81,19 @@ class UploadTask(implicit smtp: MailerClient, ats: ATS, rule: Program, admin: Bo
 				archive.file = file.filename
 				archive.data = Files.readAllBytes(file.ref.path)
 				ats.archives().push(archive)
-				logs.addAll(archive.toItemList.asScala)
+				logs.addAll(archive.toItemList)
 			}
 			for (sect <- post.entries) {
-				val summary = rule.section(sect.sect).summarize(logs.asJava)
 				val ranking = new RankingData()
 				ranking.call = post.station.call
 				ranking.sect = sect.sect
 				ranking.city = sect.city
-				ranking.score = summary.score()
-				ranking.total = summary.total()
+				util.Try {
+					val section = rule.section(sect.sect)
+					val summary = section.summarize(logs)
+					ranking.score = summary.score()
+					ranking.total = summary.total()
+				}
 				ats.rankings().push(ranking)
 			}
 			new NotifyTask().send(station)
