@@ -1,7 +1,6 @@
-@(call: String)(implicit req: RequestHeader, ats: ATS, rule: Program, admin: Boolean = false)
+@(call: String)(implicit req: RequestHeader, cfg: Configuration, ats: ATS, rule: Program, admin: Boolean = false)
 
 @station = @{ats.stations().byCall(call).get(0)}
-@archive = @{ats.archives().byCall(call).asScala.toList}
 
 @comps.frame(title = "提出書類の確認", nav = "lists") {
 	@if(!admin) {
@@ -31,11 +30,11 @@
 			@station.note
 		</blockquote>
 	}
-	@for(log <- archive) {
+	@for(log <- ats.archives().byCall(call).asScala) {
 		@comps.error(log)
 	}
 	@for(ranking <- ats.rankings().byCall(station.call)) {
-		@comps.table(ranking, station, archive)
+		@comps.table(ranking, station)
 	}
 	@if(admin) {
 		<button type='button' class='btn btn-outline-danger' data-bs-toggle='modal' data-bs-target='#deleteModal'>

@@ -2,7 +2,7 @@
 
 @getRank(ranking: RankingData) = @{ranking.getRankFromZeroIn(ats.rankings())}
 
-@getAwardLimit(ranking: RankingData) = @{ats.rankings().getAwardLimit(ranking.rule(rule))}
+@getAwardLimit(ranking: RankingData) = @{ats.rankings().getAwardLimit(rule.section(ranking.sect))}
 
 @link(call: String) = {
 	@if(admin) {<a href='@routes.Admin.proof(call)'>@call</a>} else {@call}

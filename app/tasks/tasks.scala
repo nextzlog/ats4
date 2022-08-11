@@ -11,10 +11,8 @@ import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.Files
 import java.util.{UUID, NoSuchElementException => Omiss}
 
-import qxsl.model.Item
 import qxsl.ruler._
 import qxsl.sheet.{SheetManager, SheetOrTable}
-import qxsl.table.TableManager
 
 import ats4.data._
 import ats4.root.ATS
@@ -39,11 +37,12 @@ import org.apache.commons.mail.EmailException
  *
  *
  * @param smtp メールクライアントの依存性注入
+ * @param cfg アプリケーションの設定の依存性注入
  * @param ats データベースの依存性注入
  * @param rule コンテスト規約の依存性注入
  * @param admin 管理者権限
  */
-class UploadTask(implicit smtp: MailerClient, ats: ATS, rule: Program, admin: Boolean = false) {
+class UploadTask(implicit smtp: MailerClient, cfg: Cfg, ats: ATS, rule: Program, admin: Boolean = false) {
 	/**
 	 * 書類提出のリクエストを処理して、確認画面のページのビューを返します。
 	 *
@@ -69,10 +68,9 @@ class UploadTask(implicit smtp: MailerClient, ats: ATS, rule: Program, admin: Bo
 			station.note = post.station.note
 			station.uuid = post.station.uuid.toString
 			ats.stations().push(station)
-			val logs = new java.util.LinkedList[Item]()
 			for (up <- post.uploads if up.keep) util.Try {
 				val file = stayLogs(up.file)
-				logs.addAll(file.toItemList)
+				ats.messages().push(post.station.call, file.toItemList())
 				ats.archives().push(file)
 			}
 			for (file <- files) util.Try {
@@ -80,8 +78,8 @@ class UploadTask(implicit smtp: MailerClient, ats: ATS, rule: Program, admin: Bo
 				archive.call = post.station.call
 				archive.file = file.filename
 				archive.data = Files.readAllBytes(file.ref.path)
+				ats.messages().push(post.station.call, archive.toItemList())
 				ats.archives().push(archive)
-				logs.addAll(archive.toItemList)
 			}
 			for (sect <- post.entries) {
 				val ranking = new RankingData()
@@ -89,15 +87,13 @@ class UploadTask(implicit smtp: MailerClient, ats: ATS, rule: Program, admin: Bo
 				ranking.sect = sect.sect
 				ranking.city = sect.city
 				util.Try {
-					val section = rule.section(sect.sect)
-					val summary = section.summarize(logs)
-					ranking.score = summary.score()
-					ranking.total = summary.total()
+					val items = ats.messages().search(station.call)
+					ranking.copy(rule.section(ranking.sect).summarize(items))
 				}
 				ats.rankings().push(ranking)
 			}
-			new NotifyTask().send(station)
 			Logger(this.getClass).info(s"accept: $post")
+			new NotifyTask().send(station)
 			pages.proof(post.station.call)
 		}.recover {
 			case ex: Omiss => pages.entry(form, Some(warns.omiss()))
@@ -274,19 +270,17 @@ class SocketTask(out: ActorRef, token: UUID)(implicit cfg: Cfg, ats: ATS, rule: 
 	 */
 	def push(data: Array[Byte]): String = {
 		val station = ats.stations().byUUID(token).get(0)
-		val archive = ats.archives().byCall(station.call).asScala
-		val ranking = ats.rankings().byCall(station.call).asScala
-		val qsoList = archive.map(_.toItemList.asScala).flatten
+		val ranking = ats.rankings().byCall(station.call)
 		val qsoDiff = decoder.unpack(data.tail).asScala
-		qsoList --= qsoDiff.take(data.head.toInt & 0xFF)
-		qsoList ++= qsoDiff.drop(data.head.toInt & 0xFF)
-		archive.head.data = new TableManager().encode(qsoList.asJava)
-		ats.archives().byCall(station.call).asScala.foreach(ats.archives().drop)
-		ats.rankings().byCall(station.call).asScala.foreach(ats.rankings().drop)
-		val sums = ranking.map(_.rule(rule).summarize(qsoList.asJava))
-		ranking.lazyZip(sums).map(_.copy(_)).foreach(ats.rankings().push)
-		ats.archives().push(archive.head)
-		Logger(this.getClass).info(s"accept: $station.call")
+		ats.messages().drop(station.call, qsoDiff.take(data.head.toInt & 0xFF).asJava)
+		ats.messages().push(station.call, qsoDiff.drop(data.head.toInt & 0xFF).asJava)
+		for (ranking <- ranking.asScala) {
+			ats.rankings().drop(ranking)
+			val items = ats.messages().search(station.call)
+			ranking.copy(rule.section(ranking.sect).summarize(items))
+			ats.rankings().push(ranking)
+		}
+		Logger(this.getClass).info(s"update: $station.call")
 		if (rule.finish()) new RankingTableToJson().json else ""
 	}
 }

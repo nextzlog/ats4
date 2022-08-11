@@ -1,12 +1,22 @@
-@(ranking: RankingData, station: StationData, archives: Seq[ArchiveData])(implicit ats: ATS, rule: Program, admin: Boolean = false)
+@(ranking: RankingData, station: StationData)(implicit cfg: Configuration, ats: ATS, rule: Program, admin: Boolean = false)
 
 @import java.time.format.DateTimeFormatter
 
-@dfmt = @{DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss OOOO")}
-@time(t: Time) = @{t.value.format(dfmt)}
+@lfmt = @{DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z")}
+@sfmt = @{DateTimeFormatter.ofPattern("HH:mm")}
 
-@book = @{util.Try(rule.section(ranking.sect).summarize(archives.map(_.toItemList().asScala).flatten.asJava))}
-@link(call: String) = {@if(admin && ats.stations().byCall(call).nonEmpty) {<a href='@routes.Admin.proof(call)'>@call</a>} else {@call}}
+@time(t: Time) = @{if(Option(t).isDefined) t.value.format(lfmt) else "-"}
+@sign(t: Sign) = @{if(Option(t).isDefined) t.value.format(sfmt) else "-"}
+
+@summary = @{util.Try(rule.section(ranking.sect).summarize(ats.messages().search(station.call)))}
+
+@link(call: String) = {
+	@if(admin && ats.stations().byCall(call).nonEmpty) {
+		<a href='@routes.Admin.proof(call)'>@call</a>
+	} else {
+		@call
+	}
+}
 
 @normalize(list: Seq[Message]) = @{list.zip(RuleKit.load("jautil.lisp").pattern().normalize(list.map(_.item).toSeq.asJava, null))}
 
@@ -20,7 +30,7 @@
 			暫定の得点は<strong>@{ranking.total}点</strong>(素点@{ranking.score})です。
 		</div>
 	</div>
-	@if(book.isSuccess) {
+	@if(summary.isSuccess) {
 		<table class='table table-hover font-monospace'>
 			<thead class='table-dark'>
 				<tr>
@@ -32,11 +42,12 @@
 					<th>送信</th>
 					<th>担当者</th>
 					<th>素点</th>
+					<th>照合</th>
 					<th>無効判定</th>
 				</tr>
 			</thead>
 			<tbody>
-				@for((msg, item) <- normalize(book.get.accepted().toSeq)) {
+				@for((msg, item) <- normalize(summary.get.accepted().toSeq)) {
 					<tr>
 						<td>@{time(item.get(Qxsl.TIME).asInstanceOf[Time])}</td>
 						<td>@link(String.valueOf(item.get(Qxsl.CALL)))</td>
@@ -46,11 +57,12 @@
 						<td>@{item.getSent().get(Qxsl.CODE)}</td>
 						<td>@{item.get(Qxsl.NAME)}</td>
 						<td>@{msg.score()}</td>
-						<td>-</td>
+						<td>@if(admin) {@sign(item.get(Qxsl.SIGN).asInstanceOf[Sign])} else {-}</td>
+						<td>@{msg.text}</td>
 					</tr>
 				}
-				@for((msg, item) <- normalize(book.get.rejected().toSeq)) {
-					<tr class='table-warning'>
+				@for((msg, item) <- normalize(summary.get.rejected().toSeq)) {
+					<tr>
 						<td>@{time(msg.item.get(Qxsl.TIME).asInstanceOf[Time])}</td>
 						<td>@link(String.valueOf(msg.item.get(Qxsl.CALL)))</td>
 						<td>@{msg.item.get(Qxsl.BAND)}</td>
@@ -59,7 +71,8 @@
 						<td>@{msg.item.getSent().get(Qxsl.CODE)}</td>
 						<td>@{msg.item.get(Qxsl.NAME)}</td>
 						<td>@{msg.score()}</td>
-						<td>@if(msg.text.nonEmpty){@msg.text}else{dupe}</td>
+						<td>-</td>
+						<td class='text-warning'>@{msg.text}</td>
 					</tr>
 				}
 			</tbody>
@@ -69,7 +82,7 @@
 			得点計算の処理でエラーが発生しました。
 		</div>
 		@if(admin) {
-			<pre class='text-white bg-dark rounded p-2'>@{book.failed.get}</pre>
+			<pre class='text-white bg-dark rounded p-2'>@{summary.failed.get}</pre>
 		}
 	}
 }

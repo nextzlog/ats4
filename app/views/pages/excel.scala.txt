@@ -2,7 +2,7 @@
 
 @getRank(ranking: RankingData) = @{ranking.getRankFromZeroIn(ats.rankings())}
 
-@getAwardLimit(ranking: RankingData) = @{ats.rankings().getAwardLimit(ranking.rule(rule))}
+@getAwardLimit(ranking: RankingData) = @{ats.rankings().getAwardLimit(rule.section(ranking.sect))}
 
 @line(ranking: RankingData) = @{
 	val station = ats.stations().byCall(ranking.call).get(0)
