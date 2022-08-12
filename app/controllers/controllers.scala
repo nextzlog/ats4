@@ -242,6 +242,13 @@ class Force @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Program) exte
 	 * @return 確認画面または再提出のページ
 	 */
 	def edit = Action(implicit r => Ok(new UploadTask().accept))
+
+	/**
+	 * 全ての参加局の得点を再計算して、確認画面のページのビューを返します。
+	 *
+	 * @return 管理画面のページ
+	 */
+	def redo = Action(implicit r => Ok(new UpdateTask().accept))
 }
 
 

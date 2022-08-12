@@ -27,6 +27,7 @@ GET     /admin/table/:call/:file controllers.Admin.table(call: String, file: Str
 DELETE  /admin                   controllers.Force.init
 DELETE  /admin/proof/:call       controllers.Force.drop(call: String)
 POST    /admin/entry             controllers.Force.edit
+POST    /admin/force             controllers.Force.redo
 
 # WebSocket
 GET     /agent/:uuid             controllers.Agent.agent(uuid: UUID)

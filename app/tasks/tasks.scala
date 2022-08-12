@@ -103,6 +103,32 @@ class UploadTask(implicit smtp: MailerClient, cfg: Cfg, ats: ATS, rule: Program,
 
 
 /**
+ * 登録済みの全ての参加局に対し、得点計算を再実行します。
+ *
+ *
+ * @param req リクエストヘッダ
+ * @param ats データベースの依存性注入
+ * @param rule コンテスト規約の依存性注入
+ */
+class UpdateTask(implicit req: RequestHeader, ats: ATS, rule: Program) {
+	/**
+	 * 得点計算を再実行します。
+	 *
+	 * @return 管理画面のページ
+	 */
+	def accept: Html = {
+		for (ranking <- ats.rankings().list().asScala) {
+			ats.rankings().drop(ranking)
+			val items = ats.messages().search(ranking.call)
+			ranking.copy(rule.section(ranking.sect).summarize(items))
+			ats.rankings().push(ranking)
+		}
+		pages.lists()
+	}
+}
+
+
+/**
  * 書類削除のリクエストを受け取り、データベースから参加局を削除します。
  *
  *

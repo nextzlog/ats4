@@ -53,6 +53,10 @@
 			<i class='fas fa-trash'></i>
 			全書類を消去する
 		</button>
+		<button type='button' class='btn btn-outline-danger' data-bs-toggle='modal' data-bs-target='#updateModal'>
+			<i class='fas fa-trash'></i>
+			得点を再計算する
+		</button>
 		<div class='modal' id='deleteModal'>
 			<div class='modal-dialog'>
 				<div class='modal-content'>
@@ -70,10 +74,31 @@
 				</div>
 			</div>
 		</div>
+		<div class='modal' id='updateModal'>
+			<div class='modal-dialog'>
+				<div class='modal-content'>
+					<div class='modal-header'>
+						<h4 class='modal-title'>得点の再計算</h4>
+					</div>
+					<div class='modal-body'>
+						<p>全参加局の得点の再計算を開始します。</p>
+						<p class='text-danger'>この操作は取り消せません。</p>
+					</div>
+					<div class='modal-footer'>
+						<button type='button' class='btn btn-danger' id='updateButton'>開始する</button>
+						<button type='button' class='btn btn-primary' data-bs-dismiss='modal'>キャンセル</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	}
 	<script>
 	$('#deleteButton').click(function () {
 		$.ajax({type: 'DELETE', url: '@helper.CSRF(routes.Force.init)'}).done(() => location.reload());
+	});
+	$('#updateButton').click(function () {
+		$('#updateButton').prop('disabled', true);
+		$.ajax({type: 'POST', url: '@helper.CSRF(routes.Force.redo)'}).done(() => location.reload());
 	});
 	</script>
 }
