@@ -34,7 +34,7 @@
 						<a class='nav-item nav-link @("active".when(admin))' href="@routes.Admin.index">管理画面</a>
 						@if(admin) {
 							<a class='nav-item nav-link @("active".when(nav == "lists"))' href="@routes.Admin.index">暫定結果</a>
-							<a class='nav-item nav-link @("active".when(nav == "force"))' href="@routes.Admin.entry">書類提出</a>
+							<a class='nav-item nav-link @("active".when(nav == "entry"))' href="@routes.Admin.entry">書類提出</a>
 							<a class='nav-item nav-link @("active".when(nav == "excel"))' href="@routes.Admin.excel">
 								<i class='fas fa-download'></i>
 							</a>

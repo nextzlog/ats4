@@ -189,7 +189,7 @@ class Admin @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Program) exte
 	 * @param call 提出対象の呼出符号
 	 * @return 書類提出のページ
 	 */
-	def force(call: String) = Action(implicit r => Ok(pages.force(call)))
+	def amend(call: String) = Action(implicit r => Ok(pages.amend(call)))
 
 	/**
 	 * 指定された呼出符号の参加局の専用の暫定結果のページのビューを返します。

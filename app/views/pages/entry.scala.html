@@ -3,7 +3,7 @@
 @post = {p-postal-code}
 @addr = {p-region p-locality p-street-address p-extended-address}
 
-@comps.page(title = "書類提出", nav = if(admin) "force" else "entry") {
+@comps.page(title = "書類提出", nav = "entry") {
 	@if(rule.accept() || admin) {
 		@if(warn.nonEmpty) {
 			<div class='alert alert-warning'>
