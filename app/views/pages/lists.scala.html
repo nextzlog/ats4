@@ -8,7 +8,7 @@
 	@if(admin) {<a href='@routes.Admin.proof(call)'>@call</a>} else {@call}
 }
 
-@comps.frame(title = "暫定結果", nav = "lists") {
+@comps.page(title = "暫定結果", nav = "lists") {
 	@if(admin || rule.finish()) {
 		@for(sect <- rule.asScala if !sect.isAbsence()) {
 			@if(ats.rankings().bySect(sect.name()).nonEmpty) {

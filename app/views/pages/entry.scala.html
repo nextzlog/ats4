@@ -1,6 +1,6 @@
 @(form: Form[ContestFormData], warn: Option[Html] = None)(implicit req: RequestHeader, ats: ATS, rule: Program, admin: Boolean)
 
-@comps.frame(title = "書類提出", nav = if(admin) "force" else "entry") {
+@comps.page(title = "書類提出", nav = if(admin) "force" else "entry") {
 	@if(rule.accept() || admin) {
 		@if(warn.nonEmpty) {
 			<div class='alert alert-warning'>
@@ -9,7 +9,7 @@
 		}
 		@helper.form(action = if(admin) routes.Force.edit else routes.Entry.entry, Symbol("enctype")->"multipart/form-data") {
 			@helper.CSRF.formField
-			@comps.upload(id = "sheet", form = form)
+			@comps.file(id = "sheet", form = form)
 			<div class='card bg-light mb-5'>
 				<h3 class='card-header'>
 					<span>共通事項</span>
@@ -17,13 +17,13 @@
 				<div class='card-body'>
 					<fieldset class='h-adr'>
 						<input type='hidden' class='p-country-name' value='Japan'>
-						@comps.input(form("station.call"), text = "呼出符号", hint = "移動運用の例: JA1ZLO/1", up = true)
-						@comps.input(form("station.name"), text = "お名前", hint = "この宛名で賞を発送します。")
-						@comps.input(form("station.post"), text = "郵便番号", hint = "この宛先に賞を発送します。", post = true)
-						@comps.input(form("station.addr"), text = "ご住所", hint = "この宛先に賞を発送します。", area = true, addr = true)
-						@comps.input(form("station.mail"), text = "メール", hint = "受理通知メールが届きます。")
-						@comps.input(form("station.note"), text = "ご感想", hint = "呼出符号付きで公表します。", area = true)
-						@comps.token(form("station.uuid"))
+						@comps.text(form("station.call"), text = "呼出符号", hint = "移動運用の例: JA1ZLO/1", up = true)
+						@comps.text(form("station.name"), text = "お名前", hint = "この宛名で賞を発送します。")
+						@comps.text(form("station.post"), text = "郵便番号", hint = "この宛先に賞を発送します。", post = true)
+						@comps.text(form("station.addr"), text = "ご住所", hint = "この宛先に賞を発送します。", area = true, addr = true)
+						@comps.text(form("station.mail"), text = "メール", hint = "受理通知メールが届きます。")
+						@comps.text(form("station.note"), text = "ご感想", hint = "呼出符号付きで公表します。", area = true)
+						@comps.data(form("station.uuid"))
 					</fieldset>
 				</div>
 			</div>
@@ -34,7 +34,7 @@
 					</h3>
 					<div class='card-body'>
 						<fieldset>
-							@comps.choice(form(s"entries[$idx]"), form("entries"), sectOpts=rule.filter(_.code == code))
+							@comps.sect(form(s"entries[$idx]"), form("entries"), sectOpts=rule.filter(_.code == code))
 						</fieldset>
 					</div>
 				</div>

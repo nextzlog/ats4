@@ -1,6 +1,6 @@
 @()(implicit ats: ATS, rule: Program, admin: Boolean)
 
-@comps.frame(title = "皆様の声", nav = "forum") {
+@comps.page(title = "皆様の声", nav = "forum") {
 	@for(station <- ats.stations().list().asScala.filter(_.note.nonEmpty)) {
 		<figure>
 			<blockquote class='blockquote' id='@station.call'>

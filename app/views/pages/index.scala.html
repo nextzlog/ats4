@@ -2,7 +2,7 @@
 
 @notes = @{ats.stations().list().asScala.filter(_.note.nonEmpty)}
 
-@comps.frame(nav = "index") {
+@comps.page(nav = "index") {
 	<div class='bg-light rounded p-5 my-3 text-center'>
 		@if(status.isEmpty) {
 			<h1 class='display-1'>@rule.name()</h1>
@@ -22,7 +22,7 @@
 		} else {
 			<h1 class='display-1'>@status</h1>
 			<h1 class='display-5'>ERROR</h1>
-			@comps.email()
+			@comps.help()
 		}
 	</div>
 	<div class='text-center'>

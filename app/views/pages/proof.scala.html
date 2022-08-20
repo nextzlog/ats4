@@ -2,7 +2,7 @@
 
 @station = @{ats.stations().byCall(call).get(0)}
 
-@comps.frame(title = "提出書類の確認", nav = "lists") {
+@comps.page(title = "提出書類の確認", nav = "lists") {
 	@if(!admin) {
 		<div class='alert alert-success'>
 			下記の内容で受理しました。
@@ -30,11 +30,31 @@
 			@station.note
 		</blockquote>
 	}
-	@for(log <- ats.archives().byCall(call).asScala) {
-		@comps.error(log)
+	@for(archive <- ats.archives().byCall(call).asScala) {
+		@defining(Option(archive.getWarningMessage)) {warn =>
+			<div class='card my-5 @if(warn.isDefined) {bg-warning}'>
+				<h3 class='card-header d-flex justify-content-between'>
+					<span>@{archive.file}</span>
+					@if(admin) {
+						<a class='btn btn-outline-success' href='@routes.Admin.table(archive.call, archive.file)'>
+							<i class='fas fa-download'></i>
+						</a>
+					}
+				</h3>
+				@if(warn.isDefined){
+					@if(admin){
+						<pre class='card-body'>@{warn.get}</pre>
+					} else {
+						<div class='card-body'>交信記録が読み取れません。再提出をお勧めします。</div>
+					}
+				} else {
+					<div class='card-body'>@{archive.toItemList().size()}件の交信</div>
+				}
+			</div>
+		}
 	}
 	@for(ranking <- ats.rankings().byCall(station.call)) {
-		@comps.table(ranking, station)
+		@comps.summ(ranking, station)
 	}
 	@if(admin) {
 		<button type='button' class='btn btn-outline-danger' data-bs-toggle='modal' data-bs-target='#deleteModal'>

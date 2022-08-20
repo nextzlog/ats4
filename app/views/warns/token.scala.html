@@ -1,6 +1,6 @@
 @()(implicit ats: ATS, rule: Program, admin: Boolean)
 
-@comps.frame(title = "書類提出", nav = "entry") {
+@comps.page(title = "書類提出", nav = "entry") {
 	<div class='alert alert-danger'>
 		<i class='fas fa-exclamation-triangle'></i>
 		CSRFトークンが無効なため、提出できません。
