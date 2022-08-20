@@ -1,0 +1,16 @@
+@(field: Field)(implicit c: Configuration)
+
+@bands = @{c.get[Seq[String]]("ats4.bands")}
+@modes = @{c.get[Seq[String]]("ats4.modes")}
+
+@w25 = {w-25}
+
+<div class='QSO input-group mb-3'>
+	@comps.text(field("time"), hint = "Time", style = Some(w25))
+	@comps.text(field("call"), hint = "Call")
+	@comps.opts(field("band"), opts = bands, style = "form-select")()
+	@comps.opts(field("mode"), opts = modes, style = "form-select")()
+	@comps.text(field("sent"), hint = "Sent RST")
+	@comps.text(field("rcvd"), hint = "Rcvd RST")
+	<button type='button' class='btn btn-outline-primary delete-qso'><i class='fas fa-trash'></i></button>
+</div>

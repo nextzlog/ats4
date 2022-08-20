@@ -1,0 +1,29 @@
+@(field: Field, id: String)(implicit c: Configuration)
+
+@import java.time.ZonedDateTime.now
+@import java.time.format.DateTimeFormatter.ofPattern
+
+@dfmt = {Y-m-d\\TH:i@{ofPattern("xxx").format(now()).replaceAll(".", """\\\\$0""")}}
+
+<div id='@field.id'>
+	@helper.repeat(field, min = 0) {row => @comps.item(row)}
+</div>
+
+<script>
+$(function() {
+	let numQSO = @field.indexes.size;
+
+	function reset(row) {
+		flatpickr(row.find("input[id$='time']"), {enableTime: true, time_24hr: true, dateFormat: '@dfmt'});
+		row.children().each((n, element) => element.name = element.name.replace(/\[\d+\]/, `[${numQSO}]`));
+		row.find('.delete-qso').click(() => row.remove());
+		numQSO++;
+		return row;
+	}
+
+	$('#@field.id').find('.QSO').each((n, element) => reset($(element)));
+
+	const qso = `@{comps.item(field(s"[${field.indexes.size}]"))}`;
+	$('#@id-form').find('.append-qso').click(() => reset($(qso)).appendTo($('#@field.id')));
+});
+</script>

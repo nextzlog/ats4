@@ -6,8 +6,10 @@
 	</h3>
 	<div class='card-body'>
 		@comps.keep(form("uploads"))
+		@comps.list(form("marshal"), id)
 		<div class='input-group' id='@id-form'>
 			<input type='file' id='@id' name='@id' class='form-control' multiple>
+			<button type='button' class='btn btn-outline-primary append-qso'><i class='fas fa-plus'></i> QSO1件追加</button>
 		</div>
 	</div>
 	<div id='@id-footer' class='card-footer'>
@@ -48,12 +50,5 @@ $('#@id').change(function() {
 			if(!$('#@{form("station.note").id}').val()) $('#@{form("station.note").id}').val(json.note);
 		}
 	});
-});
-
-$('.keep').change(function() {
-	$('#@id').prop('required', !$('.keep:checked').length);
-});
-$(function() {
-	$('#@id').prop('required', !$('.keep:checked').length);
 });
 </script>

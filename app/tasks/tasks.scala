@@ -13,6 +13,7 @@ import java.util.{UUID, NoSuchElementException => Omiss}
 
 import qxsl.ruler._
 import qxsl.sheet.{SheetManager, SheetOrTable}
+import qxsl.table.TableManager
 
 import ats4.data._
 import ats4.root.ATS
@@ -80,6 +81,15 @@ class UploadTask(implicit smtp: MailerClient, cfg: Cfg, ats: ATS, rule: Program,
 				archive.data = Files.readAllBytes(file.ref.path)
 				ats.messages().push(post.station.call, archive.toItemList())
 				ats.archives().push(archive)
+			}
+			val list = post.marshal.map(MarshalFormData.encode).asJava
+			if (!list.isEmpty) util.Try {
+				val archive = new ArchiveData()
+				archive.call = post.station.call
+				archive.file = ""
+				archive.data = new TableManager().encode(list)
+				ats.archives().push(archive)
+				ats.messages().push(post.station.call, list)
 			}
 			for (sect <- post.entries) {
 				val ranking = new RankingData()

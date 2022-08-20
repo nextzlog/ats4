@@ -7,9 +7,11 @@ package models
 
 import java.util.UUID
 
-import qxsl.draft.Call
+import qxsl.draft.{Call, Qxsl}
+import qxsl.model.Item
 import qxsl.ruler._
 import qxsl.sheet.SheetDecoder
+import qxsl.table.TableManager
 
 import ats4.data._
 import ats4.root.ATS
@@ -56,7 +58,7 @@ case class StationFormData(
 
 
 /**
- * 交信記録のフォームに入力されたデータです。
+ * 交信記録のファイルのフォームに入力されたデータです。
  *
  *
  * @param file このファイルの名前
@@ -69,17 +71,80 @@ case class ArchiveFormData(
 
 
 /**
+ * 交信記録の補助入力のフォームに入力されたデータです。
+ *
+ *
+ * @param time 日時
+ * @param call 呼出符号
+ * @param band 周波数帯
+ * @param mode 通信方式
+ * @param sent 送信したナンバー
+ * @param rcvd 受信したナンバー
+ */
+case class MarshalFormData(
+	time: String,
+	call: String,
+	band: String,
+	mode: String,
+	sent: String,
+	rcvd: String
+)
+
+/**
+ * 交信の補助入力のデータと交信記録の変換を実装します。
+ */
+object MarshalFormData {
+	/**
+	 * 指定された補助入力のデータを交信記録に変換します。
+	 *
+	 * @param data 補助入力のデータ
+	 * @return 交信記録
+	 */
+	def encode(data: MarshalFormData) = {
+		val item = new Item()
+		item.set(Qxsl.TIME, data.time)
+		item.set(Qxsl.CALL, data.call)
+		item.set(Qxsl.BAND, data.band)
+		item.set(Qxsl.MODE, data.mode)
+		item.getSent().set(Qxsl.CODE, data.sent)
+		item.getRcvd().set(Qxsl.CODE, data.rcvd)
+		item
+	}
+
+	/**
+	 * 指定された交信記録を補助入力のデータに変換します。
+	 *
+	 * @param archive 交信記録
+	 * @return 補助入力のデータ
+	 */
+	def decode(archive: ArchiveData) = util.Try {
+		val seq = new TableManager().decode(archive.data)
+		seq.asScala.map(item => MarshalFormData(
+			time = item.getBoth().get(Qxsl.TIME).toString(),
+			call = item.getBoth().get(Qxsl.CALL).toString(),
+			band = item.getBoth().get(Qxsl.BAND).toString(),
+			mode = item.getBoth().get(Qxsl.MODE).toString(),
+			sent = item.getSent().get(Qxsl.CODE).toString(),
+			rcvd = item.getRcvd().get(Qxsl.CODE).toString()
+		))
+	}.getOrElse(Seq())
+}
+
+
+/**
  * 書類提出のフォームに入力されたデータです。
  *
  *
  * @param station 共通事項のデータ
  * @param entries 部門選択のデータ
  * @param uploads 交信記録のデータ
+ * @param marshal 交信記録の文字列
  */
 case class ContestFormData(
 	station: StationFormData,
 	entries: Seq[SectionFormData],
-	uploads: Seq[ArchiveFormData]
+	uploads: Seq[ArchiveFormData],
+	marshal: Seq[MarshalFormData]
 )
 
 
@@ -99,6 +164,8 @@ object ContestFormData {
 		val station = ats.stations().byCall(call).get(0)
 		val entries = ats.rankings().byCall(call).asScala.toList
 		val uploads = ats.archives().byCall(call).asScala.toList
+		val archive = uploads.filter(_.file.nonEmpty)
+		val marshal = uploads.filter(_.file.isEmpty)
 		new ContestFormData(
 			StationFormData(
 				call = station.call,
@@ -110,7 +177,8 @@ object ContestFormData {
 				uuid = UUID.fromString(station.uuid)
 			),
 			entries.map(r => new SectionFormData(r.sect, r.city)),
-			uploads.map(a => new ArchiveFormData(a.file, true))
+			archive.map(a => new ArchiveFormData(a.file, true)),
+			marshal.map(MarshalFormData.decode).flatten
 		)
 	}
 }
@@ -211,7 +279,7 @@ class Token(implicit ats: ATS) {
 
 
 /**
- * 交信記録のフォームとデータの関連付けと検証を実装します。
+ * 交信記録のファイルのフォームとデータの関連付けと検証を実装します。
  *
  *
  * @param ats データベースの依存性注入
@@ -228,6 +296,23 @@ class ArchiveForm(implicit ats: ATS, rule: Program) extends Form[ArchiveFormData
 
 
 /**
+ * 交信記録の補助入力のフォームとデータの関連付けと検証を実装します。
+ */
+class MarshalForm extends Form[MarshalFormData](
+	Forms.mapping(
+		"time" -> Forms.nonEmptyText,
+		"call" -> Forms.nonEmptyText,
+		"band" -> Forms.nonEmptyText,
+		"mode" -> Forms.nonEmptyText,
+		"sent" -> Forms.nonEmptyText,
+		"rcvd" -> Forms.nonEmptyText
+	)
+	(MarshalFormData.apply)
+	(MarshalFormData.unapply), Map.empty, Nil, None
+)
+
+
+/**
  * 書類提出のフォームとデータの関連付けと検証を実装します。
  *
  *
@@ -238,7 +323,8 @@ class ContestForm(implicit ats: ATS, rule: Program) extends Form[ContestFormData
 	Forms.mapping(
 		"station" -> new StationForm().mapping,
 		"entries" -> Forms.seq(new SectionForm().mapping).verifying(new Conflict().ok(_)),
-		"uploads" -> Forms.seq(new ArchiveForm().mapping)
+		"uploads" -> Forms.seq(new ArchiveForm().mapping),
+		"marshal" -> Forms.seq(new MarshalForm().mapping)
 	)
 	(ContestFormData.apply)
 	(ContestFormData.unapply), Map.empty, Nil, None

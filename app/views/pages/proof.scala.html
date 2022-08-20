@@ -31,24 +31,24 @@
 		</blockquote>
 	}
 	@for(archive <- ats.archives().byCall(call).asScala) {
-		@defining(Option(archive.getWarningMessage)) {warn =>
-			<div class='card my-5 @if(warn.isDefined) {bg-warning}'>
+		@defining(util.Try(archive.toItemList())) {items =>
+			<div class='card my-5 @if(items.isFailure) {bg-warning}'>
 				<h3 class='card-header d-flex justify-content-between'>
-					<span>@{archive.file}</span>
-					@if(admin) {
+					<span>@if(archive.file.nonEmpty) {@archive.file} else {無名}</span>
+					@if(admin && archive.file.nonEmpty) {
 						<a class='btn btn-outline-success' href='@routes.Admin.table(archive.call, archive.file)'>
 							<i class='fas fa-download'></i>
 						</a>
 					}
 				</h3>
-				@if(warn.isDefined){
+				@if(items.isFailure){
 					@if(admin){
-						<pre class='card-body'>@{warn.get}</pre>
+						<pre class='card-body'>@{items.failed.get.getMessage()}</pre>
 					} else {
 						<div class='card-body'>交信記録が読み取れません。再提出をお勧めします。</div>
 					}
 				} else {
-					<div class='card-body'>@{archive.toItemList().size()}件の交信</div>
+					<div class='card-body'>@{items.get.size()}件の交信</div>
 				}
 			</div>
 		}
