@@ -1,4 +1,4 @@
-@(status: Option[Int] = None)(implicit cfg: Configuration, ats: ATS, rule: Program, admin: Boolean)
+@(status: Option[Int] = None)(implicit c: Configuration, ats: ATS, rule: Program, admin: Boolean)
 
 @notes = @{ats.stations().list().asScala.filter(_.note.nonEmpty)}
 
@@ -26,7 +26,7 @@
 		}
 	</div>
 	<div class='text-center'>
-	@if(cfg.get[Boolean]("play.mailer.mock")) {
+	@if(c.get[Boolean]("play.mailer.mock")) {
 		<div class='alert alert-warning'>
 			メール送信機能は試験モードに設定されています。実際には送信されません。
 		</div>

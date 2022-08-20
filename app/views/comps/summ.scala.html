@@ -1,88 +1,71 @@
-@(ranking: RankingData, station: StationData)(implicit cfg: Configuration, ats: ATS, rule: Program, admin: Boolean)
-
-@import java.time.format.DateTimeFormatter
-
-@lfmt = @{DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z")}
-@sfmt = @{DateTimeFormatter.ofPattern("HH:mm")}
-
-@time(t: Time) = @{if(Option(t).isDefined) t.value.format(lfmt) else "-"}
-@sign(t: Sign) = @{if(Option(t).isDefined) t.value.format(sfmt) else "-"}
+@(ranking: RankingData, station: StationData)(implicit ats: ATS, rule: Program, admin: Boolean)
 
 @summary = @{util.Try(rule.section(ranking.sect).summarize(ats.messages().search(station.call)))}
-
-@link(call: String) = {
-	@if(admin && ats.stations().byCall(call).nonEmpty) {
-		<a href='@routes.Admin.proof(call)'>@call</a>
-	} else {
-		@call
-	}
-}
-
-@normalize(list: Seq[Message]) = @{list.zip(RuleKit.load("jautil.lisp").pattern().normalize(list.map(_.item).toSeq.asJava, null))}
 
 @if(!rule.section(ranking.sect).isAbsence) {
 	<div class='card my-5'>
 		<h3 class='card-header'>
 			<span>@ranking.sect</span>
 		</h3>
-		<div class='card-body'>
-			@if(ranking.city.nonEmpty){運用地は@{ranking.city}です。}
-			暫定の得点は<strong>@{ranking.total}点</strong>(素点@{ranking.score})です。
-		</div>
-	</div>
-	@if(summary.isSuccess) {
-		<table class='table table-hover font-monospace'>
-			<thead class='table-dark'>
-				<tr>
-					<th>交信日時</th>
-					<th>相手局</th>
-					<th>周波数帯</th>
-					<th>通信方式</th>
-					<th>受信</th>
-					<th>送信</th>
-					<th>担当者</th>
-					<th>素点</th>
-					<th>照合</th>
-					<th>無効判定</th>
-				</tr>
-			</thead>
-			<tbody>
-				@for((msg, item) <- normalize(summary.get.accepted().toSeq)) {
+		<ul class='list-group list-group-flush'>
+			<li class='list-group-item'>@{ranking.city}</li>
+			<li class='list-group-item'>交信数は@{ranking.score}点です。</li>
+			<li class='list-group-item'>総得点は@{ranking.total}点です。</li>
+		</ul>
+		@if(summary.isSuccess) {
+			<table class='table table-hover font-monospace'>
+				<thead class='table-light'>
 					<tr>
-						<td>@{time(item.get(Qxsl.TIME).asInstanceOf[Time])}</td>
-						<td>@link(String.valueOf(item.get(Qxsl.CALL)))</td>
-						<td>@{item.get(Qxsl.BAND)}</td>
-						<td>@{item.get(Qxsl.MODE)}</td>
-						<td>@{item.getRcvd().get(Qxsl.CODE)}</td>
-						<td>@{item.getSent().get(Qxsl.CODE)}</td>
-						<td>@{item.get(Qxsl.NAME)}</td>
-						<td>@{msg.score()}</td>
-						<td>@if(admin) {@sign(item.get(Qxsl.SIGN).asInstanceOf[Sign])} else {-}</td>
-						<td>@{msg.text}</td>
+						<th>日時</th>
+						<th>呼出符号</th>
+						<th>周波数帯</th>
+						<th>通信方式</th>
+						<th>受信</th>
+						<th>送信</th>
+						<th>担当</th>
+						<th>素点</th>
+						<th>照合</th>
+						<th>無効</th>
 					</tr>
-				}
-				@for((msg, item) <- normalize(summary.get.rejected().toSeq)) {
-					<tr>
-						<td>@{time(msg.item.get(Qxsl.TIME).asInstanceOf[Time])}</td>
-						<td>@link(String.valueOf(msg.item.get(Qxsl.CALL)))</td>
-						<td>@{msg.item.get(Qxsl.BAND)}</td>
-						<td>@{msg.item.get(Qxsl.MODE)}</td>
-						<td>@{msg.item.getRcvd().get(Qxsl.CODE)}</td>
-						<td>@{msg.item.getSent().get(Qxsl.CODE)}</td>
-						<td>@{msg.item.get(Qxsl.NAME)}</td>
-						<td>@{msg.score()}</td>
-						<td>-</td>
-						<td class='text-warning'>@{msg.text}</td>
-					</tr>
-				}
-			</tbody>
-		</table>
-	} else {
-		<div class='alert alert-warning'>
-			得点計算の処理でエラーが発生しました。
-		</div>
-		@if(admin) {
-			<pre class='text-white bg-dark rounded p-2'>@{summary.failed.get}</pre>
+				</thead>
+				<tbody>
+					@for((msg, item) <- summary.get.accepted().map(msg => (msg, msg.item()))) {
+						<tr>
+							<td>@comps.time(item.get(Qxsl.TIME).asInstanceOf[Time])</td>
+							<td>@comps.call(item.get(Qxsl.CALL).toString())</td>
+							<td>@{item.get(Qxsl.BAND)}</td>
+							<td>@{item.get(Qxsl.MODE)}</td>
+							<td>@{item.getRcvd().get(Qxsl.CODE)}</td>
+							<td>@{item.getSent().get(Qxsl.CODE)}</td>
+							<td>@{item.get(Qxsl.NAME)}</td>
+							<td>@{msg.score()}</td>
+							<td>@comps.sign(item.get(Qxsl.SIGN).asInstanceOf[Sign])</td>
+							<td>@{msg.text}</td>
+						</tr>
+					}
+					@for((msg, item) <- summary.get.rejected().map(msg => (msg, msg.item()))) {
+						<tr>
+							<td>@comps.time(item.get(Qxsl.TIME).asInstanceOf[Time])</td>
+							<td>@comps.call(msg.item.get(Qxsl.CALL).toString())</td>
+							<td>@{msg.item.get(Qxsl.BAND)}</td>
+							<td>@{msg.item.get(Qxsl.MODE)}</td>
+							<td>@{msg.item.getRcvd().get(Qxsl.CODE)}</td>
+							<td>@{msg.item.getSent().get(Qxsl.CODE)}</td>
+							<td>@{msg.item.get(Qxsl.NAME)}</td>
+							<td>@{msg.score()}</td>
+							<td>-</td>
+							<td class='text-warning'>@{msg.text}</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		} else {
+			<div class='alert alert-warning'>
+				得点計算の処理でエラーが発生しました。
+			</div>
+			@if(admin) {
+				<pre class='text-white bg-dark rounded p-2'>@{summary.failed.get}</pre>
+			}
 		}
-	}
+	</div>
 }
