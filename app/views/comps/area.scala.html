@@ -1,0 +1,8 @@
+@(field: Field, label: String = "", hint: String = "", style: Option[Html] = None)
+
+@invalid = {@if(field.hasErrors) {is-invalid}}
+
+<div class='mb-3'>
+	<label class='form-label' for='@field.id'>@label</label>
+	<textarea class='form-control @invalid @style' id='@field.id' name='@field.name' placeholder='@hint' rows='5'>@field.value</textarea>
+</div>

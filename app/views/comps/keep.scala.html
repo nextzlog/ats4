@@ -1,0 +1,13 @@
+@(field: Field)
+
+@helper.repeat(field, min = 0) {row =>
+	@defining((row("file"), row("keep"))) {case (file, keep) =>
+		<div class='input-group mb-3'>
+			<div class='input-group-text'>
+				<input class='keep form-check-input' type='checkbox' id='@keep.id' name='@keep.name' value=@keep.value checked>
+			</div>
+			<label class='form-control' for='@keep.id'>@file.value</label>
+			<input type='hidden' id='@file.id' name='@file.name' value='@file.value'>
+		</div>
+	}
+}

@@ -1,0 +1,7 @@
+@(call: String)(implicit ats: ATS, admin: Boolean)
+
+@if(admin && ats.stations().byCall(call).nonEmpty) {
+	<a href='@routes.Admin.proof(call)'>@call</a>
+} else {
+	@call
+}

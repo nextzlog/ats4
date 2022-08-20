@@ -1,4 +1,4 @@
-@(call: String)(implicit req: RequestHeader, cfg: Configuration, ats: ATS, rule: Program, admin: Boolean)
+@(call: String)(implicit r: RequestHeader, c: Configuration, ats: ATS, rule: Program, admin: Boolean)
 
 @station = @{ats.stations().byCall(call).get(0)}
 

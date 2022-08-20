@@ -1,4 +1,4 @@
-@()(implicit req: RequestHeader, ats: ATS, rule: Program, admin: Boolean)
+@()(implicit r: RequestHeader, ats: ATS, rule: Program, admin: Boolean)
 
 @getRank(ranking: RankingData) = @{ranking.getRankFromZeroIn(ats.rankings())}
 

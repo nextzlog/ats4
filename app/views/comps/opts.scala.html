@@ -1,0 +1,14 @@
+@(field: Field, opts: Iterable[String], style: String = "", empty: String = "")(parent: Field = field) 
+
+@invalid = {@if(field.hasErrors || parent.hasErrors) {is-invalid}}
+
+<select class='form-control @invalid @style' id='@field.id' name='@field.name' data-size='10' data-live-search='true'>
+	@if(empty.nonEmpty) {
+		<option class='blank' value=''>
+			@empty
+		</option>
+	}
+	@for(opt <- opts) {
+		<option value='@opt' @if(field.value.contains(opt)) {selected}>@opt</option>
+	}
+</select>

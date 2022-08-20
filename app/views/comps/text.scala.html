@@ -1,13 +1,16 @@
-@(field: Field, text: String = "", hint: String = "", area: Boolean = false, post: Boolean = false, addr: Boolean = false, up: Boolean = false)
+@(field: Field, label: String = "", hint: String = "", style: Option[Html] = None)
 
-@postStyle = {@if(post) {p-postal-code} else if(addr) {p-region p-locality p-street-address p-extended-address}}
-@formStyle = {form-control @if(field.hasErrors) {is-invalid} @postStyle @if(up) {text-uppercase}}
+@invalid = {@if(field.hasErrors) {is-invalid}}
 
-<div class='mb-3'>
-	<label class='form-label' for='@field.id'>@text</label>
-	@if(area) {
-		<textarea class='@formStyle' id='@field.id' name='@field.name' placeholder='@hint' rows='5'>@field.value</textarea>
-	} else {
-		<input type='text' class='@formStyle' id='@field.id' name='@field.name' placeholder='@hint' value='@field.value'>
-	}
-</div>
+@input = {
+	<input type='text' class='form-control @invalid @style' id='@field.id' name='@field.name' placeholder='@hint' value='@field.value'>
+}
+
+@if(label.nonEmpty) {
+	<div class='mb-3'>
+		<label class='form-label' for='@field.id'>@label</label>
+		@input
+	</div>
+} else {
+	@input
+}

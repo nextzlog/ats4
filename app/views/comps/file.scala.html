@@ -1,22 +1,12 @@
-@(id: String, form: Form[ContestFormData])(implicit req: RequestHeader, admin: Boolean)
-
-@keep(file: Field, keep: Field) = {
-	<div class='input-group mb-3'>
-		<div class='input-group-text'>
-			<input class='keep form-check-input' type='checkbox' id='@keep.id' name='@keep.name' value=@keep.value checked>
-		</div>
-		<label class='form-control' for='@keep.id'>@file.value</label>
-		<input type='hidden' id='@file.id' name='@file.name' value='@file.value'>
-	</div>
-}
+@(id: String, form: Form[ContestFormData])(implicit r: RequestHeader, c: Configuration, admin: Boolean)
 
 <div class='card bg-light mb-5'>
 	<h3 class='card-header'>
 		<span>交信記録</span>
 	</h3>
 	<div class='card-body'>
-		@helper.repeat(form("uploads"), min = 0) {field => @keep(field("file"), field("keep"))}
-		<div>
+		@comps.keep(form("uploads"))
+		<div class='input-group' id='@id-form'>
 			<input type='file' id='@id' name='@id' class='form-control' multiple>
 		</div>
 	</div>
@@ -59,6 +49,7 @@ $('#@id').change(function() {
 		}
 	});
 });
+
 $('.keep').change(function() {
 	$('#@id').prop('required', !$('.keep:checked').length);
 });

@@ -1,31 +1,12 @@
 @(field: Field, parent: Field, sectOpts: Iterable[Section])
 
-@cityOpts = @{sectOpts.map(_.getCityList).flatten.toSeq.distinct}
+@cityOpts = @{sectOpts.map(_.getCityList()).flatten.toSeq.distinct}
 
-@sect = @{field("sect")}
-@city = @{field("city")}
+@comps.opts(field("sect"), sectOpts.map(_.toString()), style = "sect selectpicker my-2")(parent)
+@comps.opts(field("city"), cityOpts.map(_.toString()), style = "city selectpicker my-2", empty = "運用地が未選択です")(parent)
 
-@style = {
-	selectpicker form-control my-2 @if(parent.hasErrors || field.hasErrors) {is-invalid}
-}
-
-<select class='sect @style' id='@sect.id' name='@sect.name' data-size='10' data-live-search='true'>
-	@for(opt <- sectOpts.map(_.toString)) {
-		<option value='@opt' @if(sect.value.contains(opt)) {selected}>@opt</option>
-	}
-</select>
-<select class='city @style' id='@city.id' name='@city.name' data-size='10' data-live-search='true'>
-	<option class='blank' value=''>
-		運用地が未選択です。
-	</option>
-	@for(opt <- cityOpts.map(_.toString)) {
-		<option value='@opt' @if(city.value.contains(opt)) {selected}>@opt</option>
-	}
-</select>
 <script>
-$(function() {
-	$('select.city').change(function() {
-		if(!$('#@{city.id}').val()) $('#@{city.id}').selectpicker('val', this.value);
-	});
-});
+$(() => $('select.city').change(function() {
+	if(!$('#@field("city").id').val()) $('#@field("city").id').selectpicker('val', this.value);
+}));
 </script>

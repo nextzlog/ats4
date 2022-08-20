@@ -1,0 +1,9 @@
+@(sign: Sign)(implicit admin: Boolean)
+
+@import java.time.format.DateTimeFormatter
+
+@if(admin && Option(sign).isDefined) {
+	@{sign.value().format(DateTimeFormatter.ofPattern("HH:mm"))}
+} else {
+	-
+}
