@@ -49,6 +49,11 @@ class Index @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Program) exte
 	implicit val ats = new ATS(db.getConnection()).createTables()
 
 	/**
+	 * 非管理者権限を表す真偽値です。
+	 */
+	implicit val admin = false
+
+	/**
 	 * トップページのビューを返します。
 	 *
 	 * @return トップページ
@@ -107,6 +112,11 @@ class Entry @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Program) exte
 	 * データベースの処理を総括するオブジェクトです。
 	 */
 	implicit val ats = new ATS(db.getConnection()).createTables()
+
+	/**
+	 * 非管理者権限を表す真偽値です。
+	 */
+	implicit val admin = false
 
 	/**
 	 * 書類提出のリクエストを処理して、確認画面のページのビューを返します。
@@ -282,6 +292,11 @@ class Error @Inject()(implicit cfg: Cfg, db: DB, rule: Program) extends HttpErro
 	 * データベースの処理を総括するオブジェクトです。
 	 */
 	implicit val ats = new ATS(db.getConnection()).createTables()
+
+	/**
+	 * 非管理者権限を表す真偽値です。
+	 */
+	implicit val admin = false
 
 	/**
 	 * クライアント側のエラーを表示するページを返します。

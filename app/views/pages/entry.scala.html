@@ -1,4 +1,4 @@
-@(form: Form[ContestFormData], warn: Option[Html] = None)(implicit req: RequestHeader, ats: ATS, rule: Program, admin: Boolean = false)
+@(form: Form[ContestFormData], warn: Option[Html] = None)(implicit req: RequestHeader, ats: ATS, rule: Program, admin: Boolean)
 
 @comps.frame(title = "書類提出", nav = if(admin) "force" else "entry") {
 	@if(rule.accept() || admin) {

@@ -1,4 +1,4 @@
-@()(implicit ats: ATS, rule: Program)
+@()(implicit ats: ATS, rule: Program, admin: Boolean)
 
 @zero(ranking: RankingData) = @{!rule.section(ranking.sect).isAbsence && ranking.score == 0}
 

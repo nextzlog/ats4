@@ -42,7 +42,7 @@ import org.apache.commons.mail.EmailException
  * @param rule コンテスト規約の依存性注入
  * @param admin 管理者権限
  */
-class UploadTask(implicit smtp: MailerClient, cfg: Cfg, ats: ATS, rule: Program, admin: Boolean = false) {
+class UploadTask(implicit smtp: MailerClient, cfg: Cfg, ats: ATS, rule: Program, admin: Boolean) {
 	/**
 	 * 書類提出のリクエストを処理して、確認画面のページのビューを返します。
 	 *
@@ -109,8 +109,9 @@ class UploadTask(implicit smtp: MailerClient, cfg: Cfg, ats: ATS, rule: Program,
  * @param req リクエストヘッダ
  * @param ats データベースの依存性注入
  * @param rule コンテスト規約の依存性注入
+ * @param admin 管理者権限
  */
-class UpdateTask(implicit req: RequestHeader, ats: ATS, rule: Program) {
+class UpdateTask(implicit req: RequestHeader, ats: ATS, rule: Program, admin: Boolean) {
 	/**
 	 * 得点計算を再実行します。
 	 *
@@ -135,8 +136,9 @@ class UpdateTask(implicit req: RequestHeader, ats: ATS, rule: Program) {
  * @param req リクエストヘッダ
  * @param ats データベースの依存性注入
  * @param rule コンテスト規約の依存性注入
+ * @param admin 管理者権限
  */
-class DeleteTask(implicit req: RequestHeader, ats: ATS, rule: Program) {
+class DeleteTask(implicit req: RequestHeader, ats: ATS, rule: Program, admin: Boolean) {
 	/**
 	 * 指定された呼出符号の参加局を削除します。
 	 *

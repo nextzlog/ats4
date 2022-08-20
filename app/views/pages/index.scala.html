@@ -1,4 +1,4 @@
-@(status: Option[Int] = None)(implicit cfg: Configuration, ats: ATS, rule: Program)
+@(status: Option[Int] = None)(implicit cfg: Configuration, ats: ATS, rule: Program, admin: Boolean)
 
 @notes = @{ats.stations().list().asScala.filter(_.note.nonEmpty)}
 
