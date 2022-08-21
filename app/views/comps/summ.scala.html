@@ -1,6 +1,6 @@
-@(ranking: RankingData, station: StationData)(implicit ats: ATS, rule: Program, admin: Boolean)
+@(ranking: RankingData, station: StationData, items: Seq[Item])(implicit ats: ATS, rule: Program, admin: Boolean)
 
-@summary = @{util.Try(rule.section(ranking.sect).summarize(ats.messages().search(station.call)))}
+@summary = @{util.Try(rule.section(ranking.sect).summarize(items.asJava))}
 
 @if(!rule.section(ranking.sect).isAbsence) {
 	<div class='card my-5'>

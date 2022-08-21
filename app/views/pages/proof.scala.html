@@ -53,8 +53,10 @@
 			</div>
 		}
 	}
-	@for(ranking <- ats.rankings().byCall(station.call)) {
-		@comps.summ(ranking, station)
+	@defining(ats.messages().search(station.call).asScala.toSeq) {items =>
+		@for(ranking <- ats.rankings().byCall(station.call)) {
+			@comps.summ(ranking, station, items)
+		}
 	}
 	@if(admin) {
 		<button type='button' class='btn btn-outline-danger' data-bs-toggle='modal' data-bs-target='#deleteModal'>
