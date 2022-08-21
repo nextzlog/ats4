@@ -31,7 +31,7 @@
 		</blockquote>
 	}
 	@for(archive <- ats.archives().byCall(call).asScala) {
-		@defining(util.Try(archive.toItemList())) {items =>
+		@defining(util.Try(ats.archives().getItems(archive))) {items =>
 			<div class='card my-5 @if(items.isFailure) {bg-warning}'>
 				<h3 class='card-header d-flex justify-content-between'>
 					<span>@if(archive.file.nonEmpty) {@archive.file} else {無名}</span>

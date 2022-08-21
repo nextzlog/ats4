@@ -13,7 +13,6 @@ import java.util.{UUID, NoSuchElementException => Omiss}
 
 import qxsl.ruler._
 import qxsl.sheet.{SheetManager, SheetOrTable}
-import qxsl.table.TableManager
 
 import ats4.data._
 import ats4.root.ATS
@@ -57,9 +56,6 @@ class UploadTask(implicit smtp: MailerClient, cfg: Cfg, ats: ATS, rule: Program,
 		if (CSRF.getToken.isDefined) util.Try {
 			val post = form.get
 			val files = req.body.asMultipartFormData.get.files
-			val prevLogs = ats.archives().byCall(post.station.call)
-			val stayLogs = prevLogs.asScala.map(f => f.file -> f).toMap
-			ats.drop(post.station.call)
 			val station = new StationData()
 			station.call = post.station.call
 			station.name = post.station.name
@@ -68,40 +64,34 @@ class UploadTask(implicit smtp: MailerClient, cfg: Cfg, ats: ATS, rule: Program,
 			station.mail = post.station.mail
 			station.note = post.station.note
 			station.uuid = post.station.uuid.toString
+			val prevs = ats.archives().byCall(station.call)
+			val kepts = prevs.asScala.map(f => f.file -> f).toMap
+			ats.drop(station.call)
 			ats.stations().push(station)
 			for (up <- post.uploads if up.keep) util.Try {
-				val file = stayLogs(up.file)
-				ats.messages().push(post.station.call, file.toItemList())
-				ats.archives().push(file)
+				ats.archives().push(kepts(up.file))
+				ats.messages().push(kepts(up.file))
 			}
 			for (file <- files) util.Try {
-				val archive = new ArchiveData()
-				archive.call = post.station.call
+				val archive = station.archive().load(file.ref.path)
 				archive.file = file.filename
-				archive.data = Files.readAllBytes(file.ref.path)
-				ats.messages().push(post.station.call, archive.toItemList())
 				ats.archives().push(archive)
+				ats.messages().push(archive)
 			}
 			val list = post.marshal.map(MarshalFormData.encode).asJava
 			if (!list.isEmpty) util.Try {
-				val archive = new ArchiveData()
-				archive.call = post.station.call
+				val archive = station.archive().load(list)
 				archive.file = ""
-				archive.data = new TableManager().encode(list)
 				ats.archives().push(archive)
-				ats.messages().push(post.station.call, list)
+				ats.messages().push(archive)
 			}
 			for (sect <- post.entries) {
-				val ranking = new RankingData()
-				ranking.call = post.station.call
+				val ranking = station.ranking()
 				ranking.sect = sect.sect
 				ranking.city = sect.city
-				util.Try {
-					val items = ats.messages().search(station.call)
-					ranking.copy(rule.section(ranking.sect).summarize(items))
-				}
 				ats.rankings().push(ranking)
 			}
+			ats.update(station.call, rule)
 			Logger(this.getClass).info(s"accept: $post")
 			new NotifyTask().send(station)
 			pages.proof(post.station.call)
@@ -128,12 +118,7 @@ class UpdateTask(implicit req: RequestHeader, ats: ATS, rule: Program, admin: Bo
 	 * @return 管理画面のページ
 	 */
 	def accept: Html = {
-		for (ranking <- ats.rankings().list().asScala) {
-			ats.rankings().drop(ranking)
-			val items = ats.messages().search(ranking.call)
-			ranking.copy(rule.section(ranking.sect).summarize(items))
-			ats.rankings().push(ranking)
-		}
+		for (station <- ats.stations().list().asScala) ats.update(station.call, rule)
 		pages.lists()
 	}
 }
@@ -169,6 +154,7 @@ class DeleteTask(implicit req: RequestHeader, ats: ATS, rule: Program, admin: Bo
 	def clear = {
 		ats.deleteTables()
 		ats.createTables()
+		Logger(getClass).info("all records deleted")
 		pages.lists()
 	}
 }
@@ -179,22 +165,18 @@ class DeleteTask(implicit req: RequestHeader, ats: ATS, rule: Program, admin: Bo
  *
  *
  * @param req 交信記録を含むリクエスト
+ * @param ats データベースの依存性注入
  */
-class VerifyTask(implicit req: Request[AnyContent]) {
-	/**
-	 * 交信記録を読み取るデコーダです。
-	 */
-	val tables = new SheetOrTable()
-
+class VerifyTask(implicit req: Request[AnyContent], ats: ATS) {
 	/**
 	 * 交信記録を処理可能か確認して結果のメッセージを返します。
 	 *
 	 * @return 確認した結果を表すメッセージ
 	 */
 	def accept = util.Try {
-		val files = req.body.asMultipartFormData.get.files.map(_.ref)
-		files.foreach(f => tables.unpack(Files.readAllBytes(f)))
-		warns.ready()
+		val logs = req.body.asMultipartFormData.get.files.map(_.ref)
+		val bads = logs.map(ats.archives().decodable(_).isPresent())
+		if (bads.exists(identity)) warns.unsup() else warns.ready()
 	}.recover {
 		case ex: Chset => warns.chset()
 		case ex: Unsup => warns.unsup()
@@ -312,12 +294,7 @@ class SocketTask(out: ActorRef, token: UUID)(implicit cfg: Cfg, ats: ATS, rule: 
 		val qsoDiff = decoder.unpack(data.tail).asScala
 		ats.messages().drop(station.call, qsoDiff.take(data.head.toInt & 0xFF).asJava)
 		ats.messages().push(station.call, qsoDiff.drop(data.head.toInt & 0xFF).asJava)
-		for (ranking <- ranking.asScala) {
-			ats.rankings().drop(ranking)
-			val items = ats.messages().search(station.call)
-			ranking.copy(rule.section(ranking.sect).summarize(items))
-			ats.rankings().push(ranking)
-		}
+		ats.update(station.call, rule);
 		Logger(this.getClass).info(s"update: $station.call")
 		if (rule.finish()) new RankingTableToJson().json else ""
 	}
