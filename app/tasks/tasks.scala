@@ -118,6 +118,8 @@ class UpdateTask(implicit req: RequestHeader, ats: ATS, rule: Program, admin: Bo
 	 * @return 管理画面のページ
 	 */
 	def accept: Html = {
+		for (message <- ats.messages().list().asScala) util.Try(ats.messages().drop(message))
+		for (archive <- ats.archives().list().asScala) util.Try(ats.messages().push(archive))
 		for (station <- ats.stations().list().asScala) ats.update(station.call, rule)
 		pages.lists()
 	}
