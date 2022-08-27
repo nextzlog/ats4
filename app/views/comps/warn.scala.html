@@ -1,0 +1,31 @@
+@(id: String, title: String, button: String = "", submit: Boolean = false, hidden: Boolean = true)(message: Html)
+
+@if(hidden) {
+	<button type='button' class='btn btn-lg btn-primary' data-bs-toggle='modal' data-bs-target='#@{id}Dialog'>
+		<i class='fas fa-thumbs-up'></i>
+		@button
+	</button>
+} else {
+	<script>
+	$(() => new bootstrap.Modal($('#@{id}Dialog')).show());
+	</script>
+}
+
+<div class='modal' id='@{id}Dialog'>
+	<div class='modal-dialog modal-lg modal-dialog-scrollable'>
+		<div class='modal-content'>
+			<div class='modal-header'>
+				<h4 class='modal-title'>@title</h4>
+			</div>
+			<div class='modal-body'>
+				@message
+			</div>
+			<div class='modal-footer'>
+				@if(button.nonEmpty) {
+					<button type='@if(submit) {submit} else {button}' class='btn btn-danger' id='@{id}Button'>@button</button>
+				}
+				<button type='button' class='btn btn-primary' data-bs-dismiss='modal'>閉じる</button>
+			</div>
+		</div>
+	</div>
+</div>

@@ -59,27 +59,10 @@
 		}
 	}
 	@if(admin) {
-		<button type='button' class='btn btn-outline-danger' data-bs-toggle='modal' data-bs-target='#deleteModal'>
-			<i class='fas fa-trash'></i>
-			削除する
-		</button>
-		<div class='modal' id='deleteModal'>
-			<div class='modal-dialog'>
-				<div class='modal-content'>
-					<div class='modal-header'>
-						<h4 class='modal-title'>書類の削除</h4>
-					</div>
-					<div class='modal-body'>
-						<p>@{station.call}の書類を削除します。</p>
-						<p class='text-danger'>この操作は取り消せません。</p>
-					</div>
-					<div class='modal-footer'>
-						<button type='button' class='btn btn-danger' id='deleteButton'>削除する</button>
-						<button type='button' class='btn btn-primary' data-bs-dismiss='modal'>キャンセル</button>
-					</div>
-				</div>
-			</div>
-		</div>
+		@comps.warn(id = "delete", title = "書類の削除", button = "削除する") {
+			<p>@{station.call}の書類を削除します。</p>
+			<p class='text-danger'>この操作は取り消せません。</p>
+		}
 	}
 	<script>
 	@if(admin) {

@@ -42,26 +42,14 @@
 					</div>
 				</div>
 			}
-			<button type='button' class='btn btn-lg btn-primary' data-bs-toggle='modal' data-bs-target='#submitModal'>
-				<i class='fas fa-thumbs-up'></i>
-				この内容で提出する
-			</button>
-			<div class='modal' id='submitModal'>
-				<div class='modal-dialog'>
-					<div class='modal-content'>
-						<div class='modal-header'>
-							<h4 class='modal-title'>書類提出</h4>
-						</div>
-						<div class='modal-body'>
-							<p>以前の登録内容を全て破棄して、指定された部門で参加登録します。</p>
-						</div>
-						<div class='modal-footer'>
-							<button type='submit' class='btn btn-primary' id='submit'>提出する</button>
-							<button type='button' class='btn btn-default' data-bs-dismiss='modal'>キャンセル</button>
-						</div>
-					</div>
-				</div>
-			</div>
+			@comps.warn(id = "submit", title = "確認", button = "提出する", submit = true) {
+				<p>書類提出を複数回に分割することはできません。</p>
+				<p>参加した全ての部門を漏れなく記入しましょう。</p>
+				<p class='text-danger'>提出済みの書類は削除されます。</p>
+			}
+			@comps.warn(id = "inform", title = "案内", hidden = false) {
+				<div id='help'></div>
+			}
 		}
 	} else {
 		<div class='alert alert-warning'>
@@ -71,6 +59,9 @@
 	<script>
 	$('form').submit(function() {
 		$(this).find(':submit').prop('disabled', 'true');
+	});
+	$(function() {
+		$('div#help').append(marked.parse(`@{rule.help()}`));
 	});
 	</script>
 }
