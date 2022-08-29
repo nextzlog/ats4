@@ -9,12 +9,15 @@
 		@comps.list(form("marshal"), id)
 		<div class='input-group' id='@id-form'>
 			<input type='file' id='@id' name='@id' class='form-control' multiple>
-			<button type='button' class='btn btn-outline-primary append-qso'><i class='fas fa-plus'></i> QSO1件追加</button>
+			<span class='input-group-text'>または</span>
+			<button type='button' class='btn btn-outline-primary append-qso'>
+				<i class='fas fa-plus'></i>
+				QSO1件を直接追加
+			</button>
 		</div>
 	</div>
 	<div id='@id-footer' class='card-footer'>
-		既に提出済みの交信記録は、完全に消去されます。
-		複数のファイルを選ぶと、自動的に結合されます。
+		選択画面でCtrlキーを押したままファイルをクリックすると複数のファイルを添付できます。
 	</div>
 </div>
 <script>

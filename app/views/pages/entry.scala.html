@@ -12,6 +12,15 @@
 		}
 		@helper.form(action = if(admin) routes.Force.edit else routes.Entry.entry, Symbol("enctype")->"multipart/form-data") {
 			@helper.CSRF.formField
+			<div class='card mb-5'>
+				<h3 class='card-header'>
+					<span>注意事項</span>
+				</h3>
+				<ul class='list-group list-group-flush'>
+					<li class='list-group-item'>参加した全ての部門を選び、交信記録を添付する必要があります。</li>
+					<li class='list-group-item'>複数回に分けて提出すると、以前に提出した書類は削除されます。</li>
+				</ul>
+			</div>
 			@comps.file(id = "sheet", form = form)
 			<div class='card bg-light mb-5'>
 				<h3 class='card-header'>
@@ -43,12 +52,13 @@
 				</div>
 			}
 			@comps.warn(id = "submit", title = "確認", button = "提出する", submit = true) {
-				<p>書類提出を複数回に分割することはできません。</p>
-				<p>参加した全ての部門を漏れなく記入しましょう。</p>
-				<p class='text-danger'>提出済みの書類は削除されます。</p>
-			}
-			@comps.warn(id = "inform", title = "案内", hidden = false) {
-				<div id='help'></div>
+				<p>既に提出済みの書類がある場合は、以前の提出は無効化されます。</p>
+				<div class='card my-3'>
+					<div class='card-header'>
+						@rule.host()よりご案内
+					</div>
+					<div class='card-body' id='help'></div>
+				</div>
 			}
 		}
 	} else {
