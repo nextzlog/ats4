@@ -77,6 +77,8 @@ class UploadTask(implicit smtp: MailerClient, cfg: Cfg, ats: ATS, rule: Program,
 				archive.file = file.filename
 				ats.archives().push(archive)
 				ats.messages().push(archive)
+			}.recover {
+				case ex => Logger(this.getClass).error(s"failed: $post", ex)
 			}
 			val list = post.marshal.map(MarshalFormData.encode).asJava
 			if (!list.isEmpty) util.Try {
