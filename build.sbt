@@ -1,12 +1,12 @@
 name := "ats4"
 version := "SNAPSHOT"
-scalaVersion := "2.13.8"
+scalaVersion := "2.13.10"
 scalacOptions += "-feature"
 libraryDependencies ++= Seq(
 	filters,
 	guice,
 	jdbc,
-	"qxsl" % "qxsl" % "0.1.268",
+	"qxsl" % "qxsl" % "0.1.269",
 	"org.jruby" % "jruby-core" % "9.+",
 	"com.h2database" % "h2" % "1.4.+",
 	"com.typesafe.play" %% "play-mailer" % "7.0.+",
@@ -24,6 +24,7 @@ TwirlKeys.templateImports ++= Seq(
 	"qxsl.ruler._",
 	"qxsl.sheet._",
 	"qxsl.table._",
+	"qxsl.utils._",
 	"scala.io.Source",
 	"scala.jdk.CollectionConverters._"
 )
