@@ -57,6 +57,10 @@
 			<p>全参加局の得点の再計算を開始します。</p>
 			<p class='text-danger'>この操作は取り消せません。</p>
 		}
+		@comps.warn(id = "export", title = "エクスポート", button = "データを出力する", icon = "fas fa-download") {
+			<p>全参加局の情報をダウンロードします。</p>
+			<p class='text-danger'>このデータは機密情報です。</p>
+		}
 	}
 	<script>
 	$('#deleteButton').click(function () {
@@ -65,6 +69,18 @@
 	$('#updateButton').click(function () {
 		$('#updateButton').prop('disabled', true);
 		$.ajax({type: 'POST', url: '@helper.CSRF(routes.Force.redo)'}).done(() => location.reload());
+	});
+	$('#exportButton').click(function () {
+		$('#exportButton').prop('disabled', true);
+		$.ajax({type: 'GET', url: '@routes.Admin.excel'}).done((data) => {
+			const blob = new Blob([data], {type: 'text/csv'});
+			const link = document.createElement('a');
+			const wURL = window.URL || window.webkitURL;
+			link.href = wURL.createObjectURL(blob);
+			link.download = 'results.csv';
+			link.click();
+			wURL.revokeObjectURL(link.href);
+		});
 	});
 	</script>
 }
