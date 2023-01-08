@@ -131,10 +131,12 @@ end
 
 JCCs = LocalCityBase.load('qxsl/local/city.ja').toList.select{|c| c.code.length > 3}
 
-# returns contest definition
-PlainProgram.new(
+RULE = PlainProgram.new(
 	PlainSection.new('14MHz CW部門', [Band.new(14000)], [Mode.new('CW')]),
 	PlainSection.new('21MHz CW部門', [Band.new(21000)], [Mode.new('CW')]),
 	PlainSection.new('28MHz CW部門', [Band.new(28000)], [Mode.new('CW')]),
 	PlainSection.new('50MHz CW部門', [Band.new(50000)], [Mode.new('CW')]),
 )
+
+# returns contest definition
+RULE

@@ -16,7 +16,7 @@ Feel free to visit [ALLJA1 ATS-4](https://allja1.org).
 
 - provides a web interface for contest-log acceptance.
 - verifies the uploaded logs according to the contest rules described in Ruby or LISP forms.
-- supports many contests including [UEC](https://www.ja1zgp.com/uectest_public_info), [ALLJA1](http://ja1zlo.u-tokyo.org/allja1), [REAL-TIME](http://ja1zlo.u-tokyo.org/rt/rt1.html), and [TAMAGAWA](http://apollo.c.ooco.jp).
+- supports many contests including [UEC](https://www.ja1zgp.com/uectest_public_info), [ALLJA1](https://ja1zlo.u-tokyo.org/allja1), [REAL-TIME](https://ja1zlo.u-tokyo.org/rt/rt1.html), [1-Area 6m AM](https://6mnet.jp/mannaka/blog) and [TAMAGAWA](http://apollo.c.ooco.jp).
 
 ## Documents
 
@@ -34,7 +34,7 @@ services:
   ATS4:
     image: ghcr.io/nextzlog/ats4:master
     ports:
-    - 8000:9000
+    - 9000:9000
     volumes:
     - ./ats/data:/ats/data
     - ./ats/logs:/ats/logs
@@ -47,33 +47,48 @@ Then, create a container as follows:
 $ docker-compose up -d
 ```
 
-Just wait and relax, and browse the web page on port 8000.
 To kill the container, enter the following command:
 
 ```sh
 $ docker-compose kill
 ```
 
-To start ATS-4 without using the container, run the following command:
-
-```sh
-$ sbt "start -Dhttp.port=8000"
-```
-
 ## Configuration
 
-Follow the instructions below.
+First, create `docker-compose.yaml` as follows:
+
+```yaml
+version: '3'
+services:
+  ATS4:
+    image: ghcr.io/nextzlog/ats4:master
+    ports:
+    - 9000:9000
+    volumes:
+    - ./ats/data:/ats/data
+    - ./ats/logs:/ats/logs
+    - ./ats.conf:/ats/conf/ats.conf
+    - ./rules.rb:/ats/conf/rules.rb
+    command: /ats/bin/ats4
+  www:
+    image: nginx:latest
+    ports:
+    - 80:80
+    volumes:
+    - ./proxy.conf:/etc/nginx/conf.d/default.conf
+```
+
+Then, follow the instructions below.
 
 ### Proxy
 
-We expect that ATS-4 operates as a backend server, which is hidden behind a frontend server such as Apache and Nginx.
-Make sure that unauthorized clients have no access to admin pages under `/admin` before you start the system as follows:
+Create `proxy.conf` as follows:
 
 ```nginx
 server {
-  server_name allja1.org;
+  server_name localhost;
   location / {
-    proxy_pass http://localhost:9000;
+    proxy_pass http://ATS4:9000;
     location /admin/ {
       allow 127.0.0.1;
       deny all;
@@ -86,12 +101,12 @@ server {
 }
 ```
 
-We recommend that you utilize the BASIC authentication in addition to SSH authentication to protect the private pages.
+Make sure that unauthorized clients cannot access administration pages under `/admin`.
+Expose port 80 of the container to the internet so that the administration page cannot be accessed.
 
 ### Email
 
-Open the system configuration file [`conf/application.conf`](conf/application.conf).
-You will find the mail settings as follows:
+Create the system configuration file `ats.conf` as follows:
 
 ```ini
 # Typesafe Mailer Plugin
@@ -106,35 +121,48 @@ play.mailer.mock=true
 ```
 
 Modify the settings properly.
-In addition, disable the `mock` mode of the mailer plugin.
 
 ### Regulation
 
-Open the system configuration file [`conf/application.conf`](conf/application.conf).
-You will find the contest settings as follows:
+Add the path to the contest definition file to `ats.conf` like this:
 
 ```ini
 # Contest
-ats4.rules=/rules/JA1ZLO/ja1.rb
+# ats4.rules=/rules/JA1ZLO/ja1.rb
+# ats4.rules=/rules/JA1ZGP/uec.rb
+ats4.rules=/rules.rb
 ```
 
-Modify the settings properly.
-The [`Program`](https://nextzlog.github.io/qxsl/docs/qxsl/ruler/Program) object is the entity of the contest rules.
-See [`ja1.rb`](conf/rules/JA1ZLO/ja1.rb) and [`rtc.rb`](conf/rules/JA1ZLO/rtc.rb) and [`uec.rb`](conf/rules/JA1ZGP/uec.rb) for example.
+In addition, create `rules.rb` as follows:
 
-```Ruby
-ProgramJA1.new(ALLJA1)
+```rb
+require 'rules/sample/plain'
+RULE
 ```
 
-## Development
+Of course, you can also modify `rules.rb` to customize it for your contest.
+See [`plain.rb`](conf/rules/sample/plain.rb) for example.
 
-Start ATS-4 in development mode as follows:
+### Run
+
+Finally, create a container as follows:
+
+```sh
+$ docker-compose up -d
+```
+
+Access 80 port of the container.
+
+## Development Mode
+
+You can change Scala code and configuration without restarting by starting ATS-4 in development mode as follows:
 
 ```sh
 $ sbt run
 ```
 
-In development mode, you can modify the contest rules (and/or `application.conf`) and have them reflected in the system without rebooting.
+Then, access http://localhost:9000/admin/shell to develop contest rules interactively.
+You can test the scoring algorithm by attaching QSO data to the web form.
 
 ## Stream API
 
