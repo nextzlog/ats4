@@ -1,0 +1,8 @@
+@(id: String = "", label: String = "", icon: String = "", submit: Boolean = false)
+
+<button type='@if(submit) {submit} else {button}' class='btn btn-primary' @if(id.nonEmpty) {id='@id'}>
+	@if(icon.nonEmpty) {
+		<i class='@icon'></i>
+	}
+	@label
+</button>

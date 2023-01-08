@@ -8,7 +8,7 @@
 	@if(admin) {<a href='@routes.Admin.proof(call)'>@call</a>} else {@call}
 }
 
-@comps.page(title = "暫定結果", nav = "lists") {
+@comps.page(title = "集計結果", nav = "lists") {
 	@if(admin || rule.finish()) {
 		@for(sect <- rule.asScala if !sect.isAbsence()) {
 			@if(ats.rankings().bySect(sect.name()).nonEmpty) {
@@ -45,15 +45,15 @@
 		}
 	} else {
 		<div class='alert alert-info'>
-			受付期間の終了と同時に暫定結果を公表します。
+			未公表です。
 		</div>
 	}
 	@if(admin) {
-		@comps.warn(id = "delete", title = "書類の全消去", button = "全書類を消去する") {
+		@comps.warn(id = "delete", title = "書類の全消去", button = "全書類を消去する", icon = "fas fa-trash") {
 			<p>全参加局の書類を消去します。</p>
 			<p class='text-danger'>この操作は取り消せません。</p>
 		}
-		@comps.warn(id = "update", title = "得点の再計算", button = "得点を再計算する") {
+		@comps.warn(id = "update", title = "得点の再計算", button = "得点を再計算する", icon = "fas fa-repeat") {
 			<p>全参加局の得点の再計算を開始します。</p>
 			<p class='text-danger'>この操作は取り消せません。</p>
 		}
