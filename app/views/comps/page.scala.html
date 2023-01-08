@@ -23,6 +23,7 @@
 						@if(admin) {
 							@navi(href = routes.Admin.index.url, label = "集計結果", active = nav == "lists", icon = "fas fa-trophy")
 							@navi(href = routes.Admin.entry.url, label = "書類提出", active = nav == "entry", icon = "fas fa-upload")
+							@navi(href = routes.Shell.shell.url, label = "規約開発", active = nav == "shell", icon = "fas fa-terminal")
 						} else {
 							@navi(href = routes.Index.entry.url, label = "書類提出", active = nav == "entry", icon = "fas fa-upload")
 							@navi(href = routes.Index.lists.url, label = "集計結果", active = nav == "lists", icon = "fas fa-trophy")

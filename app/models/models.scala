@@ -18,6 +18,7 @@ import ats4.root.ATS
 
 import scala.jdk.CollectionConverters._
 
+import play.api.{Configuration => Cfg}
 import play.api.data.{Form, Forms, OptionalMapping}
 import play.api.libs.json.{Json, JsValue}
 
@@ -420,3 +421,54 @@ class SheetDecoderToJson(decoder: SheetDecoder) {
 		"note" -> decoder.getString("COMMENTS")
 	)))
 }
+
+
+/**
+ * 開発画面のフォームに入力されたデータです。
+ *
+ *
+ * @param rule 規約
+ * @param data 交信記録
+ *
+ * @since 2023/01/08
+ */
+case class DevelopFormData(
+	rule: String,
+	data: String
+)
+
+
+/**
+ * 開発画面に表示される規約の草案のデータを提供します。
+ *
+ *
+ * @since 2023/01/08
+ */
+object DevelopFormData {
+	/**
+	 * 規約の草案のフォームの内容を返します。
+	 *
+	 * @param cfg アプリケーションの設定
+	 * @return フォームの内容
+	 */
+	def data(implicit cfg: Cfg) = DevelopFormData(
+		rule = RuleKit.read(cfg.get[String]("ats4.draft")),
+		data = ""
+	)
+}
+
+
+/**
+ * 開発画面のフォームとデータの関連付けと検証を実装します。
+ *
+ *
+ * @since 2023/01/08
+ */
+class DevelopForm extends Form[DevelopFormData](
+	Forms.mapping(
+		"rule" -> Forms.nonEmptyText,
+		"data" -> Forms.text
+	)
+	(DevelopFormData.apply)
+	(DevelopFormData.unapply), Map.empty, Nil, None
+)
