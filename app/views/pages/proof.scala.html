@@ -19,7 +19,7 @@
 				</a>
 			}
 		</h3>
-		<div class="card-body">
+		<div class='card-body'>
 			<p>〒@{station.post} @{station.addr}</p>
 			<p>@{station.name}様</p>
 			<p><a href='mailto:@station.mail'>@station.mail</a></p>
@@ -59,7 +59,7 @@
 		}
 	}
 	@if(admin) {
-		@comps.warn(id = "delete", title = "書類の削除", button = "削除する") {
+		@comps.warn(id = "delete", title = "書類の削除", button = "削除する", icon = "fas fa-trash") {
 			<p>@{station.call}の書類を削除します。</p>
 			<p class='text-danger'>この操作は取り消せません。</p>
 		}

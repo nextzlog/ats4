@@ -31,26 +31,23 @@
 				</button>
 				<div class='collapse navbar-collapse' id='nav'>
 					<div class='navbar-nav'>
-						<a class='nav-item nav-link @("active".when(admin))' href="@routes.Admin.index">管理画面</a>
+						@navi(href = routes.Admin.index.url, label = "管理", active = admin, icon = "fas fa-key")
 						@if(admin) {
-							<a class='nav-item nav-link @("active".when(nav == "lists"))' href="@routes.Admin.index">暫定結果</a>
-							<a class='nav-item nav-link @("active".when(nav == "entry"))' href="@routes.Admin.entry">書類提出</a>
-							<a class='nav-item nav-link @("active".when(nav == "excel"))' href="@routes.Admin.excel">
-								<i class='fas fa-download'></i>
-							</a>
+							@navi(href = routes.Admin.index.url, label = "集計結果", active = nav == "lists", icon = "fas fa-trophy")
+							@navi(href = routes.Admin.entry.url, label = "書類提出", active = nav == "entry", icon = "fas fa-upload")
 						} else {
-							<a class='nav-item nav-link @("active".when(nav == "entry"))' href="@routes.Index.entry">書類提出</a>
-							<a class='nav-item nav-link @("active".when(nav == "lists"))' href="@routes.Index.lists">暫定結果</a>
-							<a class='nav-item nav-link @("active".when(nav == "calls"))' href="@routes.Index.calls">全参加局</a>
-							<a class='nav-item nav-link @("active".when(nav == "forum"))' href="@routes.Index.forum">皆様の声</a>
-							<a class='nav-item nav-link @("active".when(nav == "guide"))' href="@routes.Index.guide">ヘルプ</a>
+							@navi(href = routes.Index.entry.url, label = "書類提出", active = nav == "entry", icon = "fas fa-upload")
+							@navi(href = routes.Index.lists.url, label = "集計結果", active = nav == "lists", icon = "fas fa-trophy")
+							@navi(href = routes.Index.calls.url, label = "全参加局", active = nav == "calls", icon = "fas fa-user-alt")
+							@navi(href = routes.Index.forum.url, label = "皆様の声", active = nav == "forum", icon = "fas fa-comments")
+							@navi(href = routes.Index.guide.url, label = "提出方法", active = nav == "guide", icon = "fas fa-question")
+							@navi(href = s"mailto:${rule.mail}", label = "運営に連絡", icon = "fas fa-envelope")
 						}
 					</div>
 					<div class='navbar-nav ms-auto'>
-						<a class='nav-item nav-link' href='https://zylo.pafelog.net'>ZyLO</a>
-						<a class='nav-item nav-link' href='http://github.com/nextzlog/ats4'>GitHub</a>
-						<a class='nav-item nav-link' href='http://@rule.link()'>@rule.host()</a>
-						<a class='nav-item nav-link' href='http://pafelog.net'>無線部開発班</a>
+						@navi(href = s"http://${rule.link()}", label = rule.host())
+						@navi(href = "https://github.com/nextzlog/ats4", label = "GitHub", icon = "fab fa-github")
+						@navi(href = "https://pafelog.net", label = "無線部開発班")
 					</div>
 				</div>
 			</div>
@@ -59,7 +56,6 @@
 			@if(title.nonEmpty) {
 				<div class='border-bottom mb-4'>
 					<h1 class='my-2'>@title</h1>
-					@comps.help()
 				</div>
 			}
 			@content

@@ -1,0 +1,8 @@
+@(href: String, label: String, icon: String = "", active: Boolean = false)
+
+<a class='nav-item nav-link @("active".when(active))' href='@href'>
+	@if(icon.nonEmpty) {
+		<i class='@icon'></i>
+	}
+	@label
+</a>
