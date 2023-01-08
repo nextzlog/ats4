@@ -21,7 +21,7 @@ def opt_year(func_start_day, months = 9)
 	(span.getMonths > months ? 1: 0) + year
 end
 
-ONLINE = RuleKit.load('online.lisp').contest
+ONLINE = RuleKit.load('/rules/JA1ZLO/rtc.lisp').contest
 
 class ProgramRTC < Program
 	def name()
