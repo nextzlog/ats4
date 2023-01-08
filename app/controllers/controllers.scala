@@ -33,7 +33,7 @@ import akka.stream.{Materializer => Mat}
 import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, MergeHub}
 
 /**
- * 管理者権限を伴わず、HTTPのGETメソッドを処理するコントローラです。
+ * 管理者権限を伴わず、公開画面のGETメソッドを処理するコントローラです。
  *
  *
  * @param smtp メールクライアントの依存性注入
@@ -98,7 +98,7 @@ class Index @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Program) exte
 
 
 /**
- * 管理者権限を伴わず、HTTPのPOSTメソッドを処理するコントローラです。
+ * 管理者権限を伴わず、公開画面のPOSTメソッドを処理するコントローラです。
  *
  *
  * @param smtp メールクライアントの依存性注入
@@ -142,7 +142,7 @@ class Entry @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Program) exte
 
 
 /**
- * 管理者権限を伴って、HTTPのGETメソッドを処理するコントローラです。
+ * 管理者権限を伴って、管理画面のGETメソッドを処理するコントローラです。
  *
  *
  * @param smtp メールクライアントの依存性注入
@@ -211,7 +211,7 @@ class Admin @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Program) exte
 
 
 /**
- * 管理者権限を伴って、HTTPのPOSTメソッドを処理するコントローラです。
+ * 管理者権限を伴って、管理画面のPOSTメソッドを処理するコントローラです。
  *
  *
  * @param smtp メールクライアントの依存性注入
@@ -259,6 +259,42 @@ class Force @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Program) exte
 	 * @return 管理画面のページ
 	 */
 	def redo = Action(implicit r => Ok(new UpdateTask().accept))
+}
+
+
+/**
+ * 管理者権限を伴って、開発画面のGETまたはPOSTメソッドを処理するコントローラです。
+ *
+ *
+ * @param cfg アプリケーションの設定の依存性注入
+ * @param db データベースの依存性注入
+ * @param rule コンテスト規約の依存性注入
+ */
+@Singleton
+class Shell @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Program) extends IC {
+	/**
+	 * データベースの処理を総括するオブジェクトです。
+	 */
+	implicit val ats = new ATS(db.getConnection()).createTables()
+
+	/**
+	 * 管理者権限を表す真偽値です。
+	 */
+	implicit val admin = true
+
+	/**
+	 * 開発画面のページのビューを返します。
+	 *
+	 * @return 管理画面のページ
+	 */
+	def shell = Action(implicit r => Ok(pages.shell(new DevelopForm().fill(DevelopFormData.data))))
+
+	/**
+	 * 送信された規約を評価して、実行結果のページのビューを返します。
+	 *
+	 * @return 管理画面のページ
+	 */
+	def debug = Action(implicit r => Ok(pages.debug(new DevelopForm().bindFromRequest())))
 }
 
 

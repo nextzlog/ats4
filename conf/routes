@@ -29,6 +29,10 @@ DELETE  /admin/proof/:call       controllers.Force.drop(call: String)
 POST    /admin/entry             controllers.Force.edit
 POST    /admin/amend             controllers.Force.redo
 
+# System pages
+GET     /admin/shell             controllers.Shell.shell
+POST    /admin/shell             controllers.Shell.debug
+
 # WebSocket
 GET     /agent/:uuid             controllers.Agent.agent(uuid: UUID)
 

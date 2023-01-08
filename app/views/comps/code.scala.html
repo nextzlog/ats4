@@ -1,0 +1,3 @@
+@(field: Field, lang: String, hint: String = "")
+
+<textarea id='@field.id' name='@field.name' class='prism-live line-numbers language-@lang' placeholder='@hint'>@field.value</textarea>

@@ -1,0 +1,32 @@
+@(form: Form[DevelopFormData])(implicit c: Configuration, ats: ATS, rule: Program, admin: Boolean)
+
+@local = @{util.Try(RuleKit.forFile(c.get[String]("ats4.rules")).eval(form.get.rule).program())}
+@items = @{util.Try(new SheetOrTable().unpack(form.get.data))}
+
+@comps.page(title = "規約開発", nav = "shell") {
+	@if(local.isFailure) {
+		<div class='alert alert-danger'>
+			規約の修正が必要です。
+		</div>
+		<pre class='text-white bg-dark rounded p-2'>@{local.failed.get.getMessage()}</pre>
+	} else if(items.isFailure) {
+		<div class='alert alert-danger'>
+			@warns.unsup()
+		</div>
+		<pre class='text-white bg-dark rounded p-2'>@{items.failed.get.getMessage()}</pre>
+	} else if(form.get.data.isEmpty) {
+		<div class='alert alert-danger'>
+			交信記録がありません。
+		</div>
+	} else {
+		@for(sect <- local.get.asScala if !sect.isAbsence()) {
+			@defining(util.Try(new RankingData().copy(sect.summarize(items.get)))) {ranking =>
+				@if(ranking.isSuccess) {
+					@comps.summ({ranking.get.sect = sect.name(); ranking.get}, items.get.asScala.toSeq)
+				} else {
+					<pre class='text-white bg-dark rounded p-2'>@{ranking.failed.get.getMessage()}</pre>
+				}
+			}
+		}
+	}
+}(ats, if(local.isSuccess) local.get else rule, admin)
