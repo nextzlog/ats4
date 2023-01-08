@@ -55,7 +55,7 @@
 	}
 	@defining(ats.messages().search(station.call).asScala.toSeq) {items =>
 		@for(ranking <- ats.rankings().byCall(station.call)) {
-			@comps.summ(ranking, station, items)
+			@comps.summ(ranking, items)
 		}
 	}
 	@if(admin) {

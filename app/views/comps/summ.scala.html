@@ -1,4 +1,4 @@
-@(ranking: RankingData, station: StationData, items: Seq[Item])(implicit ats: ATS, rule: Program, admin: Boolean)
+@(ranking: RankingData, items: Seq[Item])(implicit ats: ATS, rule: Program, admin: Boolean)
 
 @summary = @{util.Try(rule.section(ranking.sect).summarize(items.asJava))}
 
@@ -8,12 +8,14 @@
 			<span>@ranking.sect</span>
 		</h3>
 		<ul class='list-group list-group-flush'>
-			<li class='list-group-item'>@{ranking.city}</li>
+			@if(Option(ranking.city).isDefined) {
+				<li class='list-group-item'>@{ranking.city}</li>
+			}
 			<li class='list-group-item'>交信数は@{ranking.score}点です。</li>
 			<li class='list-group-item'>総得点は@{ranking.total}点です。</li>
 		</ul>
 		@if(summary.isSuccess) {
-			<table class='table table-hover font-monospace'>
+			<table class='table table-hover table-borderless font-monospace mb-0'>
 				<thead class='table-light'>
 					<tr>
 						<th>日時</th>

@@ -1,7 +1,5 @@
 @()(implicit ats: ATS, rule: Program, admin: Boolean)
 
-@zero(ranking: RankingData) = @{!rule.section(ranking.sect).isAbsence && ranking.score == 0}
-
 @comps.page(title = "全参加局", nav = "calls") {
 	<table class='table table-hover font-monospace'>
 		<thead class='table-light'>
@@ -13,7 +11,7 @@
 		</thead>
 		<tbody>
 			@for((station, count) <- ats.stations().list().asScala.zipWithIndex) {
-				@if(ats.rankings().byCall(station.call).asScala.exists(zero)) {
+				@if(ats.rankings().byCall(station.call).asScala.exists(_.scoreless(rule))) {
 					<tr class='table-warning'>
 						<td>@{count + 1}
 						<td>@station.call</td>
