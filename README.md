@@ -23,12 +23,13 @@ Feel free to visit [ALLJA1 ATS-4](https://allja1.org).
 - [Scaladoc](https://nextzlog.github.io/ats4/api)
 - [ATS-4 (PDF)](https://pafelog.net/ats4.pdf)
 
-## Usage
+## Quick Start
 
 Docker image is available.
-Create `docker-compose.yaml` as follows:
+Paste the entire following script into the terminal and run it.
 
-```yaml
+```sh
+cat << EOS > docker-compose.yaml
 version: '3'
 services:
   ATS4:
@@ -38,20 +39,65 @@ services:
     volumes:
     - ./ats/data:/ats/data
     - ./ats/logs:/ats/logs
+    - ./ats.conf:/ats/conf/ats.conf
+    - ./rules.rb:/ats/conf/rules.rb
     command: /ats/bin/ats4
+  www:
+    image: nginx:latest
+    ports:
+    - 80:80
+    volumes:
+    - ./proxy.conf:/etc/nginx/conf.d/default.conf
+EOS
+
+echo -n 'enter mail hostname: '
+read host
+
+echo -n 'enter mail username: '
+read user
+
+echo -n 'enter mail password: '
+read pass
+
+cat << EOS > ats.conf
+play.mailer.host=$host
+play.mailer.port=465
+play.mailer.ssl=true
+play.mailer.user="$user"
+play.mailer.password="$pass"
+play.mailer.mock=false
+ats4.rules=/rules.rb
+EOS
+
+cat << EOS > rules.rb
+require 'rules/sample/plain'
+RULE
+EOS
+
+echo -n 'enter server domain: '
+read name
+
+cat << EOS > proxy.conf
+server {
+  server_name $name;
+  location / {
+    proxy_pass http://ATS4:9000;
+    location /admin/ {
+      allow 127.0.0.1;
+      deny all;
+    }
+    location ~ /admin {
+      allow 127.0.0.1;
+      deny all;
+    }
+  }
+}
+EOS
+
+docker compose up -d
 ```
 
-Then, create a container as follows:
-
-```sh
-$ docker-compose up -d
-```
-
-To kill the container, enter the following command:
-
-```sh
-$ docker-compose kill
-```
+Then, point your browser to http://localhost and verify that ATS-4 is running.
 
 ## Configuration
 
@@ -148,10 +194,18 @@ See [`plain.rb`](conf/rules/sample/plain.rb) for example.
 Finally, create a container as follows:
 
 ```sh
-$ docker-compose up -d
+$ docker compose up -d
 ```
 
 Access 80 port of the container.
+
+### Shutdown
+
+To kill the container, enter the following command:
+
+```sh
+$ docker compose kill
+```
 
 ## Development Mode
 
