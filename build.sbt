@@ -12,7 +12,7 @@ libraryDependencies ++= Seq(
 	"com.typesafe.play" %% "play-mailer" % "7.0.+",
 	"com.typesafe.play" %% "play-mailer-guice" % "7.0.+"
 )
-resolvers += "qxsl" at "https://nextzlog.github.io/qxsl/mvn"
+resolvers += "qxsl" at "https://autodyne.github.io/qxsl/mvn"
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 routesImport += "java.util.UUID"
 TwirlKeys.templateImports ++= Seq(
