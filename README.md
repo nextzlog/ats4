@@ -9,7 +9,7 @@ ATS-4: Amateur-Radio Contest Administration System
 ![image](https://img.shields.io/badge/license-GPL3-darkblue.svg)
 ![badge](https://github.com/nextzlog/ats4/actions/workflows/build.yaml/badge.svg)
 
-ATS-4 is an Automatic Acceptance & Tabulation System for Amateur-Radio Contests, based on [QxSL](https://github.com/nextzlog/qxsl).
+ATS-4 is an Automatic Acceptance & Tabulation System for Amateur-Radio Contests, based on [QxSL](https://github.com/autodyne/qxsl).
 Feel free to visit [ALLJA1 ATS-4](https://allja1.org).
 
 ## Features
@@ -242,7 +242,7 @@ Messages from the clients to the server must follow the format below.
 |sequence|QSO entities to append|
 
 The second and subsequent bytes of the messages are formatted as a single electronic log file.
-The format must be officially supported by the [QXSL](https://github.com/nextzlog/qxsl) library.
+The format must be officially supported by the [QXSL](https://github.com/autodyne/qxsl) library.
 
 ### Downstream
 
