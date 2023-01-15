@@ -21,7 +21,7 @@ Feel free to visit [ALLJA1 ATS-4](https://allja1.org).
 ## Documents
 
 - [Scaladoc](https://nextzlog.github.io/ats4/api)
-- [ATS-4 (PDF)](https://pafelog.net/ats4.pdf)
+- [ATS-4 (PDF)](https://nextzlog.dev/ats4.pdf)
 
 ## Quick Start
 
@@ -321,7 +321,7 @@ Follow [@nextzlog](https://twitter.com/nextzlog) on Twitter.
 
 ### Author
 
-[無線部開発班](https://pafelog.net)
+[無線部開発班](https://nextzlog.dev)
 
 - JG1VPP
 - JJ2ULU
