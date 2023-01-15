@@ -27,7 +27,7 @@ class PlainProgram < Program
 	end
 
 	def link()
-		'pafelog.net'
+		'nextzlog.dev'
 	end
 
 	def help()

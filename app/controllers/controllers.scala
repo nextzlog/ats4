@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Amateur Radio Contest Administration System 'ATS-4' since 2017 April 2nd
- * License: GNU General Public License v3.0 (see LICENSE)
- * Author: Journal of Hamradio Informatics (https://pafelog.net)
+ * Released under the GNU General Public License (GPL) v3 (see LICENSE)
+ * Univ. Tokyo Amateur Radio Club Development Task Force (nextzlog.dev)
 *******************************************************************************/
 package controllers
 

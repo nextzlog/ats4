@@ -3,4 +3,4 @@
 - 記載漏れ
 - 個人部門と団体部門が混在
 
-[zLogの設定方法はこちら](https://pafelog.net/real)
+[zLogの設定方法はこちら](https://nextzlog.dev/real)
