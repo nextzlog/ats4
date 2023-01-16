@@ -3,18 +3,17 @@ on:
   push:
     branches:
     - master
+permissions:
+  contents: read
+  id-token: write
+  packages: write
+  pages: write
 env:
   REGISTRY: ghcr.io
   IMG_NAME: ${{github.repository}}
 jobs:
-  BuildATS4:
+  Prepare:
     runs-on: ubuntu-latest
-    env:
-      NAME: github-actions[bot]
-      MAIL: github-actions[bot]@users.noreply.github.com
-      HEAD: ${{github.event.head_commit.message}}
-      DOCS: ./target/scala-2.13
-      OPTS: --allow-empty
     steps:
     - uses: actions/checkout@v2
     - uses: docker/login-action@v2
@@ -34,16 +33,17 @@ jobs:
       with:
         distribution: temurin
         java-version: 11
-    - uses: actions/checkout@v2
-      with:
-        ref: gh-pages
-        path: ${{env.DOCS}}
     - run: sbt doc
-    - name: 'publish docs'
-      run: |
-        git config user.name  ${{env.NAME}}
-        git config user.email ${{env.MAIL}}
-        git add api
-        git commit ${{env.OPTS}} -m '${{env.HEAD}}'
-        git push
-      working-directory: ${{env.DOCS}}
+    - uses: actions/configure-pages@v2
+    - uses: actions/jekyll-build-pages@v1
+      with:
+        source: ./target/scala-2.13
+    - uses: actions/upload-pages-artifact@v1
+  Publish:
+    needs: Prepare
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{steps.deployment.outputs.page_url}}
+    steps:
+    - uses: actions/deploy-pages@v1
