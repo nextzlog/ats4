@@ -1,11 +1,10 @@
-# UEC CONTEST DEFINED by ATS-4
+# UEC CONTEST DEFINED for ATS-4
 
 java_import 'java.time.DayOfWeek'
 java_import 'java.time.LocalDate'
-java_import 'java.time.Year'
 java_import 'java.time.ZoneId'
-java_import 'java.time.temporal.TemporalAdjusters'
 java_import 'qxsl.draft.Band'
+java_import 'qxsl.draft.Mode'
 java_import 'qxsl.draft.Qxsl'
 java_import 'qxsl.local.LocalCityBase'
 java_import 'qxsl.local.LocalCityItem'
@@ -17,19 +16,6 @@ java_import 'qxsl.ruler.RuleKit'
 java_import 'qxsl.ruler.Section'
 java_import 'qxsl.ruler.Success'
 java_import 'qxsl.utils.AssetUtil'
-
-def schedule(year, month, nth, dayOfWeek)
-	week = DayOfWeek.valueOf(dayOfWeek)
-	date = LocalDate.of(year, month, 1)
-	date.with(TemporalAdjusters.dayOfWeekInMonth(nth, week))
-end
-
-def opt_year(func_start_day, months = 9)
-	year = Year.now.getValue
-	date = func_start_day.call(year)
-	span = date.until(LocalDate.now)
-	(span.getMonths > months ? 1: 0) + year
-end
 
 # JAUTIL library
 JAUTIL = RuleKit.load('jautil.lisp').pattern
@@ -44,20 +30,19 @@ def prepare_city_base()
 	base
 end
 
-HOURDB = [17, 18, 19, 20]
-MODEDB = ['CW']
-CITYDB = prepare_city_base()
+PREFs = prepare_city_base()
 
 ALLBAND = 'オールバンド/SWL'
 SINBAND = 'シングルバンド'
 
 module BandEnum
-	B3_5 =  3500
-	B7_0 =  7000
-	B14_ = 14000
-	B21_ = 21000
-	B28_ = 28000
-	B50_ = 50000
+	B3_5 = Band.new( 3_500)
+	B7_0 = Band.new( 7_000)
+	B14_ = Band.new(14_000)
+	B21_ = Band.new(21_000)
+	B28_ = Band.new(28_000)
+	B50_ = Band.new(50_000)
+
 	def self.all
 		self.constants.map{|name| self.const_get(name)}
 	end
@@ -65,76 +50,48 @@ end
 
 SCORES = {'UEC' => 5, 'L' => 4, 'I' => 3, 'H' => 2}
 
-def verify_time(time)
-	HOURDB.include?(time.withZoneSameInstant(ZONEID).getHour)
-end
+class ProgramUEC < Program::Annual
+	def initialize()
+		super(7, 3, DayOfWeek::SATURDAY)
+	end
 
-def verify_city(city)
-	CITYDB.any?{|c| c.code == city}
-end
-
-def verify_item(item, bandDB)
-	time = item.value(Qxsl::TIME)
-	call = item.value(Qxsl::CALL)
-	band = item.value(Qxsl::BAND).intValue
-	mode = item.value(Qxsl::MODE)
-	code = item.getRcvd.value(Qxsl::CODE)
-	city,suf = code.split(/([HIL]|UEC)$/)
-	return Failure.new(item, 'bad time') if not verify_time(time)
-	return Failure.new(item, 'bad city') if not verify_city(city)
-	return Failure.new(item, 'bad band') if not bandDB.include?(band)
-	return Failure.new(item, 'bad mode') if not MODEDB.include?(mode)
-	return Success.new(item, SCORES[suf])
-end
-
-def unique_item(item)
-	call = item.value(Qxsl::CALL)
-	band = item.value(Qxsl::BAND).intValue
-	Element.new([call, band])
-end
-
-def entity_item(item)
-	band = item.value(Qxsl::BAND).intValue
-	code = item.getRcvd.value(Qxsl::CODE)
-	city,suf = code.split(/([HIL]|UEC)$/)
-	Element.new([band, city])
-end
-
-class ProgramUEC < Program
 	def name()
 		'電通大コンテスト'
 	end
+
 	def host()
 		'JA1ZGP'
 	end
+
 	def mail()
 		'uectest-info@example.com'
 	end
+
 	def link()
 		'www.ja1zgp.com/uectest_public_info'
 	end
+
 	def help()
 		AssetUtil.root.string('rules/JA1ZGP/uec.md')
 	end
+
 	def get(name)
 		eval name
 	end
-	def year()
-		opt_year(method(:getStartDay))
-	end
-	def getStartDay(year)
-		schedule(year, 7, 3, 'SATURDAY')
-	end
+
 	def getFinalDay(year)
-		schedule(year, 7, 3, 'SATURDAY')
+		getStartDay(year)
 	end
+
 	def getDeadLine(year)
 		LocalDate.of(year, 8, 31)
 	end
+
 	def limitMultipleEntry(code)
 		return 1 if code == ALLBAND
 		return 2 if code == SINBAND
 	end
+
 	def conflict(entries)
 		codes = entries.map{|e| e.code}.uniq
 		names = entries.map{|e| e.name}.uniq
@@ -147,22 +104,66 @@ class SectionUEC < Section
 		super()
 		@name = name
 		@band = band
+		@mode = [Mode.new('CW')]
+		@hour = [17, 18, 19, 20]
 	end
+
 	def name()
 		@name
 	end
+
 	def getCityList()
-		CITYDB
+		PREFs
 	end
+
 	def verify(item)
-		verify_item(JAUTIL.normalize(item, @name), @band)
+		errors = []
+		item = JAUTIL.normalize(item, @name)
+		errors.push verify_time(item.getBoth(Qxsl::TIME))
+		errors.push verify_band(item.getBoth(Qxsl::BAND))
+		errors.push verify_mode(item.getBoth(Qxsl::MODE))
+		errors.push verify_code(item.getRcvd(Qxsl::CODE))
+		return Success.new(item, points(item)) if errors.all? ''
+		return Failure.new(item, errors.grep_v('').join(', '))
 	end
+
+	def verify_time(time)
+		hour = time.value.withZoneSameInstant(ZONEID).getHour
+		@hour.include?(hour)? '': "hour: #{hour}"
+	end
+
+	def verify_band(band)
+		@band.include?(band)? '': "band: #{band}"
+	end
+
+	def verify_mode(mode)
+		@mode.include?(mode)? '': "mode: #{mode}"
+	end
+
+	def verify_code(code)
+		city,suf = code.value.split(/([HIL]|UEC)$/)
+		PREFs.any? {|c| c.code == city}? '': "code: #{code}"
+	end
+
+	def points(item)
+		code = item.getRcvd.value(Qxsl::CODE)
+		city,suf = code.split(/([HIL]|UEC)$/)
+		SCORES[suf]
+	end
+
 	def unique(item)
-		unique_item(item)
+		call = item.value(Qxsl::CALL)
+		band = item.value(Qxsl::BAND).intValue
+		Element.new([call, band])
 	end
+
 	def entity(item)
-		entity_item(item)
+		band = item.value(Qxsl::BAND).intValue
+		code = item.getRcvd.value(Qxsl::CODE)
+		city,suf = code.split(/([HIL]|UEC)$/)
+		Element.new([band, city])
 	end
+
 	def result(list)
 		score,mults = list.toArray
 		score > 0? score * mults.size: 0
@@ -173,6 +174,7 @@ class AllBandUEC < SectionUEC
 	def initialize(name)
 		super('%s部門' % name, BandEnum.all)
 	end
+
 	def code()
 		ALLBAND
 	end
@@ -180,8 +182,9 @@ end
 
 class SinBandUEC < SectionUEC
 	def initialize(band)
-		super('%s部門' % Band.new(band), [band])
+		super('%s部門' % band, [band])
 	end
+
 	def code()
 		SINBAND
 	end
@@ -192,24 +195,27 @@ class AbsenceUEC < Absence
 		super()
 		@code = code
 	end
-	def code()
-		@code
-	end
+
 	def name()
 		"#{@code} 不参加"
 	end
+
+	def code()
+		@code
+	end
 end
 
-ANIL = AbsenceUEC.new(ALLBAND)
-SNIL = AbsenceUEC.new(SINBAND)
-AQSO = AllBandUEC.new('オールバンド')
-S3_5 = SinBandUEC.new(BandEnum::B3_5)
-S7_0 = SinBandUEC.new(BandEnum::B7_0)
-S14_ = SinBandUEC.new(BandEnum::B14_)
-S21_ = SinBandUEC.new(BandEnum::B21_)
-S28_ = SinBandUEC.new(BandEnum::B28_)
-S50_ = SinBandUEC.new(BandEnum::B50_)
-ASWL = AllBandUEC.new('SWL')
+RULE = ProgramUEC.new
+RULE.add(AbsenceUEC.new(ALLBAND))
+RULE.add(AbsenceUEC.new(SINBAND))
+RULE.add(AllBandUEC.new('オールバンド'))
+RULE.add(SinBandUEC.new(BandEnum::B3_5))
+RULE.add(SinBandUEC.new(BandEnum::B7_0))
+RULE.add(SinBandUEC.new(BandEnum::B14_))
+RULE.add(SinBandUEC.new(BandEnum::B21_))
+RULE.add(SinBandUEC.new(BandEnum::B28_))
+RULE.add(SinBandUEC.new(BandEnum::B50_))
+RULE.add(AllBandUEC.new('SWL'))
 
 # returns contest definition
-ProgramUEC.new(ANIL, SNIL, AQSO, S3_5, S7_0, S14_, S21_, S28_, S50_, ASWL)
+RULE

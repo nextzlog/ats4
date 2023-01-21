@@ -1,7 +1,6 @@
 # PLAIN SAMPLE CONTEST FOR ATS-4 BEGINNERS
 
-java_import 'java.time.LocalDate'
-java_import 'java.time.Year'
+java_import 'java.time.DayOfWeek'
 java_import 'qxsl.draft.Band'
 java_import 'qxsl.draft.Code'
 java_import 'qxsl.draft.Mode'
@@ -13,7 +12,11 @@ java_import 'qxsl.ruler.Program'
 java_import 'qxsl.ruler.Section'
 java_import 'qxsl.ruler.Success'
 
-class PlainProgram < Program
+class PlainProgram < Program::Annual
+	def initialize()
+		super(4, 1, DayOfWeek::SUNDAY)
+	end
+
 	def name()
 		'サンプルコンテスト'
 	end
@@ -38,20 +41,12 @@ class PlainProgram < Program
 		eval name
 	end
 
-	def year()
-		Year.now.getValue
-	end
-
-	def getStartDay(year)
-		LocalDate.of(year, 1, 1)
-	end
-
 	def getFinalDay(year)
-		LocalDate.of(year, 1, 1)
+		getStartDay(year)
 	end
 
 	def getDeadLine(year)
-		LocalDate.of(year, 2, 1)
+		getStartDay(year).plusMonths(1)
 	end
 
 	def limitMultipleEntry(code)
@@ -93,16 +88,16 @@ class PlainSection < Section
 	end
 
 	def verify_band(band)
-		@band.include?(band)? '': "bad band: #{band}"
+		@band.include?(band)? '': "band: #{band}"
 	end
 
 	def verify_mode(mode)
-		@mode.include?(mode)? '': "bad mode: #{mode}"
+		@mode.include?(mode)? '': "mode: #{mode}"
 	end
 
 	def verify_code(code)
 		code = code.value.sub(/^599?/, '')
-		JCCs.any? {|c| c.code == code}? '': "bad code: #{code}"
+		JCCs.any? {|c| c.code == code}? '': "code: #{code}"
 	end
 
 	def points(item)
@@ -131,12 +126,11 @@ end
 
 JCCs = LocalCityBase.load('qxsl/local/city.ja').toList.select{|c| c.code.length > 3}
 
-RULE = PlainProgram.new(
-	PlainSection.new('14MHz CW部門', [Band.new(14000)], [Mode.new('CW')]),
-	PlainSection.new('21MHz CW部門', [Band.new(21000)], [Mode.new('CW')]),
-	PlainSection.new('28MHz CW部門', [Band.new(28000)], [Mode.new('CW')]),
-	PlainSection.new('50MHz CW部門', [Band.new(50000)], [Mode.new('CW')]),
-)
+RULE = PlainProgram.new
+RULE.add(PlainSection.new('14MHz CW部門', [Band.new(14000)], [Mode.new('CW')]))
+RULE.add(PlainSection.new('21MHz CW部門', [Band.new(21000)], [Mode.new('CW')]))
+RULE.add(PlainSection.new('28MHz CW部門', [Band.new(28000)], [Mode.new('CW')]))
+RULE.add(PlainSection.new('50MHz CW部門', [Band.new(50000)], [Mode.new('CW')]))
 
 # returns contest definition
 RULE
