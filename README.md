@@ -82,10 +82,6 @@ server {
   server_name $name;
   location / {
     proxy_pass http://ATS4:9000;
-    location /admin/ {
-      allow 127.0.0.1;
-      deny all;
-    }
     location ~ /admin {
       allow 127.0.0.1;
       deny all;
@@ -135,10 +131,6 @@ server {
   server_name localhost;
   location / {
     proxy_pass http://ATS4:9000;
-    location /admin/ {
-      allow 127.0.0.1;
-      deny all;
-    }
     location ~ /admin {
       allow 127.0.0.1;
       deny all;
