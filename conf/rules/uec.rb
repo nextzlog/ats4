@@ -72,7 +72,7 @@ class ProgramUEC < Program::Annual
 	end
 
 	def help()
-		AssetUtil.root.string('rules/JA1ZGP/uec.md')
+		AssetUtil.root.string('rules/ats.md')
 	end
 
 	def get(name)

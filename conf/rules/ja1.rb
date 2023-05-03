@@ -30,7 +30,7 @@ class ProgramJA1 < Program::Annual
 	end
 
 	def help()
-		AssetUtil.root.string('rules/JA1ZLO/ja1.md')
+		AssetUtil.root.string('rules/ja1.md')
 	end
 
 	def get(name)
