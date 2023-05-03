@@ -1,40 +1,51 @@
-# PLAIN SAMPLE CONTEST FOR ATS-4 BEGINNERS
+# ABSTRACT CONTEST FOR ATS-4
 
+java_import 'java.net.URL'
 java_import 'java.time.DayOfWeek'
+java_import 'java.time.ZoneId'
 java_import 'qxsl.draft.Band'
-java_import 'qxsl.draft.Code'
 java_import 'qxsl.draft.Mode'
 java_import 'qxsl.draft.Qxsl'
 java_import 'qxsl.local.LocalCityBase'
+java_import 'qxsl.ruler.Absence'
 java_import 'qxsl.ruler.Element'
 java_import 'qxsl.ruler.Failure'
 java_import 'qxsl.ruler.Program'
+java_import 'qxsl.ruler.RuleKit'
 java_import 'qxsl.ruler.Section'
 java_import 'qxsl.ruler.Success'
+java_import 'qxsl.utils.AssetUtil'
 
-class PlainProgram < Program::Annual
-	def initialize()
-		super(4, 1, DayOfWeek::SUNDAY)
+JAUTIL = RuleKit.load('jautil.lisp').pattern
+ZONEID = ZoneId.of('Asia/Tokyo')
+
+class ProgramATS < Program::Annual
+	def initialize(name, host, mail, link, month, week, day)
+		super(month, week, day)
+		@name = name
+		@host = host
+		@mail = mail
+		@link = link
 	end
 
 	def name()
-		'サンプルコンテスト'
+		@name
 	end
 
 	def host()
-		'JA1ZLO'
+		@host
 	end
 
 	def mail()
-		'ja1zlo@example.com'
+		@mail
 	end
 
 	def link()
-		'nextzlog.dev'
+		@link
 	end
 
 	def help()
-		'未対応の交信記録を提出した場合は、運営に報告が必要です。'
+		AssetUtil.root.string('rules/ats.md')
 	end
 
 	def get(name)
@@ -54,16 +65,34 @@ class PlainProgram < Program::Annual
 	end
 
 	def conflict(entries)
-		false
+		entries.length > 1
 	end
 end
 
-class PlainSection < Section
-	def initialize(name, band, mode)
+class AbsenceATS < Absence
+	def initialize(code)
+		super()
+		@code = code
+	end
+
+	def name()
+		"#{@code} 不参加"
+	end
+
+	def code()
+		@code
+	end
+end
+
+class SectionATS < Section
+	def initialize(name, band, mode, zdat = nil)
 		super()
 		@name = name
 		@band = band
 		@mode = mode
+		@hour = (0..23).to_a
+		@base = loadDAT(zdat).toList
+		@mult = @base.map{|c| c.code}
 	end
 
 	def name()
@@ -71,33 +100,33 @@ class PlainSection < Section
 	end
 
 	def code()
-		'サンプル部門'
+		'部門'
 	end
 
 	def getCityList()
-		JCCs
+		@base
+	end
+
+	def trim()
+		/$/
 	end
 
 	def verify(item)
+		item = JAUTIL.normalize(item, @name)
+		band = item.getBoth(Qxsl::BAND)
+		mode = item.getBoth(Qxsl::MODE)
+		time = item.getBoth(Qxsl::TIME)
+		hour = time.value.withZoneSameInstant(ZONEID).getHour
+		code = item.getRcvd(Qxsl::CODE).value.sub(/^599?/, '')
+		city = code.sub(trim, '')
 		errors = []
-		errors.push verify_band(item.getBoth(Qxsl::BAND))
-		errors.push verify_mode(item.getBoth(Qxsl::MODE))
-		errors.push verify_code(item.getRcvd(Qxsl::CODE))
-		return Success.new(item, points(item)) if errors.all? ''
-		return Failure.new(item, errors.grep_v('').join(', '))
-	end
-
-	def verify_band(band)
-		@band.include?(band)? '': "band: #{band}"
-	end
-
-	def verify_mode(mode)
-		@mode.include?(mode)? '': "mode: #{mode}"
-	end
-
-	def verify_code(code)
-		code = code.value.sub(/^599?/, '')
-		JCCs.any? {|c| c.code == code}? '': "code: #{code}"
+		errors.push("band: #{band}") unless @band.include?(band)
+		errors.push("mode: #{mode}") unless @mode.include?(mode)
+		errors.push("hour: #{hour}") unless @hour.include?(hour)
+		errors.push("code: #{code}") unless @mult.include?(city)
+		errors.push("code: #{code}") unless trim.match?(code)
+		return Success.new(item, points(item)) if errors.empty?
+		return Failure.new(item, errors.join(', '))
 	end
 
 	def points(item)
@@ -112,25 +141,29 @@ class PlainSection < Section
 	end
 
 	def entity(item)
-		# multiplier = [band, code]
+		# multiplier = [band, city]
 		band = item.getBoth(Qxsl::BAND)
 		code = item.getRcvd(Qxsl::CODE)
-		Element.new([band, code])
+		city = code.value.sub(trim, '')
+		Element.new([band, city])
 	end
 
 	def result(list)
 		score,mults = list.toArray
 		score > 0? score * mults.size: 0
 	end
+
+	def loadDAT(url)
+		return JAUTIL.get('CITY-BASE') if url.nil?
+		text = AssetUtil.root.http(URL.new(url), 'SJIS')
+		text = text.gsub(/^(\w+) +(.+)$/, '\2 \1')
+		LocalCityBase.read(text.lines[1..-2].join)
+	end
 end
 
-JCCs = LocalCityBase.load('qxsl/local/city.ja').toList.select{|c| c.code.length > 3}
-
-RULE = PlainProgram.new
-RULE.add(PlainSection.new('14MHz CW部門', [Band.new(14000)], [Mode.new('CW')]))
-RULE.add(PlainSection.new('21MHz CW部門', [Band.new(21000)], [Mode.new('CW')]))
-RULE.add(PlainSection.new('28MHz CW部門', [Band.new(28000)], [Mode.new('CW')]))
-RULE.add(PlainSection.new('50MHz CW部門', [Band.new(50000)], [Mode.new('CW')]))
-
-# returns contest definition
+RULE = ProgramATS.new('CQJA', 'JA1RL', 'cq@jarl.com', 'jarl.com', 4, 1, DayOfWeek::SUNDAY)
+RULE.add(SectionATS.new('14MHz PH', [Band.new(14000)], [Mode.new('SSB'), Mode.new('FM')]))
+RULE.add(SectionATS.new('21MHz PH', [Band.new(21000)], [Mode.new('SSB'), Mode.new('FM')]))
+RULE.add(SectionATS.new('28MHz PH', [Band.new(28000)], [Mode.new('SSB'), Mode.new('FM')]))
+RULE.add(SectionATS.new('50MHz PH', [Band.new(50000)], [Mode.new('SSB'), Mode.new('FM')]))
 RULE

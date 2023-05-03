@@ -1,9 +1,6 @@
 # REAL-TIME CONTEST DEFINED for ATS-4
 
-java_import 'java.time.DayOfWeek'
-java_import 'qxsl.ruler.Program'
-java_import 'qxsl.ruler.RuleKit'
-java_import 'qxsl.utils.AssetUtil'
+require 'rules/ats'
 
 LISP = <<-EOS
 (load "qxsl/ruler/online.lisp")
@@ -11,36 +8,21 @@ LISP = <<-EOS
 RT
 EOS
 
-ONLINE = RuleKit.forName('elva').eval(LISP).contest
+RTC = RuleKit.forName('elva').eval(LISP).contest
 
-class ProgramRTC < Program::Annual
+NAME = 'リアルタイムコンテスト'
+HOST = '東大無線部'
+MAIL = 'allja1@ja1zlo.u-tokyo.org'
+LINK = 'ja1zlo.u-tokyo.org/rt'
+
+class ProgramRTC < ProgramATS
 	def initialize()
-		super(7, 4, DayOfWeek::MONDAY)
-		ONLINE.each{|section| add(section)}
-	end
-
-	def name()
-		'リアルタイムコンテスト'
-	end
-
-	def host()
-		'東大無線部'
-	end
-
-	def mail()
-		'allja1@ja1zlo.u-tokyo.org'
-	end
-
-	def link()
-		'ja1zlo.u-tokyo.org/rt'
+		super(NAME, HOST, MAIL, LINK, 7, 4, DayOfWeek::MONDAY)
+		RTC.each{|section| add(section)}
 	end
 
 	def help()
 		AssetUtil.root.string('rules/rtc.md')
-	end
-
-	def get(name)
-		eval name
 	end
 
 	def getFinalDay(year)
@@ -55,16 +37,11 @@ class ProgramRTC < Program::Annual
 		true
 	end
 
-	def limitMultipleEntry(code)
-		1
-	end
-
 	def conflict(entries)
-		mul = entries.map{|e| e.name.include?("団体")}.any?
-		sin = entries.map{|e| e.name.include?("個人")}.any?
+		mul = entries.map{|e| e.name.include?('団体')}.any?
+		sin = entries.map{|e| e.name.include?('個人')}.any?
 		mul && sin
 	end
 end
 
-# returns contest definition
 ProgramRTC.new
