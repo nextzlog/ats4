@@ -70,7 +70,7 @@ ats4.rules=/rules.rb
 EOS
 
 cat << EOS > rules.rb
-require 'rules/sample/plain'
+require 'rules/ats'
 RULE
 EOS
 
@@ -166,20 +166,20 @@ Add the path to the contest definition file to `ats.conf` like this:
 
 ```ini
 # Contest
-# ats4.rules=/rules/JA1ZLO/ja1.rb
-# ats4.rules=/rules/JA1ZGP/uec.rb
+# ats4.rules=/rules/ja1.rb
+# ats4.rules=/rules/uec.rb
 ats4.rules=/rules.rb
 ```
 
 In addition, create `rules.rb` as follows:
 
 ```rb
-require 'rules/sample/plain'
+require 'rules/ats'
 RULE
 ```
 
 Of course, you can also modify `rules.rb` to customize it for your contest.
-See [`plain.rb`](conf/rules/sample/plain.rb) for example.
+See [`ats.rb`](conf/rules/ats.rb) for example.
 
 ### Run
 

@@ -1,11 +1,17 @@
-# REAL-TIME CONONLINE DEFINED for ATS-4
+# REAL-TIME CONTEST DEFINED for ATS-4
 
 java_import 'java.time.DayOfWeek'
 java_import 'qxsl.ruler.Program'
 java_import 'qxsl.ruler.RuleKit'
 java_import 'qxsl.utils.AssetUtil'
 
-ONLINE = RuleKit.load('/rules/JA1ZLO/rtc.lisp').contest
+LISP = <<-EOS
+(load "qxsl/ruler/online.lisp")
+(defun time? it #t)
+RT
+EOS
+
+ONLINE = RuleKit.forName('elva').eval(LISP).contest
 
 class ProgramRTC < Program::Annual
 	def initialize()
@@ -30,7 +36,7 @@ class ProgramRTC < Program::Annual
 	end
 
 	def help()
-		AssetUtil.root.string('rules/JA1ZLO/rtc.md')
+		AssetUtil.root.string('rules/rtc.md')
 	end
 
 	def get(name)
