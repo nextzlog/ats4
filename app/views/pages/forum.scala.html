@@ -1,7 +1,7 @@
-@()(implicit ats: ATS, rule: Program, admin: Boolean)
+@()(implicit in: Injections, admin: Boolean)
 
 @comps.page(title = "皆様の声", nav = "forum") {
-	@for(station <- ats.stations().list().asScala.filter(_.note.nonEmpty)) {
+	@for(station <- in.ats.stations().list().asScala.filter(_.note.nonEmpty)) {
 		<figure>
 			<blockquote class='blockquote' id='@station.call'>
 				@station.note

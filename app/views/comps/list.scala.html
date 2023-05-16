@@ -1,4 +1,4 @@
-@(field: Field, id: String)(implicit c: Configuration)
+@(field: Field, id: String)(implicit in: Injections)
 
 @import java.time.ZonedDateTime.now
 @import java.time.format.DateTimeFormatter.ofPattern

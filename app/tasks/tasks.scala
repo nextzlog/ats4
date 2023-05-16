@@ -15,17 +15,17 @@ import qxsl.ruler._
 import qxsl.sheet.{SheetManager, SheetOrTable}
 
 import ats4.data._
-import ats4.root.ATS
 
 import scala.jdk.CollectionConverters._
 
-import play.api.{Logger, Configuration => Cfg}
+import play.api.Logger
 import play.api.data.FormBinding
 import play.api.mvc.{AnyContent, Request, RequestHeader}
 import play.filters.csrf.CSRF
-import play.libs.mailer.{Email, MailerClient}
+import play.libs.mailer.Email
 import play.twirl.api.Html
 
+import injects.Injections
 import models._
 import views.html.{pages, warns}
 
@@ -36,13 +36,10 @@ import org.apache.commons.mail.EmailException
  * 書類提出のリクエストを受け取り、得点計算と登録とメール返信までの処理を実行します。
  *
  *
- * @param smtp メールクライアントの依存性注入
- * @param cfg アプリケーションの設定の依存性注入
- * @param ats データベースの依存性注入
- * @param rule コンテスト規約の依存性注入
+ * @param in 依存性注入
  * @param admin 管理者権限
  */
-class UploadTask(implicit smtp: MailerClient, cfg: Cfg, ats: ATS, rule: Program, admin: Boolean) {
+class UploadTask(implicit in: Injections, admin: Boolean) {
 	/**
 	 * 書類提出のリクエストを処理して、確認画面のページのビューを返します。
 	 *
@@ -64,19 +61,19 @@ class UploadTask(implicit smtp: MailerClient, cfg: Cfg, ats: ATS, rule: Program,
 			station.mail = post.station.mail
 			station.note = post.station.note
 			station.uuid = post.station.uuid.toString
-			val prevs = ats.archives().byCall(station.call)
+			val prevs = in.ats.archives().byCall(station.call)
 			val kepts = prevs.asScala.map(f => f.file -> f).toMap
-			ats.drop(station.call)
-			ats.stations().push(station)
+			in.ats.drop(station.call)
+			in.ats.stations().push(station)
 			for (up <- post.uploads if up.keep) util.Try {
-				ats.archives().push(kepts(up.file))
-				ats.messages().push(kepts(up.file))
+				in.ats.archives().push(kepts(up.file))
+				in.ats.messages().push(kepts(up.file))
 			}
 			for (file <- files) util.Try {
 				val archive = station.archive().load(file.ref.path)
 				archive.file = file.filename
-				ats.archives().push(archive)
-				ats.messages().push(archive)
+				in.ats.archives().push(archive)
+				in.ats.messages().push(archive)
 			}.recover {
 				case ex => Logger(this.getClass).error(s"failed: $post", ex)
 			}
@@ -84,16 +81,16 @@ class UploadTask(implicit smtp: MailerClient, cfg: Cfg, ats: ATS, rule: Program,
 			if (!list.isEmpty) util.Try {
 				val archive = station.archive().load(list)
 				archive.file = ""
-				ats.archives().push(archive)
-				ats.messages().push(archive)
+				in.ats.archives().push(archive)
+				in.ats.messages().push(archive)
 			}
 			for (sect <- post.entries) {
 				val ranking = station.ranking()
 				ranking.sect = sect.sect
 				ranking.city = sect.city
-				ats.rankings().push(ranking)
+				in.ats.rankings().push(ranking)
 			}
-			ats.update(station.call, rule)
+			in.ats.update(station.call, in.rule)
 			Logger(this.getClass).info(s"accept: $post")
 			new NotifyTask().send(station)
 			pages.proof(post.station.call)
@@ -109,20 +106,19 @@ class UploadTask(implicit smtp: MailerClient, cfg: Cfg, ats: ATS, rule: Program,
  *
  *
  * @param req リクエストヘッダ
- * @param ats データベースの依存性注入
- * @param rule コンテスト規約の依存性注入
+ * @param in 依存性注入
  * @param admin 管理者権限
  */
-class UpdateTask(implicit req: RequestHeader, ats: ATS, rule: Program, admin: Boolean) {
+class UpdateTask(implicit req: RequestHeader, in: Injections, admin: Boolean) {
 	/**
 	 * 得点計算を再実行します。
 	 *
 	 * @return 管理画面のページ
 	 */
 	def accept: Html = {
-		for (message <- ats.messages().list().asScala) util.Try(ats.messages().drop(message))
-		for (archive <- ats.archives().list().asScala) util.Try(ats.messages().push(archive))
-		for (station <- ats.stations().list().asScala) ats.update(station.call, rule)
+		for (message <- in.ats.messages().list().asScala) util.Try(in.ats.messages().drop(message))
+		for (archive <- in.ats.archives().list().asScala) util.Try(in.ats.messages().push(archive))
+		for (station <- in.ats.stations().list().asScala) in.ats.update(station.call, in.rule)
 		pages.lists()
 	}
 }
@@ -133,11 +129,10 @@ class UpdateTask(implicit req: RequestHeader, ats: ATS, rule: Program, admin: Bo
  *
  *
  * @param req リクエストヘッダ
- * @param ats データベースの依存性注入
- * @param rule コンテスト規約の依存性注入
+ * @param in 依存性注入
  * @param admin 管理者権限
  */
-class DeleteTask(implicit req: RequestHeader, ats: ATS, rule: Program, admin: Boolean) {
+class DeleteTask(implicit req: RequestHeader, in: Injections, admin: Boolean) {
 	/**
 	 * 指定された呼出符号の参加局を削除します。
 	 *
@@ -145,7 +140,7 @@ class DeleteTask(implicit req: RequestHeader, ats: ATS, rule: Program, admin: Bo
 	 * @return 管理画面のページ
 	 */
 	def delete(call: String): Html = util.Try {
-		ats.drop(call)
+		in.ats.drop(call)
 		Logger(getClass).info(s"deleted: $call")
 		pages.lists()
 	}.getOrElse(pages.lists())
@@ -156,8 +151,8 @@ class DeleteTask(implicit req: RequestHeader, ats: ATS, rule: Program, admin: Bo
 	 * @return 管理画面のページ
 	 */
 	def clear = {
-		ats.deleteTables()
-		ats.createTables()
+		in.ats.deleteTables()
+		in.ats.createTables()
 		Logger(getClass).info("all records deleted")
 		pages.lists()
 	}
@@ -169,9 +164,9 @@ class DeleteTask(implicit req: RequestHeader, ats: ATS, rule: Program, admin: Bo
  *
  *
  * @param req 交信記録を含むリクエスト
- * @param ats データベースの依存性注入
+ * @param in 依存性注入
  */
-class VerifyTask(implicit req: Request[AnyContent], ats: ATS) {
+class VerifyTask(implicit req: Request[AnyContent], in: Injections) {
 	/**
 	 * 交信記録を処理可能か確認して結果のメッセージを返します。
 	 *
@@ -179,7 +174,7 @@ class VerifyTask(implicit req: Request[AnyContent], ats: ATS) {
 	 */
 	def accept = util.Try {
 		val logs = req.body.asMultipartFormData.get.files.map(_.ref)
-		val bads = logs.map(ats.archives().decodable(_).isPresent())
+		val bads = logs.map(in.ats.archives().decodable(_).isPresent())
 		if (bads.exists(identity)) warns.unsup() else warns.ready()
 	}.recover {
 		case ex: Chset => warns.chset()
@@ -219,15 +214,15 @@ class FillInTask(implicit req: Request[AnyContent]) {
  *
  * @param call 参加局の呼出符号
  * @param file 照会するファイルの名前
- * @param ats データベースの依存性注入
+ * @param in 依存性注入
  */
-class FileDLTask(call: String, file: String)(implicit ats: ATS) {
+class FileDLTask(call: String, file: String)(implicit in: Injections) {
 	/**
 	 * 交信記録のファイルの内容を返します。
 	 *
 	 * @return 交信記録のバイト列
 	 */
-	def get = ats.archives().byCall(call).asScala.find(_.file == file).get.data
+	def get = in.ats.archives().byCall(call).asScala.find(_.file == file).get.data
 }
 
 
@@ -235,11 +230,9 @@ class FileDLTask(call: String, file: String)(implicit ats: ATS) {
  * 書類提出を受理した内容のメールを参加局に送信します。
  *
  *
- * @param smtp メールクライアントの依存性注入
- * @param ats データベースの依存性注入
- * @param rule コンテスト規約の依存性注入
+ * @param in 依存性注入
  */
-class NotifyTask(implicit smtp: MailerClient, ats: ATS, rule: Program) {
+class NotifyTask(implicit in: Injections) {
 	/**
 	 * 指定された参加局に対してメールを送信します。
 	 *
@@ -248,12 +241,12 @@ class NotifyTask(implicit smtp: MailerClient, ats: ATS, rule: Program) {
 	def send(station: StationData): Unit = util.Try {
 		val mail = new Email
 		val text = views.txt.pages.email(station.call).body.trim
-		mail.setFrom("%s <%s>".format(rule.host, rule.mail))
+		mail.setFrom("%s <%s>".format(in.rule.host, in.rule.mail))
 		mail.addTo("%s <%s>".format(station.call, station.mail))
-		mail.addBcc(rule.mail)
+		mail.addBcc(in.rule.mail)
 		mail.setSubject(text.linesIterator.toSeq.head.split(";").head.trim)
 		mail.setBodyText(text.linesWithSeparators.toSeq.tail.mkString.trim)
-		smtp.send(mail)
+		in.mc.send(mail)
 	}.recover {
 		case ex: EmailException => Logger("mail").error("MAIL ERROR!", ex)
 	}
@@ -266,11 +259,9 @@ class NotifyTask(implicit smtp: MailerClient, ats: ATS, rule: Program) {
  *
  * @param out
  * @param token 参加局を識別するトークン
- * @param cfg アプリケーションの設定の依存性注入
- * @param ats データベースの依存性注入
- * @param rule コンテスト規約の依存性注入
+ * @param in 依存性注入
  */
-class SocketTask(out: ActorRef, token: UUID)(implicit cfg: Cfg, ats: ATS, rule: Program) extends Actor {
+class SocketTask(out: ActorRef, token: UUID)(implicit in: Injections) extends Actor {
 	/**
 	 * 交信記録を読み取るデコーダです。
 	 */
@@ -293,13 +284,13 @@ class SocketTask(out: ActorRef, token: UUID)(implicit cfg: Cfg, ats: ATS, rule: 
 	 * @return 得点状況をを格納したJSONの文字列
 	 */
 	def push(data: Array[Byte]): String = {
-		val station = ats.stations().byUUID(token).get(0)
-		val ranking = ats.rankings().byCall(station.call)
+		val station = in.ats.stations().byUUID(token).get(0)
+		val ranking = in.ats.rankings().byCall(station.call)
 		val qsoDiff = decoder.unpack(data.tail).asScala
-		ats.messages().drop(station.call, qsoDiff.take(data.head.toInt & 0xFF).asJava)
-		ats.messages().push(station.call, qsoDiff.drop(data.head.toInt & 0xFF).asJava)
-		ats.update(station.call, rule);
+		in.ats.messages().drop(station.call, qsoDiff.take(data.head.toInt & 0xFF).asJava)
+		in.ats.messages().push(station.call, qsoDiff.drop(data.head.toInt & 0xFF).asJava)
+		in.ats.update(station.call, in.rule);
 		Logger(this.getClass).info(s"update: $station.call")
-		if (rule.finish()) new RankingTableToJson().json else ""
+		if (in.rule.finish()) new RankingTableToJson().json else ""
 	}
 }

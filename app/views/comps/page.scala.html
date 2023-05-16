@@ -1,10 +1,10 @@
-@(title: String = "", nav: String = "")(content: Html)(implicit ats: ATS, rule: Program, admin: Boolean)
+@(title: String = "", nav: String = "")(content: Html)(implicit in: Injections, admin: Boolean)
 
 
 <!DOCTYPE html>
 <html lang='ja'>
 	<head>
-		<title>@rule.name() ATS-4 - @rule.host()</title>
+		<title>@in.rule.name() ATS-4 - @in.rule.host()</title>
 		<meta name='viewport' content='width=device-width, initial-scale=1'>
 		@comps.head()
 		<!--assets-->
@@ -30,11 +30,11 @@
 							@navi(href = routes.Index.calls.url, label = "全参加局", active = nav == "calls", icon = "fas fa-user-alt")
 							@navi(href = routes.Index.forum.url, label = "皆様の声", active = nav == "forum", icon = "fas fa-comments")
 							@navi(href = routes.Index.guide.url, label = "提出方法", active = nav == "guide", icon = "fas fa-question")
-							@navi(href = s"mailto:${rule.mail}", label = "運営に連絡", icon = "fas fa-envelope")
+							@navi(href = s"mailto:${in.rule.mail}", label = "運営に連絡", icon = "fas fa-envelope")
 						}
 					</div>
 					<div class='navbar-nav ms-auto'>
-						@navi(href = s"https://${rule.link()}", label = rule.host())
+						@navi(href = s"https://${in.rule.link()}", label = in.rule.host())
 						@navi(href = "https://github.com/nextzlog/ats4", label = "GitHub", icon = "fab fa-github")
 						@navi(href = "https://nextzlog.dev", label = "無線部開発班")
 					</div>

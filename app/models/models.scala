@@ -18,9 +18,10 @@ import ats4.root.ATS
 
 import scala.jdk.CollectionConverters._
 
-import play.api.{Configuration => Cfg}
 import play.api.data.{Form, Forms, OptionalMapping}
 import play.api.libs.json.{Json, JsValue}
+
+import injects.Injections
 
 /**
  * 部門選択のフォームに入力されたデータです。
@@ -157,14 +158,13 @@ object ContestFormData {
 	 * 指定された呼出符号の参加局の登録情報を返します。
 	 *
 	 * @param call 確認対象の呼出符号
-	 * @param ats データベースの依存性注入
-	 * @param rule コンテスト規約の依存性注入
+	 * @param in 依存性注入
 	 * @return 初期値が入力されたフォームデータ
 	 */
-	def apply(call: String)(implicit ats: ATS, rule: Program) = {
-		val station = ats.stations().byCall(call).get(0)
-		val entries = ats.rankings().byCall(call).asScala.toList
-		val uploads = ats.archives().byCall(call).asScala.toList
+	def apply(call: String)(implicit in: Injections) = {
+		val station = in.ats.stations().byCall(call).get(0)
+		val entries = in.ats.rankings().byCall(call).asScala.toList
+		val uploads = in.ats.archives().byCall(call).asScala.toList
 		val archive = uploads.filter(_.file.nonEmpty)
 		val marshal = uploads.filter(_.file.isEmpty)
 		new ContestFormData(
@@ -189,18 +189,17 @@ object ContestFormData {
  * 部門選択のフォームとデータの関連付けと検証を実装します。
  *
  *
- * @param ats データベースの依存性注入
- * @param rule コンテスト規約の依存性注入
+ * @param in 依存性注入
  */
-class SectionForm(implicit ats: ATS, rule: Program) extends Form[SectionFormData](
+class SectionForm(implicit in: Injections) extends Form[SectionFormData](
 	Forms.mapping(
 		"sect" -> Forms.text,
 		"city" -> Forms.text
 	)
 	(SectionFormData.apply)
 	(SectionFormData.unapply).verifying(s => {
-		rule.section(s.sect).isAbsence() ||
-		rule.section(s.sect).getCityList().asScala.exists(_.name() == s.city)
+		in.rule.section(s.sect).isAbsence() ||
+		in.rule.section(s.sect).getCityList().asScala.exists(_.name() == s.city)
 	}), Map.empty, Nil, None
 )
 
@@ -209,10 +208,9 @@ class SectionForm(implicit ats: ATS, rule: Program) extends Form[SectionFormData
  * 共通事項のフォームとデータの関連付けと検証を実装します。
  *
  *
- * @param ats データベースの依存性注入
- * @param rule コンテスト規約の依存性注入
+ * @param in 依存性注入
  */
-class StationForm(implicit ats: ATS, rule: Program) extends Form[StationFormData](
+class StationForm(implicit in: Injections) extends Form[StationFormData](
 	Forms.mapping(
 		"call" -> CallSign.mapping,
 		"name" -> Forms.nonEmptyText,
@@ -260,15 +258,15 @@ object CallSign {
  * トークンのフォームの検証を実装します。
  *
  *
- * @param ats データベースの依存性注入
+ * @param in 依存性注入
  */
-class Token(implicit ats: ATS) {
+class Token(implicit in: Injections) {
 	/**
 	 * 重複を排除してトークンを発行します。
 	 *
 	 * @return トークン
 	 */
-	def newUUID = ats.stations().createUUID()
+	def newUUID = in.ats.stations().createUUID()
 
 	/**
 	 * 呼出符号のマッピングを構築します。
@@ -283,10 +281,9 @@ class Token(implicit ats: ATS) {
  * 交信記録のファイルのフォームとデータの関連付けと検証を実装します。
  *
  *
- * @param ats データベースの依存性注入
- * @param rule コンテスト規約の依存性注入
+ * @param in 依存性注入
  */
-class ArchiveForm(implicit ats: ATS, rule: Program) extends Form[ArchiveFormData](
+class ArchiveForm(implicit in: Injections) extends Form[ArchiveFormData](
 	Forms.mapping(
 		"file" -> Forms.nonEmptyText,
 		"keep" -> Forms.boolean,
@@ -317,10 +314,9 @@ class MarshalForm extends Form[MarshalFormData](
  * 書類提出のフォームとデータの関連付けと検証を実装します。
  *
  *
- * @param ats データベースの依存性注入
- * @param rule コンテスト規約の依存性注入
+ * @param in 依存性注入
  */
-class ContestForm(implicit ats: ATS, rule: Program) extends Form[ContestFormData](
+class ContestForm(implicit in: Injections) extends Form[ContestFormData](
 	Forms.mapping(
 		"station" -> new StationForm().mapping,
 		"entries" -> Forms.seq(new SectionForm().mapping).verifying(new Conflict().ok(_)),
@@ -336,9 +332,9 @@ class ContestForm(implicit ats: ATS, rule: Program) extends Form[ContestFormData
  * 部門選択のフォームの整合性を検証します。
  *
  *
- * @param rule コンテスト規約の依存性注入
+ * @param in 依存性注入
  */
-class Conflict(implicit rule: Program) {
+class Conflict(implicit in: Injections) {
 	/**
 	 * 指定された部門選択の整合性を検証します。
 	 *
@@ -346,8 +342,8 @@ class Conflict(implicit rule: Program) {
 	 * @return 受理可能な場合は真
 	 */
 	def ok(sectionList: Seq[SectionFormData]): Boolean = {
-		val rules = sectionList.map(_.sect).map(rule.section)
-		! rule.conflict(rules.filterNot(_.isAbsence).toArray)
+		val rules = sectionList.map(_.sect).map(in.rule.section)
+		! in.rule.conflict(rules.filterNot(_.isAbsence).toArray)
 	}
 }
 
@@ -356,16 +352,15 @@ class Conflict(implicit rule: Program) {
  * 全ての部門における全ての参加局の得点状況を格納したJSONデータを生成します。
  *
  *
- * @param ats データベースの依存性注入
- * @param rule コンテスト規約の依存性注入
+ * @param in 依存性注入
  */
-class RankingTableToJson(implicit ats: ATS, rule: Program) {
+class RankingTableToJson(implicit in: Injections) {
 	/**
 	 * JSONの文字列を生成します。
 	 *
 	 * @return JSONの文字列
 	 */
-	def json = Json.stringify(toJS(rule))
+	def json = Json.stringify(toJS(in.rule))
 
 	/**
 	 * 指定された規約に対し、得点状況を格納したJSONの文字列を生成します。
@@ -384,7 +379,7 @@ class RankingTableToJson(implicit ats: ATS, rule: Program) {
 	 * @return JSONの文字列
 	 */
 	def toJS(rule: Section): JsValue = {
-		Json.toJson(ats.rankings().bySect(rule).asScala.map(toJS))
+		Json.toJson(in.ats.rankings().bySect(rule).asScala.map(toJS))
 	}
 
 	/**
@@ -448,11 +443,11 @@ object DevelopFormData {
 	/**
 	 * 規約の草案のフォームの内容を返します。
 	 *
-	 * @param cfg アプリケーションの設定
+	 * @param in 依存性注入
 	 * @return フォームの内容
 	 */
-	def data(implicit cfg: Cfg) = DevelopFormData(
-		rule = RuleKit.read(cfg.get[String]("ats4.draft")),
+	def data(implicit in: Injections) = DevelopFormData(
+		rule = RuleKit.read(in.get("ats4.draft")),
 		data = ""
 	)
 }

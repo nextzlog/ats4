@@ -1,11 +1,11 @@
-@(call: String)(implicit ats: ATS, rule: Program)
+@(call: String)(implicit in: Injections)
 
-@{rule.name}書類提出の完了 ; 空白を除く先頭行はメールの件名
+@{in.rule.name}書類提出の完了 ; 空白を除く先頭行はメールの件名
 
 @{call}様
 
-この度は@{rule.name()}に参加いただきありがとうございます。
-@for(ranking <- ats.rankings().byCall(call)) {
+この度は@{in.rule.name()}に参加いただきありがとうございます。
+@for(ranking <- in.ats.rankings().byCall(call)) {
 @{ranking.sect}
 (運用地@{ranking.city})
 }
@@ -16,7 +16,7 @@
 このメールに心当たりがない場合はお手数ですが下記の連絡先までご連絡ください。
 
 ---
-@{rule.host()}
-@{rule.name()}受付担当係
-@{rule.link()}
-@{rule.mail()}
+@{in.rule.host()}
+@{in.rule.name()}受付担当係
+@{in.rule.link()}
+@{in.rule.mail()}

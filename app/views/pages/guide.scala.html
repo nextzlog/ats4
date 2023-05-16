@@ -1,4 +1,4 @@
-@()(implicit ats: ATS, rule: Program, admin: Boolean)
+@()(implicit in: Injections, admin: Boolean)
 
 @comps.page(title = "提出方法", nav = "guide") {
 	<div class='card my-3'>
@@ -39,7 +39,7 @@
 	</div>
 	<script>
 	$(function() {
-		$('div#help').append(marked.parse(`@{rule.help()}`));
+		$('div#help').append(marked.parse(`@{in.rule.help()}`));
 	});
 	</script>
 }

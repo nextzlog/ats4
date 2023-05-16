@@ -1,4 +1,4 @@
-@()(implicit ats: ATS, rule: Program, admin: Boolean)
+@()(implicit in: Injections, admin: Boolean)
 
 @comps.page(title = "全参加局", nav = "calls") {
 	<table class='table table-hover font-monospace'>
@@ -10,14 +10,14 @@
 			</tr>
 		</thead>
 		<tbody>
-			@for((station, count) <- ats.stations().list().asScala.zipWithIndex) {
-				@if(ats.rankings().byCall(station.call).asScala.exists(_.scoreless(rule))) {
+			@for((station, count) <- in.ats.stations().list().asScala.zipWithIndex) {
+				@if(in.ats.rankings().byCall(station.call).asScala.exists(_.scoreless(in.rule))) {
 					<tr class='table-warning'>
 						<td>@{count + 1}
 						<td>@station.call</td>
 						<td>無得点の部門があります。</td>
 					</tr>
-				} else if(ats.rankings.byCall(station.call).isEmpty) {
+				} else if(in.ats.rankings.byCall(station.call).isEmpty) {
 					<tr class='table-warning'>
 						<td>@{count + 1}
 						<td>@station.call</td>

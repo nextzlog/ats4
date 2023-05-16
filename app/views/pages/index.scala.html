@@ -1,19 +1,19 @@
-@(status: Option[Int] = None)(implicit c: Configuration, ats: ATS, rule: Program, admin: Boolean)
+@(status: Option[Int] = None)(implicit in: Injections, admin: Boolean)
 
-@notes = @{ats.stations().list().asScala.filter(_.note.nonEmpty)}
+@notes = @{in.ats.stations().list().asScala.filter(_.note.nonEmpty)}
 
 @comps.page(nav = "index") {
 	<div class='bg-light rounded p-5 my-3 text-center'>
 		@if(status.isEmpty) {
-			<h1 class='display-1'>@rule.name()</h1>
+			<h1 class='display-1'>@in.rule.name()</h1>
 			<h1 class='display-5'>書類受付システム</h1>
 			<p class='lead my-3'>
-				@{rule.getStartDay()}開催
-				@{rule.getDeadLine()}締切
+				@{in.rule.getStartDay()}開催
+				@{in.rule.getDeadLine()}締切
 			</p>
 			<div class='d-flex justify-content-center py-2'>
-				<a class='btn btn-lg btn-outline-dark mx-2' href='http://@rule.link()'>規約を閲覧する</a>
-				@if(rule.accept()) {
+				<a class='btn btn-lg btn-outline-dark mx-2' href='http://@in.rule.link()'>規約を閲覧する</a>
+				@if(in.rule.accept()) {
 					<a class='btn btn-lg btn-outline-primary mx-2' href='@routes.Index.entry'>書類を提出する</a>
 				} else {
 					<a class='btn btn-lg btn-outline-primary mx-2' href='@routes.Index.lists'>結果を閲覧する</a>
@@ -25,11 +25,11 @@
 		}
 	</div>
 	<div class='text-center'>
-	@if(c.get[Boolean]("play.mailer.mock")) {
+	@if(in.cf.get[Boolean]("play.mailer.mock")) {
 		<div class='alert alert-warning'>
 			メール送信機能は試験モードに設定されています。実際には送信されません。
 		</div>
-	} else if(!rule.accept()) {
+	} else if(!in.rule.accept()) {
 		<div class='alert alert-info'>
 			提出期間外につき、新規の提出は受理できません。集計結果を閲覧できます。
 		</div>
@@ -41,7 +41,7 @@
 				@station.map(_.note).getOrElse("本日は晴天なり")
 			</blockquote>
 			<figcaption class='blockquote-footer'>
-				@station.map(_.call).getOrElse(rule.host())
+				@station.map(_.call).getOrElse(in.rule.host())
 			</figcaption>
 		}
 	</figure>
