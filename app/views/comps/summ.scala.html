@@ -1,8 +1,8 @@
-@(ranking: RankingData, items: Seq[Item])(implicit ats: ATS, rule: Program, admin: Boolean)
+@(ranking: RankingData, items: Seq[Item])(implicit in: Injections, admin: Boolean)
 
-@summary = @{util.Try(rule.section(ranking.sect).summarize(items.asJava))}
+@summary = @{util.Try(in.rule.section(ranking.sect).summarize(items.asJava))}
 
-@if(!rule.section(ranking.sect).isAbsence) {
+@if(!in.rule.section(ranking.sect).isAbsence) {
 	<div class='card my-5'>
 		<h3 class='card-header'>
 			<span>@ranking.sect</span>

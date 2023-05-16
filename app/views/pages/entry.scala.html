@@ -1,10 +1,10 @@
-@(form: Form[ContestFormData], warn: Option[Html] = None)(implicit r: RequestHeader, c: Configuration, ats: ATS, rule: Program, admin: Boolean)
+@(form: Form[ContestFormData], warn: Option[Html] = None)(implicit r: RequestHeader, in: Injections, admin: Boolean)
 
 @post = {p-postal-code}
 @addr = {p-region p-locality p-street-address p-extended-address}
 
 @comps.page(title = "書類提出", nav = "entry") {
-	@if(rule.accept() || admin) {
+	@if(in.rule.accept() || admin) {
 		@if(warn.nonEmpty) {
 			<div class='alert alert-warning'>
 				@warn
@@ -39,14 +39,14 @@
 					</fieldset>
 				</div>
 			</div>
-			@for((code, idx) <- rule.getSectionCodes().asScala.map(c => Seq.fill(rule.limitMultipleEntry(c))(c)).flatten.zipWithIndex) {
+			@for((code, idx) <- in.rule.getSectionCodes().asScala.map(c => Seq.fill(in.rule.limitMultipleEntry(c))(c)).flatten.zipWithIndex) {
 				<div class='card bg-light mb-5'>
 					<h3 class='card-header'>
 						<span>@code</span>
 					</h3>
 					<div class='card-body'>
 						<fieldset>
-							@comps.sect(form(s"entries[$idx]"), form("entries"), sectOpts=rule.filter(_.code == code))
+							@comps.sect(form(s"entries[$idx]"), form("entries"), sectOpts=in.rule.filter(_.code == code))
 						</fieldset>
 					</div>
 				</div>
@@ -55,7 +55,7 @@
 				<p>既に提出済みの書類がある場合は、以前の提出は無効化されます。</p>
 				<div class='card my-3'>
 					<div class='card-header'>
-						@rule.host()よりご案内
+						@in.rule.host()よりご案内
 					</div>
 					<div class='card-body' id='help'></div>
 				</div>
@@ -71,7 +71,7 @@
 		$(this).find(':submit').prop('disabled', 'true');
 	});
 	$(function() {
-		$('div#help').append(marked.parse(`@{rule.help()}`));
+		$('div#help').append(marked.parse(`@{in.rule.help()}`));
 	});
 	</script>
 }

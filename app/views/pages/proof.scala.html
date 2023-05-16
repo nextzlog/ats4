@@ -1,6 +1,6 @@
-@(call: String)(implicit r: RequestHeader, c: Configuration, ats: ATS, rule: Program, admin: Boolean)
+@(call: String)(implicit r: RequestHeader, in: Injections, admin: Boolean)
 
-@station = @{ats.stations().byCall(call).get(0)}
+@station = @{in.ats.stations().byCall(call).get(0)}
 
 @comps.page(title = "提出書類の確認", nav = "lists") {
 	@if(!admin) {
@@ -30,8 +30,8 @@
 			@station.note
 		</blockquote>
 	}
-	@for(archive <- ats.archives().byCall(call).asScala) {
-		@defining(util.Try(ats.archives().getItems(archive))) {items =>
+	@for(archive <- in.ats.archives().byCall(call).asScala) {
+		@defining(util.Try(in.ats.archives().getItems(archive))) {items =>
 			<div class='card my-5 @if(items.isFailure) {bg-warning}'>
 				<h3 class='card-header d-flex justify-content-between'>
 					<span>@if(archive.file.nonEmpty) {@archive.file} else {無名}</span>
@@ -53,8 +53,8 @@
 			</div>
 		}
 	}
-	@defining(ats.messages().search(station.call).asScala.toSeq) {items =>
-		@for(ranking <- ats.rankings().byCall(station.call)) {
+	@defining(in.ats.messages().search(station.call).asScala.toSeq) {items =>
+		@for(ranking <- in.ats.rankings().byCall(station.call)) {
 			@comps.summ(ranking, items)
 		}
 	}

@@ -17,6 +17,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 routesImport += "java.util.UUID"
 TwirlKeys.templateImports ++= Seq(
 	"play.api.Configuration",
+	"injects.Injections",
 	"ats4.data._",
 	"ats4.root._",
 	"qxsl.draft._",

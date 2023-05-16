@@ -1,17 +1,17 @@
-@()(implicit r: RequestHeader, ats: ATS, rule: Program, admin: Boolean)
+@()(implicit r: RequestHeader, in: Injections, admin: Boolean)
 
-@getRank(ranking: RankingData) = @{ranking.getRankFromZeroIn(ats.rankings())}
+@getRank(ranking: RankingData) = @{ranking.getRankFromZeroIn(in.ats.rankings())}
 
-@getAwardLimit(ranking: RankingData) = @{ats.rankings().getAwardLimit(rule.section(ranking.sect))}
+@getAwardLimit(ranking: RankingData) = @{in.ats.rankings().getAwardLimit(in.rule.section(ranking.sect))}
 
 @link(call: String) = {
 	@if(admin) {<a href='@routes.Admin.proof(call)'>@call</a>} else {@call}
 }
 
 @comps.page(title = "集計結果", nav = "lists") {
-	@if(admin || rule.finish()) {
-		@for(sect <- rule.asScala if !sect.isAbsence()) {
-			@if(ats.rankings().bySect(sect.name()).nonEmpty) {
+	@if(admin || in.rule.finish()) {
+		@for(sect <- in.rule.asScala if !sect.isAbsence()) {
+			@if(in.ats.rankings().bySect(sect.name()).nonEmpty) {
 				<div class='my-5'>
 					<h4>@sect.name()</h4>
 					<table class='table table-hover font-monospace'>
@@ -26,7 +26,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							@for(ranking <- ats.rankings().bySect(sect.name()).asScala.sortBy(-_.total)) {
+							@for(ranking <- in.ats.rankings().bySect(sect.name()).asScala.sortBy(-_.total)) {
 								@defining(getRank(ranking) < getAwardLimit(ranking)) {award =>
 									<tr class='@if(award) {award}'>
 										<td>@{1 + getRank(ranking)}</td>

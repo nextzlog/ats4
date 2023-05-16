@@ -1,6 +1,6 @@
-@(form: Form[DevelopFormData])(implicit c: Configuration, ats: ATS, rule: Program, admin: Boolean)
+@(form: Form[DevelopFormData])(implicit in: Injections, admin: Boolean)
 
-@local = @{util.Try(RuleKit.forFile(c.get[String]("ats4.rules")).eval(form.get.rule).program())}
+@local = @{util.Try(RuleKit.forFile(in.get("ats4.rules")).eval(form.get.rule).program())}
 @items = @{util.Try(new SheetOrTable().unpack(form.get.data))}
 
 @comps.page(title = "規約開発", nav = "shell") {
@@ -29,4 +29,4 @@
 			}
 		}
 	}
-}(ats, if(local.isSuccess) local.get else rule, admin)
+}

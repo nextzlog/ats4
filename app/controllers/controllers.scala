@@ -8,21 +8,18 @@ package controllers
 import java.util.UUID
 import javax.inject.{Inject, Singleton}
 
-import qxsl.ruler.Program
-
 import ats4.root._
 
 import scala.concurrent.{Future, ExecutionContext => EC}
 import scala.concurrent.duration._
 
-import play.api.{Logger, Configuration => Cfg}
-import play.api.db.{Database => DB}
+import play.api.Logger
 import play.api.http.HttpErrorHandler
 import play.api.libs.streams.ActorFlow
 import play.api.mvc.{InjectedController => IC, RequestHeader => RH, _}
 import play.api.mvc.Results.{Forbidden, InternalServerError, Status}
-import play.libs.mailer.{MailerClient => SMTP}
 
+import injects.Injections
 import models._
 import tasks._
 import views.html.pages
@@ -36,18 +33,10 @@ import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, MergeHub}
  * 管理者権限を伴わず、公開画面のGETメソッドを処理するコントローラです。
  *
  *
- * @param smtp メールクライアントの依存性注入
- * @param cfg アプリケーションの設定の依存性注入
- * @param db データベースの依存性注入
- * @param rule コンテスト規約の依存性注入
+ * @param in 依存性注入
  */
 @Singleton
-class Index @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Program) extends IC {
-	/**
-	 * データベースの処理を総括するオブジェクトです。
-	 */
-	implicit val ats = new ATS(db.getConnection()).createTables()
-
+class Index @Inject()(implicit in: Injections) extends IC {
 	/**
 	 * 非管理者権限を表す真偽値です。
 	 */
@@ -101,18 +90,10 @@ class Index @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Program) exte
  * 管理者権限を伴わず、公開画面のPOSTメソッドを処理するコントローラです。
  *
  *
- * @param smtp メールクライアントの依存性注入
- * @param cfg アプリケーションの設定の依存性注入
- * @param db データベースの依存性注入
- * @param rule コンテスト規約の依存性注入
+ * @param in 依存性注入
  */
 @Singleton
-class Entry @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Program) extends IC {
-	/**
-	 * データベースの処理を総括するオブジェクトです。
-	 */
-	implicit val ats = new ATS(db.getConnection()).createTables()
-
+class Entry @Inject()(implicit in: Injections) extends IC {
 	/**
 	 * 非管理者権限を表す真偽値です。
 	 */
@@ -145,18 +126,10 @@ class Entry @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Program) exte
  * 管理者権限を伴って、管理画面のGETメソッドを処理するコントローラです。
  *
  *
- * @param smtp メールクライアントの依存性注入
- * @param cfg アプリケーションの設定の依存性注入
- * @param db データベースの依存性注入
- * @param rule コンテスト規約の依存性注入
+ * @param in 依存性注入
  */
 @Singleton
-class Admin @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Program) extends IC {
-	/**
-	 * データベースの処理を総括するオブジェクトです。
-	 */
-	implicit val ats = new ATS(db.getConnection()).createTables()
-
+class Admin @Inject()(implicit in: Injections) extends IC {
 	/**
 	 * 管理者権限を表す真偽値です。
 	 */
@@ -214,18 +187,10 @@ class Admin @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Program) exte
  * 管理者権限を伴って、管理画面のPOSTメソッドを処理するコントローラです。
  *
  *
- * @param smtp メールクライアントの依存性注入
- * @param cfg アプリケーションの設定の依存性注入
- * @param db データベースの依存性注入
- * @param rule コンテスト規約の依存性注入
+ * @param in 依存性注入
  */
 @Singleton
-class Force @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Program) extends IC {
-	/**
-	 * データベースの処理を総括するオブジェクトです。
-	 */
-	implicit val ats = new ATS(db.getConnection()).createTables()
-
+class Force @Inject()(implicit in: Injections) extends IC {
 	/**
 	 * 管理者権限を表す真偽値です。
 	 */
@@ -266,17 +231,10 @@ class Force @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Program) exte
  * 管理者権限を伴って、開発画面のGETまたはPOSTメソッドを処理するコントローラです。
  *
  *
- * @param cfg アプリケーションの設定の依存性注入
- * @param db データベースの依存性注入
- * @param rule コンテスト規約の依存性注入
+ * @param in 依存性注入
  */
 @Singleton
-class Shell @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Program) extends IC {
-	/**
-	 * データベースの処理を総括するオブジェクトです。
-	 */
-	implicit val ats = new ATS(db.getConnection()).createTables()
-
+class Shell @Inject()(implicit in: Injections) extends IC {
 	/**
 	 * 管理者権限を表す真偽値です。
 	 */
@@ -304,12 +262,12 @@ class Shell @Inject()(implicit smtp: SMTP, cfg: Cfg, db: DB, rule: Program) exte
  *
  * @param mat
  * @param ec
- * @param cfg アプリケーションの設定の依存性注入
+ * @param in 依存性注入
  */
 @Singleton
-class Cache @Inject()(implicit val mat: Mat, ec: EC, cfg: Cfg) extends Filter {
+class Cache @Inject()(implicit val mat: Mat, ec: EC, in: Injections) extends Filter {
 	def apply(next: RH => Future[Result])(header: RH) = next(header).map((r: Result) => {
-		r.withHeaders("Cache-Control" -> cfg.get[String]("cache.control"))
+		r.withHeaders("Cache-Control" -> in.get("cache.control"))
 	})
 }
 
@@ -318,17 +276,10 @@ class Cache @Inject()(implicit val mat: Mat, ec: EC, cfg: Cfg) extends Filter {
  * クライアント側のエラーまたはサーバ側のエラーをクライアント側に通知するハンドラです。
  *
  *
- * @param cfg アプリケーションの設定の依存性注入
- * @param db データベースの依存性注入
- * @param rule コンテスト規約の依存性注入
+ * @param in 依存性注入
  */
 @Singleton
-class Error @Inject()(implicit cfg: Cfg, db: DB, rule: Program) extends HttpErrorHandler {
-	/**
-	 * データベースの処理を総括するオブジェクトです。
-	 */
-	implicit val ats = new ATS(db.getConnection()).createTables()
-
+class Error @Inject()(implicit in: Injections) extends HttpErrorHandler {
 	/**
 	 * 非管理者権限を表す真偽値です。
 	 */
@@ -366,19 +317,12 @@ class Error @Inject()(implicit cfg: Cfg, db: DB, rule: Program) extends HttpErro
  *
  * @param as アクター環境
  * @param mat
- * @param cfg アプリケーションの設定の依存性注入
- * @param db データベースの依存性注入
- * @param rule コンテスト規約の依存性注入
+ * @param in 依存性注入
  */
 @Singleton
-class Agent @Inject()(implicit as: ActorSystem, mat: Mat, cfg: Cfg, db: DB, rule: Program) {
-	/**
-	 * データベースの処理を総括するオブジェクトです。
-	 */
-	implicit val ats = new ATS(db.getConnection()).createTables()
-
+class Agent @Inject()(implicit as: ActorSystem, mat: Mat, in: Injections) {
 	val (sink, src) = MergeHub.source[Array[Byte]].toMat(BroadcastHub.sink)(Keep.both).run()
-	val bus = Flow.fromSinkAndSource(sink, src).delay(cfg.get[Int]("rtc.delay").second)
+	val bus = Flow.fromSinkAndSource(sink, src).delay(in.cf.get[Int]("rtc.delay").second)
 
 	/**
 	 * 指定されたトークンに対応する参加局に対してストリーミング接続を確立します。
@@ -387,7 +331,7 @@ class Agent @Inject()(implicit as: ActorSystem, mat: Mat, cfg: Cfg, db: DB, rule
 	 * @return ストリーミング接続
 	 */
 	def agent(uuid: UUID) = WebSocket.acceptOrResult[Array[Byte], Array[Byte]](req =>
-		Future.successful(if (rule.accept() && !ats.stations().byUUID(uuid).isEmpty()) {
+		Future.successful(if (in.rule.accept() && !in.ats.stations().byUUID(uuid).isEmpty()) {
 			Right(ActorFlow.actorRef(out => Props(new SocketTask(out, uuid))).viaMat(bus)(Keep.right))
 		} else Left(Forbidden))
 	)

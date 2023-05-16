@@ -1,6 +1,6 @@
-@(call: String)(implicit ats: ATS, admin: Boolean)
+@(call: String)(implicit in: Injections, admin: Boolean)
 
-@if(admin && ats.stations().byCall(call).nonEmpty) {
+@if(admin && in.ats.stations().byCall(call).nonEmpty) {
 	<a href='@routes.Admin.proof(call)'>@call</a>
 } else {
 	@call

@@ -1,7 +1,7 @@
-@(field: Field)(implicit c: Configuration)
+@(field: Field)(implicit in: Injections)
 
-@bands = @{c.get[Seq[String]]("ats4.bands")}
-@modes = @{c.get[Seq[String]]("ats4.modes")}
+@bands = @{in.cf.get[Seq[String]]("ats4.bands")}
+@modes = @{in.cf.get[Seq[String]]("ats4.modes")}
 
 @w25 = {w-25}
 
