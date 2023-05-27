@@ -44,4 +44,5 @@ class ProgramRTC < ProgramATS
 	end
 end
 
-ProgramRTC.new
+RULE = ProgramRTC.new
+RULE
