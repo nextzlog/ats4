@@ -40,4 +40,5 @@ class ProgramJA1 < ProgramATS
 	end
 end
 
-ProgramJA1.new
+RULE = ProgramJA1.new
+RULE
