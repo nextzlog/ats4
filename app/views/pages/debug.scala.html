@@ -3,10 +3,10 @@
 @local = @{util.Try(RuleKit.forFile(in.get("ats4.rules")).eval(form.get.rule).program())}
 @items = @{util.Try(new SheetOrTable().unpack(form.get.data))}
 
-@comps.page(title = "規約開発", nav = "shell") {
+@comps.page(title = in.msg("shell"), nav = "shell") {
 	@if(local.isFailure) {
 		<div class='alert alert-danger'>
-			規約の修正が必要です。
+			@in.msg("shell-error")
 		</div>
 		<pre class='text-white bg-dark rounded p-2'>@{local.failed.get.getMessage()}</pre>
 	} else if(items.isFailure) {
@@ -16,7 +16,7 @@
 		<pre class='text-white bg-dark rounded p-2'>@{items.failed.get.getMessage()}</pre>
 	} else if(form.get.data.isEmpty) {
 		<div class='alert alert-danger'>
-			交信記録がありません。
+			@in.msg("shell-empty")
 		</div>
 	} else {
 		@for(sect <- local.get.asScala if !sect.isAbsence()) {

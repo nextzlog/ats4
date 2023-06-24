@@ -3,7 +3,7 @@
 @post = {p-postal-code}
 @addr = {p-region p-locality p-street-address p-extended-address}
 
-@comps.page(title = "書類提出", nav = "entry") {
+@comps.page(title = in.msg("entry"), nav = "entry") {
 	@if(in.rule.accept() || admin) {
 		@if(warn.nonEmpty) {
 			<div class='alert alert-warning'>
@@ -14,27 +14,27 @@
 			@helper.CSRF.formField
 			<div class='card mb-5'>
 				<h3 class='card-header'>
-					<span>注意事項</span>
+					<span>@in.msg("upload-warn")</span>
 				</h3>
 				<ul class='list-group list-group-flush'>
-					<li class='list-group-item'>参加した全ての部門を選び、交信記録を添付する必要があります。</li>
-					<li class='list-group-item'>複数回に分けて提出すると、以前に提出した書類は削除されます。</li>
+					<li class='list-group-item'>@in.msg("upload-warn-1")</li>
+					<li class='list-group-item'>@in.msg("upload-warn-2")</li>
 				</ul>
 			</div>
 			@comps.file(id = "sheet", form = form)
 			<div class='card bg-light mb-5'>
 				<h3 class='card-header'>
-					<span>共通事項</span>
+					<span>@in.msg("upload-station")</span>
 				</h3>
 				<div class='card-body'>
 					<fieldset class='h-adr'>
 						<input type='hidden' class='p-country-name' value='Japan'>
-						@comps.text(form("station.call"), label = "呼出符号", hint = "JA1ZLO/1")
-						@comps.text(form("station.name"), label = "貴局名称", hint = "この名称で賞を発行します。")
-						@comps.text(form("station.post"), label = "郵便番号", hint = "この宛先に賞を発送します。", style = Some(post))
-						@comps.area(form("station.addr"), label = "賞配達先", hint = "この宛先に賞を発送します。", style = Some(addr))
-						@comps.text(form("station.mail"), label = "メール",   hint = "受理通知メールが届きます。")
-						@comps.area(form("station.note"), label = "ご感想",   hint = "呼出符号付きで公表します。")
+						@comps.text(form("station.call"), label = in.msg("call"), hint = in.msg("call-hint"))
+						@comps.text(form("station.name"), label = in.msg("name"), hint = in.msg("name-hint"))
+						@comps.text(form("station.post"), label = in.msg("post"), hint = in.msg("post-hint"), style = Some(post))
+						@comps.area(form("station.addr"), label = in.msg("addr"), hint = in.msg("addr-hint"), style = Some(addr))
+						@comps.text(form("station.mail"), label = in.msg("mail"), hint = in.msg("mail-hint"))
+						@comps.area(form("station.note"), label = in.msg("note"), hint = in.msg("note-hint"))
 						@comps.data(form("station.uuid"))
 					</fieldset>
 				</div>
@@ -51,20 +51,18 @@
 					</div>
 				</div>
 			}
-			@comps.warn(id = "submit", title = "確認", button = "提出する", icon = "fas fa-upload", submit = true) {
-				<p>既に提出済みの書類がある場合は、以前の提出は無効化されます。</p>
+			@comps.warn(id = "submit", title = in.msg("upload"), button = in.msg("upload"), icon = "fas fa-upload", submit = true) {
+				<p>@in.msg("disable")</p>
 				<div class='card my-3'>
 					<div class='card-header'>
-						@in.rule.host()よりご案内
+						@in.rule.host()
 					</div>
 					<div class='card-body' id='help'></div>
 				</div>
 			}
 		}
 	} else {
-		<div class='alert alert-warning'>
-			提出期間外です。
-		</div>
+		<a class='btn btn-lg btn-outline-primary mx-2' href='@routes.Index.lists'>@in.msg("lists")</a>
 	}
 	<script>
 	$('form').submit(function() {

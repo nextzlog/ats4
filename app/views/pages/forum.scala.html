@@ -1,6 +1,6 @@
 @()(implicit in: Injections, admin: Boolean)
 
-@comps.page(title = "皆様の声", nav = "forum") {
+@comps.page(title = in.msg("forum"), nav = "forum") {
 	@for(station <- in.ats.stations().list().asScala.filter(_.note.nonEmpty)) {
 		<figure>
 			<blockquote class='blockquote' id='@station.call'>

@@ -1,9 +1,9 @@
-@(field: Field, parent: Field, sectOpts: Iterable[Section])
+@(field: Field, parent: Field, sectOpts: Iterable[Section])(implicit in: Injections)
 
 @cityOpts = @{sectOpts.map(_.getCityList()).flatten.toSeq.distinct}
 
 @comps.opts(field("sect"), sectOpts.map(_.toString()), style = "sect selectpicker my-2")(parent)
-@comps.opts(field("city"), cityOpts.map(_.toString()), style = "city selectpicker my-2", empty = "運用地が未選択です")(parent)
+@comps.opts(field("city"), cityOpts.map(_.toString()), style = "city selectpicker my-2", empty = in.msg("place"))(parent)
 
 <script>
 $(() => $('select.city').change(function() {

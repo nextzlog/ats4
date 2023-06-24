@@ -1,14 +1,13 @@
 @()(implicit in: Injections, admin: Boolean)
 
-@comps.page(title = "提出方法", nav = "guide") {
+@comps.page(title = in.msg("guide"), nav = "guide") {
 	<div class='card my-3'>
-		<h3 class='card-header'>ご案内</h3>
+		<h3 class='card-header'>@in.msg("guide")</h3>
 		<div class='card-body' id='help'></div>
 	</div>
 	<div class='card my-3'>
-		<h3 class='card-header'>交信記録ファイルの書式</h3>
+		<h3 class='card-header'>@in.msg("formats-table")</h3>
 		<div class='card-body'>
-			<p>以下の書式での提出が可能です。</p>
 			<ul>
 				@for(fmt <- new TableManager()) {
 					<li class='my-2'>
@@ -22,9 +21,8 @@
 		</div>
 	</div>
 	<div class='card my-3'>
-		<h3 class='card-header'>サマリーシート等の書式</h3>
+		<h3 class='card-header'>@in.msg("formats-sheet")</h3>
 		<div class='card-body'>
-			<p>以下の書式での提出が可能です。</p>
 			<ul>
 				@for(fmt <- new SheetManager()) {
 					<li class='my-2'>

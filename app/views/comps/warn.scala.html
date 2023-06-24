@@ -1,17 +1,11 @@
-@(id: String, title: String, button: String = "", icon: String = "", submit: Boolean = false, hidden: Boolean = true)(message: Html)
+@(id: String, title: String, button: String = "", icon: String = "", submit: Boolean = false)(message: Html)(implicit in: Injections)
 
-@if(hidden) {
-	<button type='button' class='btn btn-lg btn-primary' data-bs-toggle='modal' data-bs-target='#@{id}Dialog'>
-		@if(icon.nonEmpty) {
-			<i class='@icon'></i>
-		}
-		@button
-	</button>
-} else {
-	<script>
-	$(() => new bootstrap.Modal($('#@{id}Dialog')).show());
-	</script>
-}
+<button type='button' class='btn btn-lg btn-primary' data-bs-toggle='modal' data-bs-target='#@{id}Dialog'>
+	@if(icon.nonEmpty) {
+		<i class='@icon'></i>
+	}
+	@button
+</button>
 
 <div class='modal' id='@{id}Dialog'>
 	<div class='modal-dialog modal-lg modal-dialog-scrollable'>
@@ -24,7 +18,7 @@
 			</div>
 			<div class='modal-footer'>
 				@post(id = s"${id}Button", label = button, icon = icon, submit = submit)
-				<button type='button' class='btn btn-primary' data-bs-dismiss='modal'>閉じる</button>
+				<button type='button' class='btn btn-primary' data-bs-dismiss='modal'>@in.msg("close")</button>
 			</div>
 		</div>
 	</div>

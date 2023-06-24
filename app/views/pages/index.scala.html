@@ -6,18 +6,13 @@
 	<div class='bg-light rounded p-5 my-3 text-center'>
 		@if(status.isEmpty) {
 			<h1 class='display-1'>@in.rule.name()</h1>
-			<h1 class='display-5'>書類受付システム</h1>
 			<p class='lead my-3'>
-				@{in.rule.getStartDay()}開催
-				@{in.rule.getDeadLine()}締切
+				@in.msg("start-day", in.rule.getStartDay())
+				@in.msg("dead-line", in.rule.getDeadLine())
 			</p>
 			<div class='d-flex justify-content-center py-2'>
-				<a class='btn btn-lg btn-outline-dark mx-2' href='http://@in.rule.link()'>規約を閲覧する</a>
-				@if(in.rule.accept()) {
-					<a class='btn btn-lg btn-outline-primary mx-2' href='@routes.Index.entry'>書類を提出する</a>
-				} else {
-					<a class='btn btn-lg btn-outline-primary mx-2' href='@routes.Index.lists'>結果を閲覧する</a>
-				}
+				<a class='btn btn-lg btn-outline-dark mx-2' href='http://@in.rule.link()'>@in.msg("index-rules")</a>
+				<a class='btn btn-lg btn-outline-primary mx-2' href='@routes.Index.entry'>@in.msg("index-entry")</a>
 			</div>
 		} else {
 			<h1 class='display-1'>@status</h1>
@@ -27,18 +22,18 @@
 	<div class='text-center'>
 	@if(in.cf.get[Boolean]("play.mailer.mock")) {
 		<div class='alert alert-warning'>
-			メール送信機能は試験モードに設定されています。実際には送信されません。
+			@in.msg("mock")
 		</div>
 	} else if(!in.rule.accept()) {
 		<div class='alert alert-info'>
-			提出期間外につき、新規の提出は受理できません。集計結果を閲覧できます。
+			@in.msg("dead")
 		</div>
 	}
 	</div>
 	<figure>
 		@defining(util.Random.shuffle(notes).headOption) {station =>
 			<blockquote class='blockquote'>
-				@station.map(_.note).getOrElse("本日は晴天なり")
+				@station.map(_.note).getOrElse("VVV")
 			</blockquote>
 			<figcaption class='blockquote-footer'>
 				@station.map(_.call).getOrElse(in.rule.host())
@@ -46,7 +41,7 @@
 		}
 	</figure>
 	<div class='text-center'>
-		<a href='https://zlog.org'>zLog令和エディションで快適なコンテストを体験しよう。</a>
+		<a href='https://zlog.org'>@in.msg("zlog")</a>
 	</div>
 	<footer class='text-center text-muted bg-light fixed-bottom'>
 		Contributed by @Source.fromResource("contributors").getLines().mkString(", ").

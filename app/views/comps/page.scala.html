@@ -19,24 +19,24 @@
 				</button>
 				<div class='collapse navbar-collapse' id='nav'>
 					<div class='navbar-nav'>
-						@navi(href = routes.Admin.index.url, label = "管理", active = admin, icon = "fas fa-key")
+						@navi(href = routes.Admin.index.url, label = in.msg("admin"), active = admin, icon = "fas fa-key")
 						@if(admin) {
-							@navi(href = routes.Admin.index.url, label = "集計結果", active = nav == "lists", icon = "fas fa-trophy")
-							@navi(href = routes.Admin.entry.url, label = "書類提出", active = nav == "entry", icon = "fas fa-upload")
-							@navi(href = routes.Shell.shell.url, label = "規約開発", active = nav == "shell", icon = "fas fa-terminal")
+							@navi(href = routes.Admin.index.url, label = in.msg("index"), active = nav == "lists", icon = "fas fa-trophy")
+							@navi(href = routes.Admin.entry.url, label = in.msg("entry"), active = nav == "entry", icon = "fas fa-upload")
+							@navi(href = routes.Shell.shell.url, label = in.msg("shell"), active = nav == "shell", icon = "fas fa-terminal")
 						} else {
-							@navi(href = routes.Index.entry.url, label = "書類提出", active = nav == "entry", icon = "fas fa-upload")
-							@navi(href = routes.Index.lists.url, label = "集計結果", active = nav == "lists", icon = "fas fa-trophy")
-							@navi(href = routes.Index.calls.url, label = "全参加局", active = nav == "calls", icon = "fas fa-user-alt")
-							@navi(href = routes.Index.forum.url, label = "皆様の声", active = nav == "forum", icon = "fas fa-comments")
-							@navi(href = routes.Index.guide.url, label = "提出方法", active = nav == "guide", icon = "fas fa-question")
-							@navi(href = s"mailto:${in.rule.mail}", label = "運営に連絡", icon = "fas fa-envelope")
+							@navi(href = routes.Index.entry.url, label = in.msg("entry"), active = nav == "entry", icon = "fas fa-upload")
+							@navi(href = routes.Index.lists.url, label = in.msg("lists"), active = nav == "lists", icon = "fas fa-trophy")
+							@navi(href = routes.Index.calls.url, label = in.msg("calls"), active = nav == "calls", icon = "fas fa-user-alt")
+							@navi(href = routes.Index.forum.url, label = in.msg("forum"), active = nav == "forum", icon = "fas fa-comments")
+							@navi(href = routes.Index.guide.url, label = in.msg("guide"), active = nav == "guide", icon = "fas fa-question")
+							@navi(href = s"mailto:${in.rule.mail}", label = in.msg("email"), icon = "fas fa-envelope")
 						}
 					</div>
 					<div class='navbar-nav ms-auto'>
 						@navi(href = s"https://${in.rule.link()}", label = in.rule.host())
 						@navi(href = "https://github.com/nextzlog/ats4", label = "GitHub", icon = "fab fa-github")
-						@navi(href = "https://nextzlog.dev", label = "無線部開発班")
+						@navi(href = "https://nextzlog.dev", label = in.msg("nextzlog"))
 					</div>
 				</div>
 			</div>

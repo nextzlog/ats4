@@ -2,12 +2,10 @@
 
 @station = @{in.ats.stations().byCall(call).get(0)}
 
-@comps.page(title = "提出書類の確認", nav = "lists") {
+@comps.page(title = in.msg("entry"), nav = "lists") {
 	@if(!admin) {
 		<div class='alert alert-success'>
-			下記の内容で受理しました。
-			交信記録が正しく読み込まれたかご確認ください。
-			訂正が必要な場合は期間内に限り再提出できます。
+			@in.msg("success")
 		</div>
 	}
 	<div class='card mb-5'>
@@ -20,8 +18,8 @@
 			}
 		</h3>
 		<div class='card-body'>
-			<p>〒@{station.post} @{station.addr}</p>
-			<p>@{station.name}様</p>
+			<p>@{station.post} @{station.addr}</p>
+			<p>@{station.name}</p>
 			<p><a href='mailto:@station.mail'>@station.mail</a></p>
 		</div>
 	</div>
@@ -34,7 +32,7 @@
 		@defining(util.Try(in.ats.archives().getItems(archive))) {items =>
 			<div class='card my-5 @if(items.isFailure) {bg-warning}'>
 				<h3 class='card-header d-flex justify-content-between'>
-					<span>@if(archive.file.nonEmpty) {@archive.file} else {無名}</span>
+					<span>@if(archive.file.nonEmpty) {@archive.file} else {-}</span>
 					@if(admin && archive.file.nonEmpty) {
 						<a class='btn btn-outline-success' href='@routes.Admin.table(archive.call, archive.file)'>
 							<i class='fas fa-download'></i>
@@ -45,10 +43,10 @@
 					@if(admin){
 						<pre class='card-body'>@{items.failed.get.getMessage()}</pre>
 					} else {
-						<div class='card-body'>交信記録が読み取れません。再提出をお勧めします。</div>
+						<div class='card-body'>@in.msg("failure")</div>
 					}
 				} else {
-					<div class='card-body'>@{items.get.size()}件の交信</div>
+					<div class='card-body'>@in.msg("item-count", items.get.size())</div>
 				}
 			</div>
 		}
@@ -59,9 +57,9 @@
 		}
 	}
 	@if(admin) {
-		@comps.warn(id = "delete", title = "書類の削除", button = "削除する", icon = "fas fa-trash") {
-			<p>@{station.call}の書類を削除します。</p>
-			<p class='text-danger'>この操作は取り消せません。</p>
+		@comps.warn(id = "delete", title = in.msg("delete"), button = in.msg("delete"), icon = "fas fa-trash") {
+			<p>@in.msg("delete-call", station.call)</p>
+			<p class='text-danger'>@in.msg("delete-warn")</p>
 		}
 	}
 	<script>

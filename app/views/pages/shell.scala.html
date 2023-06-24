@@ -1,23 +1,17 @@
 @(form: Form[DevelopFormData])(implicit r: RequestHeader, in: Injections, admin: Boolean)
 
-@comps.page(title = "規約開発", nav = "shell") {
+@comps.page(title = in.msg("shell"), nav = "shell") {
 	@helper.form(action = routes.Shell.debug, Symbol("target") -> "_new") {
 		@helper.CSRF.formField
-		<div class='alert alert-info'>
-			規約を対話的に開発できます。
-		</div>
-		<div class='alert alert-warning'>
-			本番環境での使用は危険です。
-		</div>
 		<div class='card bg-light mb-5'>
 			<h3 class='card-header'>@in.rule.name()</h3>
 			@comps.code(form("rule"), lang = "ruby")
 			<a class='card-footer' href='@{in.get("qxsl.docs")}' target='_blank'>Javadoc</a>
 		</div>
 		<div class='card bg-light mb-5'>
-			<h3 class='card-header'>交信記録</h3>
+			<h3 class='card-header'>@in.msg("table")</h3>
 			@comps.code(form("data"), lang = "xml")
 		</div>
-		@comps.post(label = "テストする", icon = "fas fa-play", submit = true)
+		@comps.post(label = in.msg("shell-trial"), icon = "fas fa-play", submit = true)
 	}
 }

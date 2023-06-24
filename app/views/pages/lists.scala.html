@@ -8,7 +8,7 @@
 	@if(admin) {<a href='@routes.Admin.proof(call)'>@call</a>} else {@call}
 }
 
-@comps.page(title = "集計結果", nav = "lists") {
+@comps.page(title = in.msg("lists"), nav = "lists") {
 	@if(admin || in.rule.finish()) {
 		@for(sect <- in.rule.asScala if !sect.isAbsence()) {
 			@if(in.ats.rankings().bySect(sect.name()).nonEmpty) {
@@ -17,12 +17,12 @@
 					<table class='table table-hover font-monospace'>
 						<thead class='table-light'>
 							<tr>
-								<th width='10%'>順位</th>
-								<th width='30%'>呼出符号</th>
-								<th width='10%'>素点</th>
-								<th width='10%'>総得点</th>
-								<th width='30%'>運用地</th>
-								<th width='10%'>@if(admin) {閲覧} else {入賞}</th>
+								<th width='10%'>@in.msg("rank")</th>
+								<th width='30%'>@in.msg("call")</th>
+								<th width='10%'>@in.msg("score")</th>
+								<th width='10%'>@in.msg("total")</th>
+								<th width='30%'>@in.msg("place")</th>
+								<th width='10%'>@in.msg("award")</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -34,7 +34,7 @@
 										<td>@{ranking.score}</td>
 										<td>@{ranking.total}</td>
 										<td>@{ranking.city}</td>
-										<td>@if(award) {入賞} else {-}</td>
+										<td>@if(award) {in.msg("award")} else {-}</td>
 									</tr>
 								}
 							}
@@ -45,21 +45,18 @@
 		}
 	} else {
 		<div class='alert alert-info'>
-			未公表です。
+			@in.msg("unpub")
 		</div>
 	}
 	@if(admin) {
-		@comps.warn(id = "delete", title = "書類の全消去", button = "全書類を消去する", icon = "fas fa-trash") {
-			<p>全参加局の書類を消去します。</p>
-			<p class='text-danger'>この操作は取り消せません。</p>
+		@comps.warn(id = "delete", title = in.msg("delete-list"), button = in.msg("delete-list"), icon = "fas fa-trash") {
+			<p class='text-danger'>@in.msg("delete-warn")</p>
 		}
-		@comps.warn(id = "update", title = "得点の再計算", button = "得点を再計算する", icon = "fas fa-repeat") {
-			<p>全参加局の得点の再計算を開始します。</p>
-			<p class='text-danger'>この操作は取り消せません。</p>
+		@comps.warn(id = "update", title = in.msg("update-list"), button = in.msg("update-list"), icon = "fas fa-repeat") {
+			<p class='text-danger'>@in.msg("update-warn")</p>
 		}
-		@comps.warn(id = "export", title = "エクスポート", button = "データを出力する", icon = "fas fa-download") {
-			<p>全参加局の情報をダウンロードします。</p>
-			<p class='text-danger'>このデータは機密情報です。</p>
+		@comps.warn(id = "export", title = in.msg("export-list"), button = in.msg("export-list"), icon = "fas fa-download") {
+			<p class='text-danger'>@in.msg("export-warn")</p>
 		}
 	}
 	<script>

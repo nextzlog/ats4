@@ -11,23 +11,23 @@
 			@if(Option(ranking.city).isDefined) {
 				<li class='list-group-item'>@{ranking.city}</li>
 			}
-			<li class='list-group-item'>交信数は@{ranking.score}点です。</li>
-			<li class='list-group-item'>総得点は@{ranking.total}点です。</li>
+			<li class='list-group-item'>@in.msg("your-score", ranking.score)</li>
+			<li class='list-group-item'>@in.msg("your-total", ranking.total)</li>
 		</ul>
 		@if(summary.isSuccess) {
 			<table class='table table-hover table-borderless font-monospace mb-0'>
 				<thead class='table-light'>
 					<tr>
-						<th>日時</th>
-						<th>呼出符号</th>
-						<th>周波数帯</th>
-						<th>通信方式</th>
-						<th>受信</th>
-						<th>送信</th>
-						<th>担当</th>
-						<th>素点</th>
-						<th>照合</th>
-						<th>無効</th>
+						<th>@in.msg("item-date")</th>
+						<th>@in.msg("item-call")</th>
+						<th>@in.msg("item-band")</th>
+						<th>@in.msg("item-mode")</th>
+						<th>@in.msg("item-rcvd")</th>
+						<th>@in.msg("item-sent")</th>
+						<th>@in.msg("item-name")</th>
+						<th>@in.msg("item-score")</th>
+						<th>@in.msg("item-cross")</th>
+						<th>@in.msg("item-inval")</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -63,7 +63,7 @@
 			</table>
 		} else {
 			<div class='alert alert-warning'>
-				得点計算の処理でエラーが発生しました。
+				@in.msg("error")
 			</div>
 			@if(admin) {
 				<pre class='text-white bg-dark rounded p-2'>@{summary.failed.get}</pre>

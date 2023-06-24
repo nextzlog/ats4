@@ -1,9 +1,8 @@
 @()(implicit in: Injections, admin: Boolean)
 
-@comps.page(title = "書類提出", nav = "entry") {
+@comps.page(title = in.msg("entry"), nav = "entry") {
 	<div class='alert alert-danger'>
 		<i class='fas fa-exclamation-triangle'></i>
-		CSRFトークンが無効なため、提出できません。
-		ブラウザのキャッシュの消去をお勧めします。
+		@in.msg("token")
 	</div>
 }

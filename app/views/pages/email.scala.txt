@@ -1,22 +1,17 @@
 @(call: String)(implicit in: Injections)
 
-@{in.rule.name}書類提出の完了 ; 空白を除く先頭行はメールの件名
+@in.msg("mail-subject", in.rule.name)
 
-@{call}様
+@in.msg("mail-greetings", call)
 
-この度は@{in.rule.name()}に参加いただきありがとうございます。
+@in.msg("mail-thanks", in.rule.name())
 @for(ranking <- in.ats.rankings().byCall(call)) {
-@{ranking.sect}
-(運用地@{ranking.city})
+@{ranking.sect} (@{ranking.city})
 }
-にて受理いたしました。
-今後とも当コンテストをよろしくお願いいたします。
-
----
-このメールに心当たりがない場合はお手数ですが下記の連絡先までご連絡ください。
+@in.msg("mail-fin")
 
 ---
 @{in.rule.host()}
-@{in.rule.name()}受付担当係
+@{in.rule.name()}
 @{in.rule.link()}
 @{in.rule.mail()}

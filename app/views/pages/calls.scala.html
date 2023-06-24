@@ -1,12 +1,12 @@
 @()(implicit in: Injections, admin: Boolean)
 
-@comps.page(title = "全参加局", nav = "calls") {
+@comps.page(title = in.msg("calls"), nav = "calls") {
 	<table class='table table-hover font-monospace'>
 		<thead class='table-light'>
 			<tr>
 				<th>#</th>
-				<th>呼出符号</th>
-				<th>再提出の警告</th>
+				<th>@in.msg("call")</th>
+				<th>@in.msg("warn")</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -15,13 +15,13 @@
 					<tr class='table-warning'>
 						<td>@{count + 1}
 						<td>@station.call</td>
-						<td>無得点の部門があります。</td>
+						<td>@in.msg("unscored")</td>
 					</tr>
 				} else if(in.ats.rankings.byCall(station.call).isEmpty) {
 					<tr class='table-warning'>
 						<td>@{count + 1}
 						<td>@station.call</td>
-						<td>どの部門にも未登録です。</td>
+						<td>@in.msg("unlinked")</td>
 					</tr>
 				} else {
 					<tr>
