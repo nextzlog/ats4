@@ -240,10 +240,13 @@ class NotifyTask(implicit in: Injections) {
 	 */
 	def send(station: StationData): Unit = util.Try {
 		val mail = new Email
+		val user = in.cf.get[String]("play.mailer.user")
+		val host = in.cf.get[String]("play.mailer.host")
 		val text = views.txt.pages.email(station.call).body.trim
-		mail.setFrom("%s <%s>".format(in.rule.host, in.rule.mail))
+		mail.setFrom("%s <%s@%s>".format(in.rule.host, user, host))
 		mail.addTo("%s <%s>".format(station.call, station.mail))
 		mail.addBcc(in.rule.mail)
+		mail.addReplyTo(in.rule.mail)
 		mail.setSubject(text.linesIterator.toSeq.head.split(";").head.trim)
 		mail.setBodyText(text.linesWithSeparators.toSeq.tail.mkString.trim)
 		in.mc.send(mail)
