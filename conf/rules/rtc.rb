@@ -12,7 +12,7 @@ RTC = RuleKit.forName('elva').eval(LISP).contest
 
 NAME = 'リアルタイムコンテスト'
 HOST = '東大無線部'
-MAIL = 'allja1@ja1zlo.u-tokyo.org'
+MAIL = 'allja1.info@gmail.com'
 LINK = 'ja1zlo.u-tokyo.org/rt'
 
 class ProgramRTC < ProgramATS
