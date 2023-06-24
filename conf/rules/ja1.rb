@@ -6,7 +6,7 @@ JA1 = RuleKit.load('allja1.lisp').contest
 
 NAME = JA1.name
 HOST = '東大無線部'
-MAIL = 'allja1@ja1zlo.u-tokyo.org'
+MAIL = 'allja1.info@gmail.com'
 LINK = 'ja1zlo.u-tokyo.org/allja1'
 
 JS1 = /1エリア内 .+ 総合/
