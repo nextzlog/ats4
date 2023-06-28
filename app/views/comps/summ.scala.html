@@ -7,13 +7,9 @@
 		<h3 class='card-header'>
 			<span>@ranking.sect</span>
 		</h3>
-		<ul class='list-group list-group-flush'>
-			@if(Option(ranking.city).isDefined) {
-				<li class='list-group-item'>@{ranking.city}</li>
-			}
-			<li class='list-group-item'>交信数は@{ranking.score}点です。</li>
-			<li class='list-group-item'>総得点は@{ranking.total}点です。</li>
-		</ul>
+		<div class='card-body'>
+			@{ranking.city}
+		</div>
 		@if(summary.isSuccess) {
 			<table class='table table-hover table-borderless font-monospace mb-0'>
 				<thead class='table-light'>
@@ -42,7 +38,7 @@
 							<td>@{item.get(Qxsl.NAME)}</td>
 							<td>@{msg.score()}</td>
 							<td>@comps.sign(item.get(Qxsl.SIGN).asInstanceOf[Sign])</td>
-							<td>@{msg.text}</td>
+							<td>@if(admin) {@msg.text}</td>
 						</tr>
 					}
 					@for((msg, item) <- summary.get.rejected().map(msg => (msg, msg.item()))) {
@@ -56,7 +52,7 @@
 							<td>@{msg.item.get(Qxsl.NAME)}</td>
 							<td>@{msg.score()}</td>
 							<td>-</td>
-							<td class='text-warning'>@{msg.text}</td>
+							<td class='text-warning'>@if(admin) {@msg.text} else {無効}</td>
 						</tr>
 					}
 				</tbody>
