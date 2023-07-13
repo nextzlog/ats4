@@ -39,20 +39,11 @@ end
 
 class SectionUEC < SectionATS
 	def initialize(band)
-		super('', band, [Mode.new('CW')], ZDAT)
+		super(band.to_s, band, Mode.new('CW'), ZDAT)
 		@hour = (17..20).to_a
-		@code = code
-	end
-
-	def name()
-		return ALL if @band.equal?(BandEnum::BALL)
-		return SWL if @band.equal?(BandEnum::BSWL)
-		return @band.toString
 	end
 
 	def code()
-		return ALL if @band.equal?(BandEnum::BALL)
-		return ALL if @band.equal?(BandEnum::BSWL)
 		return SIN
 	end
 
@@ -65,6 +56,17 @@ class SectionUEC < SectionATS
 	end
 end
 
+class SectionAll < SectionUEC
+	def initialize(name)
+		super(BandEnum::BALL)
+		@name = name
+	end
+
+	def code()
+		return ALL
+	end
+end
+
 module BandEnum
 	B3_5 = Band.new( 3_500)
 	B7_0 = Band.new( 7_000)
@@ -73,18 +75,17 @@ module BandEnum
 	B28_ = Band.new(28_000)
 	B50_ = Band.new(50_000)
 	BALL = [B3_5, B7_0, B14_, B21_, B28_, B50_]
-	BSWL = [B3_5, B7_0, B14_, B21_, B28_, B50_]
 end
 
 RULE = ProgramUEC.new
 RULE.add(AbsenceATS.new(ALL))
 RULE.add(AbsenceATS.new(SIN))
-RULE.add(SectionUEC.new(BandEnum::BALL))
 RULE.add(SectionUEC.new(BandEnum::B3_5))
 RULE.add(SectionUEC.new(BandEnum::B7_0))
 RULE.add(SectionUEC.new(BandEnum::B14_))
 RULE.add(SectionUEC.new(BandEnum::B21_))
 RULE.add(SectionUEC.new(BandEnum::B28_))
 RULE.add(SectionUEC.new(BandEnum::B50_))
-RULE.add(SectionUEC.new(BandEnum::BSWL))
+RULE.add(SectionAll.new(ALL))
+RULE.add(SectionAll.new(SWL))
 RULE

@@ -88,8 +88,8 @@ class SectionATS < Section
 	def initialize(name, band, mode, zdat = nil)
 		super()
 		@name = name
-		@band = band
-		@mode = mode
+		@band = Array(band)
+		@mode = Array(mode)
 		@hour = (0..23).to_a
 		@base = loadDAT(zdat).toList
 		@mult = @base.map{|c| c.code}
