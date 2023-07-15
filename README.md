@@ -42,6 +42,8 @@ services:
     - ./ats.conf:/ats/conf/ats.conf
     - ./rules.rb:/ats/conf/rules.rb
     command: /ats/bin/ats4
+    environment:
+      TZ: "Asia/Tokyo"
   www:
     image: nginx:latest
     ports:
@@ -112,6 +114,8 @@ services:
     - ./ats.conf:/ats/conf/ats.conf
     - ./rules.rb:/ats/conf/rules.rb
     command: /ats/bin/ats4
+    environment:
+      TZ: "Asia/Tokyo"
   www:
     image: nginx:latest
     ports:
