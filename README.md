@@ -29,6 +29,15 @@ Docker image is available.
 Paste the entire following script into the terminal and run it.
 
 ```sh
+echo -n 'enter mail hostname: '
+read host
+
+echo -n 'enter mail username: '
+read user
+
+echo -n 'enter mail password: '
+read pass
+
 cat << EOS > docker-compose.yaml
 version: '3'
 services:
@@ -39,41 +48,20 @@ services:
     volumes:
     - ./ats/data:/ats/data
     - ./ats/logs:/ats/logs
-    - ./ats.conf:/ats/conf/ats.conf
-    - ./rules.rb:/ats/conf/rules.rb
     command: /ats/bin/ats4
     environment:
-      TZ: "Asia/Tokyo"
+      TZ: Asia/Tokyo
+      ATS4_MAIL_HOST: $host
+      ATS4_MAIL_USER: $user
+      ATS4_MAIL_PASS: $pass
+      ATS4_MAIL_MOCK: false
+      ATS4_RULE_FILE: /rules/ats.rb
   www:
     image: nginx:latest
     ports:
     - 80:80
     volumes:
     - ./proxy.conf:/etc/nginx/conf.d/default.conf
-EOS
-
-echo -n 'enter mail hostname: '
-read host
-
-echo -n 'enter mail username: '
-read user
-
-echo -n 'enter mail password: '
-read pass
-
-cat << EOS > ats.conf
-play.mailer.host=$host
-play.mailer.port=465
-play.mailer.ssl=true
-play.mailer.user="$user"
-play.mailer.password="$pass"
-play.mailer.mock=false
-ats4.rules=/rules.rb
-EOS
-
-cat << EOS > rules.rb
-require 'rules/ats'
-RULE
 EOS
 
 echo -n 'enter server domain: '
@@ -111,11 +99,14 @@ services:
     volumes:
     - ./ats/data:/ats/data
     - ./ats/logs:/ats/logs
-    - ./ats.conf:/ats/conf/ats.conf
-    - ./rules.rb:/ats/conf/rules.rb
     command: /ats/bin/ats4
     environment:
-      TZ: "Asia/Tokyo"
+      TZ: Asia/Tokyo
+      ATS4_MAIL_HOST: $host
+      ATS4_MAIL_USER: $user
+      ATS4_MAIL_PASS: $pass
+      ATS4_MAIL_MOCK: false
+      ATS4_RULE_FILE: /rules/ats.rb
   www:
     image: nginx:latest
     ports:
@@ -148,41 +139,31 @@ Expose port 80 of the container to the internet so that the administration page 
 
 ### Email
 
-Create the system configuration file `ats.conf` as follows:
+Configure environment variables in `docker-compose.yaml` as follows:
 
-```ini
-# Typesafe Mailer Plugin
-play.mailer.host=mail.allja1.org
-play.mailer.port=465
-play.mailer.ssl=true
-play.mailer.user="***********"
-play.mailer.password="*******"
-
-# Never forget to disable mock mode before the contest:
-play.mailer.mock=true
+```yaml
+environment:
+  ATS4_MAIL_HOST: $host
+  ATS4_MAIL_USER: $user
+  ATS4_MAIL_PASS: $pass
+  ATS4_MAIL_MOCK: false
 ```
 
 Modify the settings properly.
 
 ### Regulation
 
-Add the path to the contest definition file to `ats.conf` like this:
+Configure environment variables in `docker-compose.yaml` as follows:
 
-```ini
-# Contest
-# ats4.rules=/rules/ja1.rb
-# ats4.rules=/rules/uec.rb
-ats4.rules=/rules.rb
+```yaml
+environment:
+  ATS4_RULE_FILE: /rules/ats.rb
+# ATS4_RULE_FILE: /rules/1am.rb
+# ATS4_RULE_FILE: /rules/ja1.rb
+# ATS4_RULE_FILE: /rules/uec.rb
 ```
 
-In addition, create `rules.rb` as follows:
-
-```rb
-require 'rules/ats'
-RULE
-```
-
-Of course, you can also modify `rules.rb` to customize it for your contest.
+Of course, you can specify different rules by mounting external Ruby files into the container.
 See [`ats.rb`](conf/rules/ats.rb) for example.
 
 ### Run
