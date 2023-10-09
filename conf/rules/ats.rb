@@ -1,5 +1,6 @@
 # ABSTRACT CONTEST FOR ATS-4
 
+java_import 'java.net.URI'
 java_import 'java.net.URL'
 java_import 'java.time.DayOfWeek'
 java_import 'java.time.ZoneId'
@@ -41,7 +42,7 @@ class ProgramATS < Program::Annual
 	end
 
 	def link()
-		@link
+		URI.new(@link).isAbsolute ? @link : "https://#{@link}"
 	end
 
 	def help()
