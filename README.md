@@ -176,12 +176,20 @@ $ docker compose up -d
 
 Access 80 port of the container.
 
-### Shutdown
+### Stop
 
-To kill the container, enter the following command:
+Stop and remove the container as follows:
 
 ```sh
-$ docker compose kill
+$ docker compose down
+```
+
+### Update
+
+Pull the latest image as follows:
+
+```sh
+$ docker pull ghcr.io/nextzlog/ats4:master
 ```
 
 ## Development Mode
