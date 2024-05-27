@@ -30,7 +30,7 @@
 					<fieldset class='h-adr'>
 						<input type='hidden' class='p-country-name' value='Japan'>
 						@comps.text(form("station.call"), label = "呼出符号", hint = "JA1ZLO/1")
-						@comps.text(form("station.name"), label = "貴局名称", hint = "この名称で賞を発行します。")
+						@comps.text(form("station.name"), label = "氏名(クラブ局名称)", hint = "この名称で賞を発行します。")
 						@comps.text(form("station.post"), label = "郵便番号", hint = "この宛先に賞を発送します。", style = Some(post))
 						@comps.area(form("station.addr"), label = "賞配達先", hint = "この宛先に賞を発送します。", style = Some(addr))
 						@comps.text(form("station.mail"), label = "メール",   hint = "受理通知メールが届きます。")
