@@ -1,6 +1,6 @@
 name := "ats4"
 version := "SNAPSHOT"
-scalaVersion := "2.13.10"
+scalaVersion := "2.13.14"
 scalacOptions += "-feature"
 libraryDependencies ++= Seq(
 	filters,
