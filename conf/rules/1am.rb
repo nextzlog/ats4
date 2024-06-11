@@ -24,8 +24,7 @@ end
 
 class Section1AM < SectionATS
 	def initialize(name)
-		super(name, Band.new(50_000), Mode.new('AM'), ZDAT)
-		@hour = (10..12).to_a
+		super(name, Band.new(50_000), Mode.new('AM'), 10..12, ZDAT)
 	end
 
 	def points(item)

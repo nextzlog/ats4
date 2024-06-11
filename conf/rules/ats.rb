@@ -86,12 +86,12 @@ class AbsenceATS < Absence
 end
 
 class SectionATS < Section
-	def initialize(name, band, mode, zdat = nil)
+	def initialize(name, band, mode, hour = 0..23, zdat = nil)
 		super()
 		@name = name
 		@band = Array(band)
 		@mode = Array(mode)
-		@hour = (0..23).to_a
+		@hour = Array(hour)
 		@base = loadDAT(zdat).toList
 		@mult = @base.map{|c| c.code}
 	end

@@ -39,8 +39,7 @@ end
 
 class SectionUEC < SectionATS
 	def initialize(band)
-		super(band.to_s, band, Mode.new('CW'), ZDAT)
-		@hour = (17..20).to_a
+		super(band.to_s, band, Mode.new('CW'), 17..20, ZDAT)
 	end
 
 	def code()
