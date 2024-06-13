@@ -86,6 +86,8 @@ class AbsenceATS < Absence
 end
 
 class SectionATS < Section
+	@@CACHE = {}
+
 	def initialize(name, band, mode, hour = 0..23, zdat = nil)
 		super()
 		@name = name
@@ -156,9 +158,12 @@ class SectionATS < Section
 
 	def loadDAT(url)
 		return JAUTIL.get('CITY-BASE') if url.nil?
+		return @@CACHE.fetch(url)if @@CACHE.member?(url)
 		text = AssetUtil.root.http(URL.new(url), 'SJIS')
-		text = text.gsub(/^(\w+) +(.+)$/, '\2 \1')
-		LocalCityBase.read(text.lines[1..-2].join)
+		text = text.gsub(/^(\w+) +(.+)$/, '\2 \1').lines.drop(1)
+		base = LocalCityBase.read(text.take(text.size - 1).join)
+		@@CACHE[url] = base
+		base
 	end
 end
 
