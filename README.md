@@ -16,7 +16,7 @@ Feel free to visit [ALLJA1 ATS-4](https://allja1.org).
 
 - provides a web interface for contest-log acceptance.
 - verifies the uploaded logs according to the contest rules described in Ruby or LISP forms.
-- supports many contests including [UEC](https://www.ja1zgp.com/uectest_public_info), [ALLJA1](https://ja1zlo.u-tokyo.org/allja1), [REAL-TIME](https://ja1zlo.u-tokyo.org/rt/rt1.html), [1-Area 6m AM](https://6mnet.jp/mannaka/blog) and [TAMAGAWA](http://apollo.c.ooco.jp).
+- supports many contests including [UEC](https://www.ja1zgp.com/uectest_public_info), [ALLJA1](https://ja1zlo.u-tokyo.org/allja1), [REAL-TIME](https://ja1zlo.u-tokyo.org/rt/rt1.html), [1-Area 6m AM](https://6mnet.jp/mannaka/blog) and [ALL GUNMA](https://www.jarl.com/gunma).
 
 ## Documents
 
