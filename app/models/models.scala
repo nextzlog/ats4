@@ -403,6 +403,8 @@ class RankingTableToJson(implicit in: Injections) {
  * @param decoder 対象のサマリーシート
  */
 class SheetDecoderToJson(decoder: SheetDecoder) {
+	val postal = "[\\u3012\\u3020]\\s*?\\d{3}-?\\d{4}".r
+
 	/**
 	 * サマリーシートの内容をJSONの文字列に変換します。
 	 *
@@ -411,10 +413,21 @@ class SheetDecoderToJson(decoder: SheetDecoder) {
 	def json = Json.stringify(Json.toJson(Map(
 		"call" -> decoder.getString("CALLSIGN"),
 		"name" -> decoder.getString("NAME"),
-		"addr" -> decoder.getString("ADDRESS"),
+		"post" -> post(decoder.getString("ADDRESS"))._1.trim,
+		"addr" -> post(decoder.getString("ADDRESS"))._2.trim,
 		"mail" -> decoder.getString("EMAIL"),
 		"note" -> decoder.getString("COMMENTS")
 	)))
+
+	/**
+	 * 住所から郵便番号と残りの文字列を抽出します。
+	 *
+	 * @return 郵便番号と残りの文字列
+	 */
+	def post(addr: String): (String, String) = {
+		val mat = postal.findFirstIn(addr.toUpperCase)
+		(mat.mkString, addr.replace(mat.mkString, ""))
+	}
 }
 
 

@@ -6,7 +6,7 @@ libraryDependencies ++= Seq(
 	filters,
 	guice,
 	jdbc,
-	"qxsl" % "qxsl" % "0.1.289",
+	"qxsl" % "qxsl" % "0.1.290",
 	"org.jruby" % "jruby-core" % "9.+",
 	"com.h2database" % "h2" % "1.4.+",
 	"com.typesafe.play" %% "play-mailer" % "7.0.+",
