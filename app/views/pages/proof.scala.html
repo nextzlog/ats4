@@ -2,7 +2,7 @@
 
 @station = @{in.ats.stations().byCall(call).get(0)}
 
-@comps.page(title = "提出書類の確認", nav = "lists") {
+@comps.page(title = "提出完了", nav = "lists") {
 	@if(!admin) {
 		<div class='alert alert-success'>
 			下記の内容で受理しました。
