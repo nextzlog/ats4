@@ -40,7 +40,7 @@ class Index @Inject()(implicit in: Injections) extends IC {
 	/**
 	 * 非管理者権限を表す真偽値です。
 	 */
-	implicit val admin = false
+	implicit val admin: Boolean = false
 
 	/**
 	 * トップページのビューを返します。
@@ -97,7 +97,7 @@ class Entry @Inject()(implicit in: Injections) extends IC {
 	/**
 	 * 非管理者権限を表す真偽値です。
 	 */
-	implicit val admin = false
+	implicit val admin: Boolean = false
 
 	/**
 	 * 書類提出のリクエストを処理して、確認画面のページのビューを返します。
@@ -133,7 +133,7 @@ class Admin @Inject()(implicit in: Injections) extends IC {
 	/**
 	 * 管理者権限を表す真偽値です。
 	 */
-	implicit val admin = true
+	implicit val admin: Boolean = true
 
 	/**
 	 * 管理画面のページのビューを返します。
@@ -194,7 +194,7 @@ class Force @Inject()(implicit in: Injections) extends IC {
 	/**
 	 * 管理者権限を表す真偽値です。
 	 */
-	implicit val admin = true
+	implicit val admin: Boolean = true
 
 	/**
 	 * 全ての参加局の情報を削除します。
@@ -238,7 +238,7 @@ class Shell @Inject()(implicit in: Injections) extends IC {
 	/**
 	 * 管理者権限を表す真偽値です。
 	 */
-	implicit val admin = true
+	implicit val admin: Boolean = true
 
 	/**
 	 * 開発画面のページのビューを返します。
@@ -283,7 +283,7 @@ class Error @Inject()(implicit in: Injections) extends HttpErrorHandler {
 	/**
 	 * 非管理者権限を表す真偽値です。
 	 */
-	implicit val admin = false
+	implicit val admin: Boolean = false
 
 	/**
 	 * クライアント側のエラーを表示するページを返します。

@@ -17,7 +17,6 @@ import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.inject.{bind, SimpleModule}
 import play.libs.mailer.MailerClient
 
-
 /**
  * 注入される依存性をまとめます。
  *
@@ -50,12 +49,12 @@ trait Injections {
 	/**
 	 * コンテストのデータベースです。
 	 */
-	implicit val ats = new ATS(db.getConnection()).createTables()
+	implicit val ats: ATS = new ATS(db.getConnection()).createTables()
 
 	/**
 	 * コンテストの規約です。
 	 */
-	implicit val rule = RuleKit.load(get("ats4.rules")).program()
+	implicit val rule: Program = RuleKit.load(get("ats4.rules")).program()
 
 	/**
 	 * 指定された設定を返します。
