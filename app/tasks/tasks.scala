@@ -242,7 +242,7 @@ class NotifyTask(implicit in: Injections) {
 		val mail = new Email
 		val user = in.cf.get[String]("play.mailer.user")
 		val host = in.cf.get[String]("play.mailer.host")
-		val text = views.txt.pages.email(station.call).body.trim
+		val text = views.txt.mails.accept(station.call).body.trim
 		mail.setFrom("%s <%s@%s>".format(in.rule.host, user, host))
 		mail.addTo("%s <%s>".format(station.call, station.mail))
 		mail.addBcc(in.rule.mail)
