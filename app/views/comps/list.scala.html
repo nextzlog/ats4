@@ -3,7 +3,7 @@
 @import java.time.ZonedDateTime.now
 @import java.time.format.DateTimeFormatter.ofPattern
 
-@dfmt = {Y-m-d\\TH:i@{ofPattern("xxx").format(now()).replaceAll(".", """\\\\$0""")}}
+@dfmt = {Y-m-d\\TH:i@{ofPattern("zzz").format(now()).replaceAll(".", """\\\\$0""")}}
 
 <div id='@field.id'>
 	@helper.repeat(field, min = 0) {row => @comps.item(row)}
