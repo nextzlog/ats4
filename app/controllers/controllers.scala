@@ -8,7 +8,7 @@ package controllers
 import java.util.UUID
 import javax.inject.{Inject, Singleton}
 
-import ats4.root._
+import ats4.root.{ATS, CSV}
 
 import scala.concurrent.{Future, ExecutionContext => EC}
 import scala.concurrent.duration._
@@ -23,7 +23,6 @@ import injects.Injections
 import models._
 import tasks._
 import views.html.pages
-import views.txt.{pages => text}
 
 import akka.actor.{ActorSystem, Props}
 import akka.stream.{Materializer => Mat}
@@ -154,7 +153,7 @@ class Admin @Inject()(implicit in: Injections) extends IC {
 	 *
 	 * @return 集計結果のページ
 	 */
-	def excel = Action(Ok(text.excel().body.trim))
+	def excel = Action(Ok(new CSV(in.ats, in.rule).dump()))
 
 	/**
 	 * 指定された呼出符号の参加局の専用の書類提出のページのビューを返します。
