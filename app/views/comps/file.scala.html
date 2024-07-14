@@ -46,12 +46,18 @@ $('#@id').change(function() {
 	}).done((data) => {
 		if(data) {
 			const json = JSON.parse(data);
-			if(!$('#@{form("station.call").id}').val()) $('#@{form("station.call").id}').val(json.call);
-			if(!$('#@{form("station.name").id}').val()) $('#@{form("station.name").id}').val(json.name);
-			if(!$('#@{form("station.post").id}').val()) $('#@{form("station.post").id}').val(json.post);
-			if(!$('#@{form("station.addr").id}').val()) $('#@{form("station.addr").id}').val(json.addr);
-			if(!$('#@{form("station.mail").id}').val()) $('#@{form("station.mail").id}').val(json.mail);
-			if(!$('#@{form("station.note").id}').val()) $('#@{form("station.note").id}').val(json.note);
+			$('#@{form("station.call").id}').val(json.call);
+			$('#@{form("station.name").id}').val(json.name);
+			$('#@{form("station.post").id}').val(json.post);
+			$('#@{form("station.addr").id}').val(json.addr);
+			$('#@{form("station.mail").id}').val(json.mail);
+			$('#@{form("station.note").id}').val(json.note);
+			@for(idx <- in.rule.getSectionCodes().asScala.indices) {
+				if($(`#@{form(s"entries[$idx].sect").id} option[value='${json.sect}']`).length) {
+					$('#@{form(s"entries[$idx].sect").id}').selectpicker('val', json.sect);
+				}
+				$('#@{form(s"entries[$idx].city").id}').selectpicker('val', json.city);
+			}
 		}
 	});
 });

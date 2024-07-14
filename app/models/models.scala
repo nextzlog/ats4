@@ -401,8 +401,9 @@ class RankingTableToJson(implicit in: Injections) {
  *
  *
  * @param decoder 対象のサマリーシート
+ * @param in 依存性注入
  */
-class SheetDecoderToJson(decoder: SheetDecoder) {
+class SheetDecoderToJson(decoder: SheetDecoder)(implicit in: Injections) {
 	val postal = "[\\u3012\\u3020]\\s*?\\d{3}-?\\d{4}".r
 
 	/**
@@ -416,8 +417,21 @@ class SheetDecoderToJson(decoder: SheetDecoder) {
 		"post" -> post(decoder.getString("ADDRESS"))._1.trim,
 		"addr" -> post(decoder.getString("ADDRESS"))._2.trim,
 		"mail" -> decoder.getString("EMAIL"),
-		"note" -> decoder.getString("COMMENTS")
+		"note" -> decoder.getString("COMMENTS"),
+		"sect" -> section.name(),
+		"city" -> section.getCityBase().recommend(decoder.getString("OPPLACE")).name(),
 	)))
+
+	/**
+	 * 指定された名前に適合する部門を検索して返します。
+	 *
+	 * @return 部門
+	 */
+	def section: Section = {
+		val name = decoder.getString("CATEGORYNAME")
+		val code = decoder.getString("CATEGORYCODE")
+		in.rule.similar(Option(name).getOrElse(code))
+	}
 
 	/**
 	 * 住所から郵便番号と残りの文字列を抽出します。

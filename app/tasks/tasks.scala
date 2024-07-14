@@ -188,8 +188,9 @@ class VerifyTask(implicit req: Request[AnyContent], in: Injections) {
  *
  *
  * @param req サマリーシートを含むリクエスト
+ * @param in 依存性注入
  */
-class FillInTask(implicit req: Request[AnyContent]) {
+class FillInTask(implicit req: Request[AnyContent], in: Injections) {
 	/**
 	 * サマリーシートを読み取るデコーダです。
 	 */
