@@ -256,6 +256,35 @@ class Shell @Inject()(implicit in: Injections) extends IC {
 
 
 /**
+ * 管理者権限を伴って、メール送信のGETまたはPOSTメソッドを処理するコントローラです。
+ *
+ *
+ * @param in 依存性注入
+ */
+@Singleton
+class Email @Inject()(implicit in: Injections) extends IC {
+	/**
+	 * 管理者権限を表す真偽値です。
+	 */
+	implicit val admin: Boolean = true
+
+	/**
+	 * メール送信のページのビューを返します。
+	 *
+	 * @return メール送信のページ
+	 */
+	def email = Action(implicit r => Ok(pages.email(new MessageForm().fill(MessageFormData.data))))
+
+	/**
+	 * メール送信のリクエストを処理します。
+	 *
+	 * @return メール送信のページ
+	 */
+	def shoot = Action(implicit r => Ok(new MailerTask().send(new MessageForm().bindFromRequest().get)))
+}
+
+
+/**
  * ブラウザに返信するレスポンスのキャッシュ設定を編集するフィルタです。
  *
  *

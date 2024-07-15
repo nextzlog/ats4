@@ -1,0 +1,10 @@
+@()(implicit in: Injections)
+
+---
+このメールに心当たりがない場合はお手数ですが下記の連絡先までご連絡ください。
+
+---
+@{in.rule.host()}
+@{in.rule.name()}受付担当係
+@{in.rule.link()}
+@{in.rule.mail()}

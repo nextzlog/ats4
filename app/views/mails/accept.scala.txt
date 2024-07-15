@@ -1,6 +1,6 @@
 @(call: String)(implicit in: Injections)
 
-@{in.rule.name}書類提出の完了 ; 空白を除く先頭行はメールの件名
+@{in.rule.name}書類提出の完了 ; 件名
 
 @{call}様
 
@@ -12,11 +12,4 @@
 にて受理いたしました。
 今後とも当コンテストをよろしくお願いいたします。
 
----
-このメールに心当たりがない場合はお手数ですが下記の連絡先までご連絡ください。
-
----
-@{in.rule.host()}
-@{in.rule.name()}受付担当係
-@{in.rule.link()}
-@{in.rule.mail()}
+@mails.footer()

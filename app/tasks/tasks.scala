@@ -231,29 +231,55 @@ class FileDLTask(call: String, file: String)(implicit in: Injections) {
  * 書類提出を受理した内容のメールを参加局に送信します。
  *
  *
+ * @param req リクエストヘッダ
  * @param in 依存性注入
+ * @param admin 管理者権限
  */
-class NotifyTask(implicit in: Injections) {
+class NotifyTask(implicit req: RequestHeader, in: Injections, admin: Boolean) {
 	/**
 	 * 指定された参加局に対してメールを送信します。
 	 *
 	 * @param station 参加局の登録情報
 	 */
-	def send(station: StationData): Unit = util.Try {
+	def send(station: StationData): Unit = {
+		val text = views.txt.mails.accept(station.call).body.trim
+		new MailerTask().send(new MessageFormData(
+			to = "%s <%s>".format(station.call, station.mail),
+			sub = text.linesIterator.toSeq.head.split(";").head.trim,
+			body = text.linesWithSeparators.toSeq.tail.mkString.trim
+		))
+	}
+}
+
+
+/**
+ * 指定された宛先・件名・本文のメールを送信します。
+ *
+ *
+ * @param req リクエストヘッダ
+ * @param in 依存性注入
+ * @param admin 管理者権限
+ */
+class MailerTask(implicit req: RequestHeader, in: Injections, admin: Boolean) {
+	/**
+	 * 指定された内容のメールを送信します。
+	 *
+	 * @param message 内容
+	 */
+	def send(message: MessageFormData): Html = util.Try {
 		val mail = new Email
 		val user = in.cf.get[String]("play.mailer.user")
 		val host = in.cf.get[String]("play.mailer.host")
-		val text = views.txt.mails.accept(station.call).body.trim
 		mail.setFrom("%s <%s@%s>".format(in.rule.host, user, host))
-		mail.addTo("%s <%s>".format(station.call, station.mail))
+		mail.addTo(message.to)
 		mail.addBcc(in.rule.mail)
 		mail.addReplyTo(in.rule.mail)
-		mail.setSubject(text.linesIterator.toSeq.head.split(";").head.trim)
-		mail.setBodyText(text.linesWithSeparators.toSeq.tail.mkString.trim)
+		mail.setSubject(message.sub)
+		mail.setBodyText(message.body)
 		in.mc.send(mail)
 	}.recover {
 		case ex: EmailException => Logger("mail").error("MAIL ERROR!", ex)
-	}
+	}.map(_ => pages.lists()).get
 }
 
 

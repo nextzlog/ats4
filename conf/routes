@@ -29,6 +29,10 @@ DELETE  /admin/proof/:call       controllers.Force.drop(call: String)
 POST    /admin/entry             controllers.Force.edit
 POST    /admin/amend             controllers.Force.redo
 
+# Mailer pages
+GET     /admin/email             controllers.Email.email
+POST    /admin/email             controllers.Email.shoot
+
 # System pages
 GET     /admin/shell             controllers.Shell.shell
 POST    /admin/shell             controllers.Shell.debug

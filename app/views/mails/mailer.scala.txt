@@ -1,0 +1,3 @@
+@()(implicit in: Injections)
+
+@mails.footer()

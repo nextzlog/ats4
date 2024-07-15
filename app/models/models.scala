@@ -494,3 +494,58 @@ class DevelopForm extends Form[DevelopFormData](
 	(DevelopFormData.apply)
 	(DevelopFormData.unapply), Map.empty, Nil, None
 )
+
+
+/**
+ * メール送信のフォームに入力されたデータです。
+ *
+ *
+ * @param to 宛先
+ * @param sub 件名
+ * @param body 本文
+ *
+ * @since 2024/07/06
+ */
+case class MessageFormData(
+	to: String,
+	sub: String,
+	body: String,
+)
+
+
+/**
+ * メール送信のフォームに入力されたデータです。
+ *
+ *
+ * @since 2024/07/06
+ */
+object MessageFormData {
+	/**
+	 * メールのテンプレートを返します。
+	 *
+	 * @param in 依存性注入
+	 * @return フォームの内容
+	 */
+	def data(implicit in: Injections) = MessageFormData(
+		to = in.rule.mail,
+		sub = "",
+		body = views.txt.mails.mailer().body.trim,
+	)
+}
+
+
+/**
+ * メール送信のフォームとデータの関連付けと検証を実装します。
+ *
+ *
+ * @since 2024/07/06
+ */
+class MessageForm extends Form[MessageFormData](
+	Forms.mapping(
+		"to" -> Forms.email,
+		"sub" -> Forms.nonEmptyText,
+		"body" -> Forms.nonEmptyText,
+	)
+	(MessageFormData.apply)
+	(MessageFormData.unapply), Map.empty, Nil, None
+)

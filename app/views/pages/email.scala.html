@@ -1,0 +1,20 @@
+@(form: Form[MessageFormData])(implicit r: RequestHeader, in: Injections, admin: Boolean)
+
+@comps.page(title = "連絡送信", nav = "email") {
+	@helper.form(action = routes.Email.shoot) {
+		@helper.CSRF.formField
+		<fieldset>
+			@comps.text(form("to"), label = "To")
+			@comps.text(form("sub"), label = "Sub")
+			@comps.area(form("body"), label = "Body")
+		</fieldset>
+		@comps.warn(id = "submit", title = "確認", button = "送信する", icon = "fas fa-paper-plane", submit = true) {
+			<p>メールを送信します。</p>
+		}
+	}
+	<script>
+	$('form').submit(function() {
+		$(this).find(':submit').prop('disabled', 'true');
+	});
+	</script>
+}
