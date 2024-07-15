@@ -116,9 +116,7 @@ class UpdateTask(implicit req: RequestHeader, in: Injections, admin: Boolean) {
 	 * @return 管理画面のページ
 	 */
 	def accept: Html = {
-		for (message <- in.ats.messages().list().asScala) util.Try(in.ats.messages().drop(message))
-		for (archive <- in.ats.archives().list().asScala) util.Try(in.ats.messages().push(archive))
-		for (station <- in.ats.stations().list().asScala) in.ats.update(station.call, in.rule)
+		in.ats.updateAll(in.rule)
 		pages.lists()
 	}
 }
@@ -319,7 +317,7 @@ class SocketTask(out: ActorRef, token: UUID)(implicit in: Injections) extends Ac
 		val qsoDiff = decoder.unpack(data.tail).asScala
 		in.ats.messages().drop(station.call, qsoDiff.take(data.head.toInt & 0xFF).asJava)
 		in.ats.messages().push(station.call, qsoDiff.drop(data.head.toInt & 0xFF).asJava)
-		in.ats.update(station.call, in.rule);
+		in.ats.update(station.call, in.rule)
 		Logger(this.getClass).info(s"update: $station.call")
 		if (in.rule.finish()) new RankingTableToJson().json else ""
 	}
