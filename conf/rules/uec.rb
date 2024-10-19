@@ -2,8 +2,6 @@
 
 require 'rules/ats'
 
-java_import 'java.time.LocalDate'
-
 NAME = '電通大コンテスト'
 HOST = 'JA1ZGP'
 MAIL = 'uectest-info@example.com'
