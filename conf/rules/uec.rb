@@ -2,8 +2,6 @@
 
 require 'rules/ats'
 
-java_import 'java.time.LocalDate'
-
 NAME = '電通大コンテスト'
 HOST = 'JA1ZGP'
 MAIL = 'uectest-info@example.com'
@@ -40,10 +38,7 @@ end
 class SectionUEC < SectionATS
 	def initialize(band)
 		super(band.to_s, band, Mode.new('CW'), 17..20, ZDAT)
-	end
-
-	def code()
-		return SIN
+		setCode(SIN)
 	end
 
 	def trim()
@@ -58,11 +53,8 @@ end
 class SectionAll < SectionUEC
 	def initialize(name)
 		super(BandEnum::BALL)
-		@name = name
-	end
-
-	def code()
-		return ALL
+		setName(name)
+		setCode(ALL)
 	end
 end
 

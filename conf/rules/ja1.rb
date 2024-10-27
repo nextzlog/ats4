@@ -18,11 +18,8 @@ ALL = /総合/
 class ProgramJA1 < ProgramATS
 	def initialize()
 		super(NAME, HOST, MAIL, LINK, 6, 4, DayOfWeek::SATURDAY)
+		setHelp(AssetUtil.root.string('rules/ja1.md'))
 		JA1.each{|section| add(section)}
-	end
-
-	def help()
-		AssetUtil.root.string('rules/ja1.md')
 	end
 
 	def getDeadLine(year)

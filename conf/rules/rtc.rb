@@ -18,11 +18,8 @@ LINK = 'ja1zlo.u-tokyo.org/rt'
 class ProgramRTC < ProgramATS
 	def initialize()
 		super(NAME, HOST, MAIL, LINK, 7, 4, DayOfWeek::MONDAY)
+		setHelp(AssetUtil.root.string('rules/rtc.md'))
 		RTC.each{|section| add(section)}
-	end
-
-	def help()
-		AssetUtil.root.string('rules/rtc.md')
 	end
 
 	def getFinalDay(year)
