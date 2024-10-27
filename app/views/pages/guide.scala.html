@@ -5,6 +5,13 @@
 		<h3 class='card-header'>ご案内</h3>
 		<div class='card-body' id='help'></div>
 	</div>
+	@defining("ats4.media") {case key =>
+		@if(in.cf.has(key)) {
+			<div class='ratio ratio-16x9'>
+				<iframe src='@in.cf.get[String](key)' title='YouTube' allowfullscreen></iframe>
+			</div>
+		}
+	}
 	<div class='card my-3'>
 		<h3 class='card-header'>交信記録ファイルの書式</h3>
 		<div class='card-body'>
