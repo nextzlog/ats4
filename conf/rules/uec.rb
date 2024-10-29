@@ -37,7 +37,7 @@ end
 
 class SectionUEC < SectionATS
 	def initialize(band)
-		super(band.to_s, band, Mode.new('CW'), 17..20, ZDAT)
+		super(band.to_s, band, Mode.new('CW'), 17...20, ZDAT)
 		setCode(SIN)
 	end
 
