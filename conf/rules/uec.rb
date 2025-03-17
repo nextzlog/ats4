@@ -4,7 +4,7 @@ require 'rules/ats'
 
 NAME = '電通大コンテスト'
 HOST = 'JA1ZGP'
-MAIL = 'uectest-info@example.com'
+MAIL = 'uectest-info@ja1zgp.com'
 LINK = 'www.ja1zgp.com/uectest_public_info'
 ZDAT = 'http://ja6ycu.in.coocan.jp/ZLOG/uec.dat'
 
