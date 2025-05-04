@@ -9,12 +9,14 @@ LINK = 'www.ja1zgp.com/uectest-vus_public_info'
 ZDAT = 'http://ja6ycu.in.coocan.jp/ZLOG/acag.dat'
 
 module Sections
-	VHF = 'V/UHF'
-	SHF = 'SHF'
-	ALL = 'オールバンド'
+	ALL = 'シングルオペ オールバンド'
+	SIN = 'シングルオペ'
+	VHF = 'シングルオペ V/UHF'
+	SHF = 'シングルオペ SHF'
+	JR  = 'シングルオペ こども'
+	NC  = 'シングルオペ ニューカマー'
+	MUL = 'マルチオペ オールバンド'
 	SWL = 'SWL'
-	JR  = 'こども'
-	NC  = 'ニューカマー'
 end
 
 module BandEnum
@@ -64,8 +66,8 @@ class ProgramVUS < ProgramATS
 end
 
 class SectionVUS < SectionATS
-	def initialize(band)
-		super(band.to_s, band, ModeEnum::ALL, 12...18, ZDAT)
+	def initialize(band, name)
+		super("#{name} #{band}", band, ModeEnum::ALL, 12...18, ZDAT)
 	end
 
 	def points(item)
@@ -84,22 +86,24 @@ end
 
 class SectionAll < SectionVUS
 	def initialize(bands, name)
-		super(bands)
+		super(bands, name)
 		setName(name)
 	end
 end
 
 RULE = ProgramVUS.new
-RULE.add(SectionVUS.new(BandEnum::B144))
-RULE.add(SectionVUS.new(BandEnum::B430))
-RULE.add(SectionVUS.new(BandEnum::B1_2))
-RULE.add(SectionVUS.new(BandEnum::B2_4))
-RULE.add(SectionVUS.new(BandEnum::B5_6))
-RULE.add(SectionVUS.new(BandEnum::B10_))
+RULE.add(SectionAll.new(BandEnum::BALL, Sections::ALL))
+RULE.add(SectionVUS.new(BandEnum::B144, Sections::SIN))
+RULE.add(SectionVUS.new(BandEnum::B430, Sections::SIN))
+RULE.add(SectionVUS.new(BandEnum::B1_2, Sections::SIN))
+RULE.add(SectionVUS.new(BandEnum::B2_4, Sections::SIN))
+RULE.add(SectionVUS.new(BandEnum::B5_6, Sections::SIN))
+RULE.add(SectionVUS.new(BandEnum::B10_, Sections::SIN))
 RULE.add(SectionAll.new(BandEnum::BVHF, Sections::VHF))
 RULE.add(SectionAll.new(BandEnum::BSHF, Sections::SHF))
 RULE.add(SectionAll.new(BandEnum::BALL, Sections::JR))
 RULE.add(SectionAll.new(BandEnum::BALL, Sections::NC))
-RULE.add(SectionAll.new(BandEnum::BALL, Sections::ALL))
+RULE.add(SectionAll.new(BandEnum::BALL, Sections::NC))
+RULE.add(SectionAll.new(BandEnum::BALL, Sections::MUL))
 RULE.add(SectionAll.new(BandEnum::BALL, Sections::SWL))
 RULE
