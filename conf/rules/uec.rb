@@ -59,18 +59,20 @@ class SectionAll < SectionUEC
 end
 
 module BandEnum
+	B1_9 = Band.new( 1_900)
 	B3_5 = Band.new( 3_500)
 	B7_0 = Band.new( 7_000)
 	B14_ = Band.new(14_000)
 	B21_ = Band.new(21_000)
 	B28_ = Band.new(28_000)
 	B50_ = Band.new(50_000)
-	BALL = [B3_5, B7_0, B14_, B21_, B28_, B50_]
+	BALL = [B1_9, B3_5, B7_0, B14_, B21_, B28_, B50_]
 end
 
 RULE = ProgramUEC.new
 RULE.add(AbsenceATS.new(ALL))
 RULE.add(AbsenceATS.new(SIN))
+RULE.add(SectionUEC.new(BandEnum::B1_9))
 RULE.add(SectionUEC.new(BandEnum::B3_5))
 RULE.add(SectionUEC.new(BandEnum::B7_0))
 RULE.add(SectionUEC.new(BandEnum::B14_))
