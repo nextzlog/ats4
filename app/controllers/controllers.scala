@@ -149,6 +149,13 @@ class Admin @Inject()(implicit in: Injections) extends IC {
 	def entry = Action(implicit r => Ok(pages.entry(new ContestForm)))
 
 	/**
+	 * 全参加局のページのビューを返します。
+	 *
+	 * @return 全参加局のページ
+	 */
+	def calls = Action(Ok(pages.calls()))
+
+	/**
 	 * 集計結果のページのビューを返します。
 	 *
 	 * @return 集計結果のページ

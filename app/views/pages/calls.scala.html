@@ -1,5 +1,9 @@
 @()(implicit in: Injections, admin: Boolean)
 
+@link(call: String) = {
+	@if(admin) {<a href='@routes.Admin.proof(call)'>@call</a>} else {@call}
+}
+
 @comps.page(title = "全参加局", nav = "calls") {
 	<table class='table table-hover font-monospace'>
 		<thead class='table-light'>
@@ -14,19 +18,19 @@
 				@if(in.ats.rankings().byCall(station.call).asScala.exists(_.scoreless(in.rule))) {
 					<tr class='table-warning'>
 						<td>@{count + 1}
-						<td>@station.call</td>
-						<td>無得点の部門があります。</td>
+						<td>@link(station.call)</td>
+						<td>無得点の部門があるので再提出を推奨します。</td>
 					</tr>
 				} else if(in.ats.rankings.byCall(station.call).isEmpty) {
 					<tr class='table-warning'>
 						<td>@{count + 1}
-						<td>@station.call</td>
-						<td>どの部門にも未登録です。</td>
+						<td>@link(station.call)</td>
+						<td>どの部門にも未登録または交信記録のみです。</td>
 					</tr>
 				} else {
 					<tr>
 						<td>@{count + 1}
-						<td>@station.call</td>
+						<td>@link(station.call)</td>
 						<td>-</td>
 					</tr>
 				}

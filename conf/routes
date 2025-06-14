@@ -18,6 +18,7 @@ POST    /unbox                   controllers.Entry.unbox
 # Secret pages
 GET     /admin                   controllers.Admin.index
 GET     /admin/entry             controllers.Admin.entry
+GET     /admin/calls             controllers.Admin.calls
 GET     /admin/excel             controllers.Admin.excel
 GET     /admin/amend/:call       controllers.Admin.amend(call: String)
 GET     /admin/proof/:call       controllers.Admin.proof(call: String)
