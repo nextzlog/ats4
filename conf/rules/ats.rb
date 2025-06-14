@@ -49,7 +49,7 @@ end
 
 class AbsenceATS < Absence::Default
 	def initialize(code)
-		super("#{code} 不参加", code)
+		super("#{code} 不参加 または交信記録のみ提出", code)
 	end
 end
 
