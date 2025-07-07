@@ -48,6 +48,12 @@ class SectionUEC < SectionATS
 	def points(item)
 		SCORE[item.getRcvd.value(Qxsl::CODE).slice(trim)]
 	end
+
+	def getAwardLimit(scores)
+		return 3 if scores.size >= 30
+		return 2 if scores.size >= 11
+		return 1
+	end
 end
 
 class SectionAll < SectionUEC
