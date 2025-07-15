@@ -15,24 +15,26 @@
 		</thead>
 		<tbody>
 			@for((station, count) <- in.ats.stations().list().asScala.zipWithIndex) {
-				@if(in.ats.rankings().byCall(station.call).asScala.exists(_.scoreless(in.rule))) {
-					<tr class='table-warning'>
-						<td>@{count + 1}
-						<td>@link(station.call)</td>
-						<td>無得点の部門があるので再提出を推奨します。</td>
-					</tr>
-				} else if(in.ats.rankings.byCall(station.call).isEmpty) {
-					<tr class='table-warning'>
-						<td>@{count + 1}
-						<td>@link(station.call)</td>
-						<td>どの部門にも未登録または交信記録のみです。</td>
-					</tr>
-				} else {
-					<tr>
-						<td>@{count + 1}
-						<td>@link(station.call)</td>
-						<td>-</td>
-					</tr>
+				@defining(in.ats.rankings().byCall(station.call).asScala) {rankings =>
+					@if(rankings.exists(_.scoreless(in.rule))) {
+						<tr class='table-warning'>
+							<td>@{count + 1}
+							<td>@link(station.call)</td>
+							<td>無得点の部門があるので再提出を推奨します。</td>
+						</tr>
+					} else if(rankings.map(_.sect).map(in.rule.section).forall(_.isAbsence())) {
+						<tr class='table-warning'>
+							<td>@{count + 1}
+							<td>@link(station.call)</td>
+							<td>どの部門にも未登録または交信記録のみです。</td>
+						</tr>
+					} else {
+						<tr>
+							<td>@{count + 1}
+							<td>@link(station.call)</td>
+							<td>-</td>
+						</tr>
+					}
 				}
 			}
 		</tbody>
