@@ -60,7 +60,7 @@ end
 class SectionAll < SectionQRP
 	def initialize(type)
 		super(type, BandEnum::BALL)
-		setName("#{CLASSES[type]}M マルチバンド #{type}")
+		setName("#{CLASSES[type]}A オールバンド #{type}")
 	end
 end
 
