@@ -62,7 +62,7 @@ class SectionATS < Section::Default
 		setBands(*Array(band))
 		setModes(*Array(mode))
 		setHours(*Array(hour))
-		set(loadDAT(zdat || "http://ja6ycu.in.coocan.jp/ZLOG/acag.dat"))
+		set(loadDAT(zdat)) if not zdat.nil?
 	end
 
 	def trim()
