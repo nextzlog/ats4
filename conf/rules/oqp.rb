@@ -68,7 +68,11 @@ class ProgramUNI < ProgramATS
 	end
 
 	def getDeadLine(year)
-		LocalDate.of(year, 12, 14)
+		LocalDate.of(year + 1, 1, 31)
+	end
+
+	def conflict(entries)
+		false
 	end
 end
 
@@ -76,6 +80,10 @@ class SectionUNI_Base < SectionATS
 	def initialize(name)
 		super(name, BANDS, MODES, 0...24, ZDAT)
 		setCode(name)
+	end
+
+	def verifyCode(code)
+		true
 	end
 
 	def points(item)
@@ -100,7 +108,7 @@ class SectionUNI_Base < SectionATS
 
 	def entity(item)
 		time = item.getBoth(Qxsl::TIME)
-		Element.new([date.value.toLocalDate])
+		Element.new([time.value.toLocalDate])
 	end
 
 	def getAwardLimit(scores)
