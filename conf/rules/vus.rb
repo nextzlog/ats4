@@ -8,15 +8,21 @@ MAIL = 'uectest-info@ja1zgp.com'
 LINK = 'www.ja1zgp.com/uectest-vus_public_info'
 ZDAT = 'http://ja6ycu.in.coocan.jp/ZLOG/acag.dat'
 
-module Sections
-	ALL = 'シングルオペ オールバンド'
-	SIN = 'シングルオペ'
+module Names
+	SAB = 'シングルオペ オールバンド'
+	SJR = 'シングルオペ こども'
+	SNC = 'シングルオペ ニューカマー'
+	MAB = 'マルチオペ オールバンド'
+	SWL = 'SWL'
+	SOP = 'シングルオペ'
 	VHF = 'シングルオペ V/UHF'
 	SHF = 'シングルオペ SHF'
-	JR  = 'シングルオペ こども'
-	NC  = 'シングルオペ ニューカマー'
-	MUL = 'マルチオペ オールバンド'
-	SWL = 'SWL'
+end
+
+module Codes
+	GEN = '総合'
+	RD1 = '第1ラウンド'
+	RD2 = '第2ラウンド'
 end
 
 module BandEnum
@@ -43,9 +49,9 @@ SCORE_BAND = {
 	BandEnum::B144 => 1,
 	BandEnum::B430 => 1,
 	BandEnum::B1_2 => 1,
-	BandEnum::B2_4 => 2,
-	BandEnum::B5_6 => 2,
-	BandEnum::B10_ => 3,
+	BandEnum::B2_4 => 10,
+	BandEnum::B5_6 => 10,
+	BandEnum::B10_ => 15,
 }
 
 SCORE_MODE = {
@@ -63,11 +69,43 @@ class ProgramVUS < ProgramATS
 	def getDeadLine(year)
 		getStartDay(year).plusWeeks(2)
 	end
+
+	def conflict(entries)
+		codes = entries.map{|e| e.code}.uniq
+		names = entries.map{|e| e.name}.uniq
+
+		gen = codes.include?(Codes::GEN)
+		rd1 = codes.include?(Codes::RD1)
+		rd2 = codes.include?(Codes::RD2)
+
+		return true if gen && (rd1 || rd2)
+
+		vhf = names.any?{|e| e.include?(Names::VHF)}
+		shf = names.any?{|e| e.include?(Names::SHF)}
+
+		return vhf && shf
+	end
 end
 
 class SectionVUS < SectionATS
-	def initialize(area, band, name)
-		super("#{area}エリア #{name} #{band}", band, ModeEnum::ALL, 12...18, ZDAT)
+	def initialize(area, band, name, code)
+		super("#{area}エリア #{name} #{band}", band, ModeEnum::ALL, 9...15, ZDAT, code)
+	end
+
+	def verify(item)
+		band = item.getBoth(Qxsl::BAND)
+		time = item.getBoth(Qxsl::TIME)
+
+		vhf = BandEnum::BVHF.include?(band)
+		shf = BandEnum::BSHF.include?(band)
+
+		rd1 = time.local.getHour < 11
+		rd2 = time.local.getHour > 11
+
+		return super(item) if rd1 && shf
+		return super(item) if rd2 && vhf
+
+		return Failure.new(item, "${band} @ {time}")
 	end
 
 	def points(item)
@@ -91,27 +129,34 @@ class SectionVUS < SectionATS
 end
 
 class SectionAll < SectionVUS
-	def initialize(area, bands, name)
-		super(area, bands, name)
+	def initialize(area, bands, name, code)
+		super(area, bands, name, code)
 		setName("#{area}エリア #{name}")
 	end
 end
 
 RULE = ProgramVUS.new
 for area in [*1..9, 0] do
-	RULE.add(SectionAll.new(area, BandEnum::BALL, Sections::ALL))
-	RULE.add(SectionVUS.new(area, BandEnum::B144, Sections::SIN))
-	RULE.add(SectionVUS.new(area, BandEnum::B430, Sections::SIN))
-	RULE.add(SectionVUS.new(area, BandEnum::B1_2, Sections::SIN))
-	RULE.add(SectionVUS.new(area, BandEnum::B2_4, Sections::SIN))
-	RULE.add(SectionVUS.new(area, BandEnum::B5_6, Sections::SIN))
-	RULE.add(SectionVUS.new(area, BandEnum::B10_, Sections::SIN))
-	RULE.add(SectionAll.new(area, BandEnum::BVHF, Sections::VHF))
-	RULE.add(SectionAll.new(area, BandEnum::BSHF, Sections::SHF))
-	RULE.add(SectionAll.new(area, BandEnum::BALL, Sections::JR))
-	RULE.add(SectionAll.new(area, BandEnum::BALL, Sections::NC))
-	RULE.add(SectionAll.new(area, BandEnum::BALL, Sections::NC))
-	RULE.add(SectionAll.new(area, BandEnum::BALL, Sections::MUL))
-	RULE.add(SectionAll.new(area, BandEnum::BALL, Sections::SWL))
+	RULE.add(AbsenceATS.new(Codes::GEN))
+	RULE.add(SectionAll.new(area, BandEnum::BALL, Names::SAB, Codes::GEN))
+	RULE.add(SectionAll.new(area, BandEnum::BALL, Names::SJR, Codes::GEN))
+	RULE.add(SectionAll.new(area, BandEnum::BALL, Names::SNC, Codes::GEN))
+	RULE.add(SectionAll.new(area, BandEnum::BALL, Names::SNC, Codes::GEN))
+	RULE.add(SectionAll.new(area, BandEnum::BALL, Names::MAB, Codes::GEN))
+	RULE.add(SectionAll.new(area, BandEnum::BALL, Names::SWL, Codes::GEN))
+
+	# 09:00 - 11:00 JST
+	RULE.add(AbsenceATS.new(Codes::RD1))
+	RULE.add(SectionVUS.new(area, BandEnum::B1_2, Names::SOP, Codes::RD1))
+	RULE.add(SectionVUS.new(area, BandEnum::B2_4, Names::SOP, Codes::RD1))
+	RULE.add(SectionVUS.new(area, BandEnum::B5_6, Names::SOP, Codes::RD1))
+	RULE.add(SectionVUS.new(area, BandEnum::B10_, Names::SOP, Codes::RD1))
+	RULE.add(SectionAll.new(area, BandEnum::BSHF, Names::SHF, Codes::RD1))
+
+	# 12:00 - 15:00 JST
+	RULE.add(AbsenceATS.new(Codes::RD2))
+	RULE.add(SectionVUS.new(area, BandEnum::B144, Names::SOP, Codes::RD2))
+	RULE.add(SectionVUS.new(area, BandEnum::B430, Names::SOP, Codes::RD2))
+	RULE.add(SectionAll.new(area, BandEnum::BVHF, Names::VHF, Codes::RD2))
 end
 RULE

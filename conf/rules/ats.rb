@@ -57,8 +57,8 @@ class SectionATS < Section::Default
 	@@UTIL = RuleKit.load('jautil.lisp').pattern
 	@@DATs = {}
 
-	def initialize(name, band, mode, hour = 0...24, zdat = nil)
-		super(name, '部門')
+	def initialize(name, band, mode, hour = 0...24, zdat = nil, code = '部門')
+		super(name, code)
 		setBands(*Array(band))
 		setModes(*Array(mode))
 		setHours(*Array(hour))
