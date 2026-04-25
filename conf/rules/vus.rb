@@ -118,6 +118,7 @@ class SectionVUS < SectionATS
 		call = item.getBoth(Qxsl::CALL)
 		band = item.getBoth(Qxsl::BAND)
 		mode = item.getBoth(Qxsl::MODE)
+		mode = mode.value.gsub('AM', 'SSB')
 		Element.new([call, band, mode])
 	end
 
