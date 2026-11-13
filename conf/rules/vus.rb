@@ -6,7 +6,7 @@ NAME = '電通大VUSコンテスト'
 HOST = 'JA1ZGP'
 MAIL = 'uectest-info@ja1zgp.com'
 LINK = 'www.ja1zgp.com/uectest-vus_public_info'
-ZDAT = 'http://ja6ycu.in.coocan.jp/ZLOG/acag.dat'
+ZDAT = 'rules/dat/acag.dat'
 
 module Names
 	SAB = 'シングルオペ オールバンド'

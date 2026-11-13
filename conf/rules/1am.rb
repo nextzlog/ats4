@@ -6,7 +6,7 @@ NAME = '1エリアAMコンテスト'
 HOST = 'まんなかくらぶ'
 MAIL = '1amtest-info@example.com'
 LINK = '6mnet.jp/mannaka/blog'
-ZDAT = 'http://ja6ycu.in.coocan.jp/ZLOG/ja1.dat'
+ZDAT = 'rules/dat/ja1.dat'
 
 SCORES = {true => 2, false => 1}
 

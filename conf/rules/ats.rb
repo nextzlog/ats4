@@ -1,7 +1,6 @@
 # ABSTRACT CONTEST FOR ATS-4
 
 java_import 'java.net.URI'
-java_import 'java.net.URL'
 java_import 'java.time.DayOfWeek'
 java_import 'java.time.LocalDate'
 java_import 'java.time.temporal.TemporalAdjusters'
@@ -12,6 +11,7 @@ java_import 'qxsl.draft.Qxsl'
 java_import 'qxsl.local.LocalCityBase'
 java_import 'qxsl.ruler.Absence'
 java_import 'qxsl.ruler.Element'
+java_import 'qxsl.ruler.Failure'
 java_import 'qxsl.ruler.Program'
 java_import 'qxsl.ruler.RuleKit'
 java_import 'qxsl.ruler.Section'
@@ -31,6 +31,10 @@ class ProgramATS < Program::Default
 
 	def get(name)
 		eval name
+	end
+
+	def optional_city()
+		false
 	end
 
 	def getStartDay(year)
@@ -77,12 +81,12 @@ class SectionATS < Section::Default
 		super(code).sub(trim, '')
 	end
 
-	def loadDAT(url)
-		return @@DATs.fetch(url) if @@DATs.include?(url)
-		text = AssetUtil.root.http(URL.new(url), 'SJIS')
+	def loadDAT(path)
+		return @@DATs.fetch(path) if @@DATs.include?(path)
+		text = AssetUtil.root.string(path)
 		text = text.gsub(/^(\w+) +(.+)$/, '\2 \1').lines.drop(1)
 		base = LocalCityBase.read(text.take(text.size - 1).join)
-		@@DATs[url] = base
+		@@DATs[path] = base
 		base
 	end
 end

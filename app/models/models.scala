@@ -199,6 +199,7 @@ class SectionForm(implicit in: Injections) extends Form[SectionFormData](
 	(SectionFormData.apply)
 	(SectionFormData.unapply).verifying(s => {
 		in.rule.section(s.sect).isAbsence() ||
+		(s.city.isEmpty && util.Try(in.rule.get("optional_city")).toOption.contains(true)) ||
 		in.rule.section(s.sect).getCityList().asScala.exists(_.name() == s.city)
 	}), Map.empty, Nil, None
 )

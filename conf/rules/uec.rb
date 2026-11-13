@@ -6,7 +6,7 @@ NAME = '電通大コンテスト'
 HOST = 'JA1ZGP'
 MAIL = 'uectest-info@ja1zgp.com'
 LINK = 'www.ja1zgp.com/uectest_public_info'
-ZDAT = 'http://ja6ycu.in.coocan.jp/ZLOG/uec.dat'
+ZDAT = 'rules/dat/uec.dat'
 
 ALL = 'オールバンド'
 SIN = 'シングルバンド'

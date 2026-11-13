@@ -6,7 +6,7 @@ NAME = 'QRPコンテスト'
 HOST = 'JARL QRP CLUB'
 MAIL = 'contest2@jaqrp.net'
 LINK = 'https://www2.jaqrp.org/contests/'
-ZDAT = 'http://ja6ycu.in.coocan.jp/ZLOG/xpo.dat'
+ZDAT = 'rules/dat/xpo.dat'
 
 CRAFT = '自作機'
 OTHER = '一般'
@@ -35,7 +35,11 @@ class ProgramQRP < ProgramATS
 	end
 
 	def getDeadLine(year)
-		LocalDate.of(year, 11, 23)
+		LocalDate.of(year, 11, 17)
+	end
+
+	def optional_city()
+		true
 	end
 end
 
@@ -46,7 +50,17 @@ class SectionQRP < SectionATS
 	end
 
 	def trim()
-		/[HMLP]?$/i
+		/P$/i
+	end
+
+	def verify(item)
+		code = item.getRcvd.value(Qxsl::CODE).to_s
+		return Failure.new(item, code) unless code.match?(/P$/i)
+		super(item)
+	end
+
+	def getAwardLimit(scores)
+		return 1
 	end
 
 	def unique(item)
@@ -76,6 +90,7 @@ module BandEnum
 end
 
 RULE = ProgramQRP.new
+RULE.add(AbsenceATS.new('部門'))
 # home-made
 RULE.add(SectionAll.new(CRAFT))
 RULE.add(SectionQRP.new(CRAFT, BandEnum::B1_9))

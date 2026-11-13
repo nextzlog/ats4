@@ -6,7 +6,7 @@ NAME = '大学社団QSOパーティ'
 HOST = 'JA1ZLO'
 MAIL = 'allja1.info@gmail.com'
 LINK = 'ja1zlo.u-tokyo.org/univ_onair_together'
-ZDAT = 'http://ja6ycu.in.coocan.jp/ZLOG/acag.dat'
+ZDAT = 'rules/dat/acag.dat'
 
 BANDS = [
 	Band.new(       135),
